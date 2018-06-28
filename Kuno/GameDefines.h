@@ -3,20 +3,22 @@
 
 class Vector2;
 
-//Yuna Okuma named found here: http://www.fantasynamegenerators.com/japanese_names.php
+//Yuna Okuma name found here: http://www.fantasynamegenerators.com/japanese_names.php
 
-Vector2	ConvertIsoTo2D(const Vector2 &pointISO)
+Vector2	IsometricToCartesian(const Vector2 &isometric)
 {
-	Vector2 point2D;
-	point2D.x = (2.0f * pointISO.y + pointISO.x) / 2.0f;
-	point2D.y = (2.0f * pointISO.y - pointISO.x) / 2.0f;
-	return point2D;
+	Vector2 cartesian;
+	cartesian.x = (2.0f * isometric.y + isometric.x) / 2.0f;
+	cartesian.y = (2.0f * isometric.y - isometric.x) / 2.0f;
+	return cartesian;
 }
 
-Vector2 Convert2DtoISO(const Vector2 &point2D)
+Vector2 CartesianToIsometric(const Vector2 &cartesian)
 {
-	Vector2 pointISO;
-	pointISO.x = (2.0f * point2D.y + point2D.x) / 2.0f;
-	pointISO.y = (2.0f * point2D.y - point2D.x) / 2.0f;
-	return pointISO;
+	return Vector2(cartesian)
+
+	Vector2 isometric;
+	isometric.x = (2.0f * cartesian.y + cartesian.x) / 2.0f;
+	isometric.y = (2.0f * cartesian.y - cartesian.x) / 2.0f;
+	return isometric;
 }

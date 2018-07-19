@@ -1,6 +1,10 @@
 **/bootstrap/
 **/dependencies/
+**/Debug
+**/Release
+**.vs
 
+#Ignore only the core bootstrap assets
 bin/textures/tankRed.png
 bin/textures/tankGreen.png
 bin/textures/tankBlue.png
@@ -22,3 +26,4 @@ bin/imgui.ini
 bin/font/consolas_italic.ttf
 bin/font/consolas_bold.ttf
 bin/font/consolas.ttf
+

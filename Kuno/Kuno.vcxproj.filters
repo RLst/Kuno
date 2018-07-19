@@ -21,12 +21,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Iso.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KunoApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Iso.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

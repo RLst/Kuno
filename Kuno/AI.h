@@ -119,7 +119,7 @@ namespace AI {
 		std::vector<Agent*> m_enemies;
 		float		m_range;
 
-		Agent*		m_enemyInRange;		//How do you relay this information to AttackAction?
+		Agent*		m_enemyFoundInRange;		//How do you relay this information to AttackAction?
 	public:
 		//This class will need to take in a list of enemy agents
 		tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range) :

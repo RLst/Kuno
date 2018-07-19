@@ -3,20 +3,34 @@
 #include "Application.h"
 #include "Renderer2D.h"
 
+namespace AI {
+	class Agent;
+}
+
+namespace PF {
+	class Node;
+	class Edge;
+	class Graph;
+}
+
 class KunoApp : public aie::Application {
 public:
 
 	KunoApp();
 	virtual ~KunoApp();
 
-	virtual bool startup();
-	virtual void shutdown();
+	bool startup() override;
+	void shutdown() override;
 
-	virtual void update(float deltaTime);
-	virtual void draw();
+	bool setupAI();
+
+	void update(float deltaTime) override;
+	void draw() override;
 
 protected:
 
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
+
+	
 };

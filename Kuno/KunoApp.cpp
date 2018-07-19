@@ -19,6 +19,12 @@ bool KunoApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
+	//Setup player
+
+	//Setup AI agents
+	if (setupAI() != false)
+		return false;
+
 	return true;
 }
 
@@ -28,10 +34,21 @@ void KunoApp::shutdown() {
 	delete m_2dRenderer;
 }
 
+bool KunoApp::setupAI()
+{
+
+	return true;
+}
+
 void KunoApp::update(float deltaTime) {
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();
+
+
+
+
+
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))

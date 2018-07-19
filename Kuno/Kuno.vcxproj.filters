@@ -9,9 +9,14 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="AI">
+      <UniqueIdentifier>{802d3f41-23d1-468d-a7f2-0b9494d39091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PF">
+      <UniqueIdentifier>{b87febe3-3bf2-4fc2-a35d-4004871dbe5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Iso">
+      <UniqueIdentifier>{498638f9-f12f-42d5-876d-69c8a929db66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,14 +26,14 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Iso.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Iso</Filter>
     </ClCompile>
     <ClCompile Include="PF.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PF</Filter>
+    </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,14 +43,14 @@
     <ClInclude Include="GameDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Iso.h">
-      <Filter>Header Files</Filter>
+      <Filter>Iso</Filter>
     </ClInclude>
     <ClInclude Include="PF.h">
-      <Filter>Header Files</Filter>
+      <Filter>PF</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

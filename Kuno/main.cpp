@@ -16,20 +16,20 @@ int main() {
 
 
 
-//Behaviour tree
-
-if (GuardBehaviour)
-{
-	//Idle
-	if (Idle)
-	{
-		wait 30 - 60 seconds;
-		move to patrol
-	}
-	//Patrol
-	if (Patrol)
-
-
-	//
-
-}
+////Behaviour tree
+//
+//if (GuardBehaviour)
+//{
+//	//Idle
+//	if (Idle)
+//	{
+//		wait 30 - 60 seconds;
+//		move to patrol
+//	}
+//	//Patrol
+//	if (Patrol)
+//
+//
+//	//
+//
+//}

@@ -66,12 +66,36 @@ namespace AI {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+
 	//Decorators
-	class Decorator : public iBehaviour
+	class iDecorator : public iBehaviour
+	{
+	protected:
+		iBehaviour * m_child;
+	public:
+		iDecorator() {}
+		~iDecorator() {}
+		virtual eResult execute(Agent* agent, float deltaTime) = 0;
+		void	setChild(iBehaviour * behaviour) { m_child = behaviour; }
+	};
+	class NotDecorator : public iDecorator
+		//Inverts SUCCESS or FAILURE
 	{
 	public:
-		Decorator() {}
-		~Decorator() override {}
+		NotDecorator() {}
+		~NotDecorator() override { delete m_child; }
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
+	class TimeoutDecorator : public iDecorator
+		//Executes child behaviour until timeout
+	{
+	private:
+		float m_timeout;		//Countdown time
+		float m_duration;		//Original duration
+	public:
+		TimeoutDecorator(float timeout, float duration) : m_timeout(timeout), m_duration(duration) {}
+		~TimeoutDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 

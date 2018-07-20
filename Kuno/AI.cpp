@@ -25,6 +25,34 @@ namespace AI {
 		return eResult::SUCCESS;
 	}
 
+	//Decorators
+	eResult NotDecorator::execute(Agent * agent, float deltaTime)
+	{
+		//Get result of child...
+		eResult result = m_child->execute(agent, deltaTime);
+
+		//Invert
+		switch (result) {
+		case eResult::SUCCESS:
+			return FAILURE; break;
+		case eResult::FAILURE:
+			return SUCCESS; break;
+		default:	//Else return whatever result is
+			return result;
+		}
+	}
+
+	eResult TimeoutDecorator::execute(Agent * agent, float deltaTime)
+	{
+		m_timeout -= deltaTime;
+		if (m_timeout > 0)
+			return eResult::FAILURE;
+		m_timeout = m_duration;
+		//Returns result of child unless it times out
+		return m_child->execute(agent, deltaTime);
+	}
+
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//Agent
 	Agent::Agent(const Agent & other) :

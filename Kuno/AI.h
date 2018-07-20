@@ -115,39 +115,54 @@ namespace AI {
 		void						draw(aie::Renderer2D* renderer);
 	};
 
+
 	///////////////////////////////////////////////////
-	//// Leaf nodes - Where all the action takes place!
+	//// Leafs - Where all the action takes place! ////
 	///////////////////////////////////////////////////
-	//Conditions
-	class tEnemiesCloseCondition : public iBehaviour
-	{
-	private:
-		std::vector<Agent*> m_enemies;
-		float		m_range;
+	////Composites
+	//class tAttackSequence : public Sequence
+	//{
+	//private:
+	//	std::vector<Agent*>	m_enemiesInRange;
+	//public:
+	//	tAttackSequence() { m_enemiesInRange.clear(); }
+	//	~tAttackSequence() {}
+	//	
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
 
-		Agent*		m_enemyFoundInRange;		//How do you relay this information to AttackAction?
-	public:
-		//This class will need to take in a list of enemy agents
-		tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range) :
-			m_enemies(listOfEnemies), m_range(range) {}
 
-		//void setEnemyList(std::vector<Agent*> listOfEnemies);
-		//std::vector<Agent*> getEnemyList() const;
-		eResult execute(Agent* agent, float deltaTime) override;
-	};
+	//////Conditions
+	//class tEnemiesCloseCondition : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemies;
+	//	float		m_range;
 
-	//Actions
-	class tAttackAction : public iBehaviour
-	{
-	private:
-		std::vector<Agent*> m_enemiesInRange;
-		Agent*		m_enemyInRange;
-		int			m_damageToApply;
-		float		m_range;
+	//	std::vector<Agent*>	m_enemyFoundInRange;		//How do you relay this information to AttackAction?
+	//public:
+	//	//This class will need to take in a list of enemy agents
+	//	tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range);
 
-	public:
-		eResult execute(Agent* agent, float deltaTime) override;
-	};
+	//	//void setEnemyList(std::vector<Agent*> listOfEnemies);
+	//	//std::vector<Agent*> getEnemyList() const;
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+
+
+	//////Actions
+	//class tAttackAction : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemiesInRange;
+	//	Agent*		m_enemyInRange;
+	//	int			m_damageToApply;
+	//	float		m_range;
+
+	//public:
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+
 
 	//Standard
 	class BasicController : public iBehaviour

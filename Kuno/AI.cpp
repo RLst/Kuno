@@ -79,8 +79,54 @@ namespace AI {
 		renderer->setRenderColour(m_colour.r, m_colour.g, m_colour.b);
 		renderer->drawCircle(m_pos.x, m_pos.y, m_size);
 	}
+	////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	//TEST leafs
+	//eResult tAttackSequence::execute(Agent * agent, float deltaTime)
+	//{
+	//	//If condition node returns success then get the list of enemies found in range
+	//	
+	//	//////////////////////
+	//	//GIVE UP!!!
+	//	//////////////////////
 
-	eResult tEnemiesCloseCondition::execute(Agent * agent, float deltaTime)
+	//	return eResult::SUCCESS;
+	//}
+	//tEnemiesCloseCondition::tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range) :
+	//	m_enemies(listOfEnemies), m_range(range) {}
+	//eResult tEnemiesCloseCondition::execute(Agent * agent, float deltaTime)
+	//{
+	//	m_enemyFoundInRange.clear();		//Clear found enemies
+	//	bool successfullyFoundEnemiesInRange = false;		//Clear found flag 
+
+	//	//Return success if an enemy is within range
+	//	for (auto enemy : m_enemies) {
+	//		if (pkr::Vector2::distance(agent->getPos(), enemy->getPos()) < m_range) {
+	//			//Retrieve the enemy that is in range
+	//			m_enemyFoundInRange.push_back(enemy);
+	//			successfullyFoundEnemiesInRange = true;
+	//		}
+	//	}
+
+	//	//Return success if found
+	//	if (successfullyFoundEnemiesInRange)
+	//			return eResult::SUCCESS;
+	//	else 
+	//		return eResult::FAILURE;
+	//}
+
+	//eResult tAttackAction::execute(Agent * agent, float deltaTime)
+	//{
+	//	//For each enemy within range of agent
+	//	for (auto enemy : m_enemiesInRange) {
+
+	//		//Deal damage to enemy
+	//		//enemy.health -= m_damageToApply;
+	//	}
+	//	return eResult::SUCCESS;
+	//}
+	//////////////////////////////////////////////////////////////////////////////////////////
+
 	eResult BasicController::execute(Agent * agent, float deltaTime)
 	{
 		//Mouse controls

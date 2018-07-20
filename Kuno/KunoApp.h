@@ -2,9 +2,10 @@
 
 #include "Application.h"
 #include "Renderer2D.h"
+#include <vector>
 //#include "AI.h"
 //#include "PF.h"
-
+	
 namespace AI {
 	class Agent;
 }

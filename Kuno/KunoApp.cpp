@@ -51,31 +51,50 @@ bool KunoApp::setupPF()
 	//Just setup a raw graph
 	m_map = new PF::Graph();
 
-	int maxCols = 15;
-	int maxRows = 15;
+	pkr::Vector2 offset = { 60, 60 };
+	int maxCols = 30;
+	int maxRows = 16;
 	float nodeWidth = 40;
 	float nodeHeight = 40;
 
 	//Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
-	for (int col = 0; col < maxCols; ++col) {
-		for (int row = 0; row < maxRows; ++row) {
+	for (int row = 0; row < maxRows; ++row) {
+		for (int col = 0; col < maxCols; ++col) {
 			//Add a node and position appropriately
-			m_map->addNode(pkr::Vector2(col * nodeWidth, row * nodeHeight));
+			m_map->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
+
+			//float x = offset.x + col * nodeWidth;
+			//float y = offset.y + row * nodeHeight;
+			//pkr::Vector2 workingPos = { x, y };
+			//m_map->addNode(pkr::Vector2(x, y));
 		}
 	}
+	
+	//Connect up adjacent neighbouring nodes
+	for (auto nodeA : m_map->getNodes()) 
+	{
+		for (auto nodeB : m_map->getNodes())
+		{
+			//Skip if they're both the same node
+			if (nodeA == nodeB)
+				continue;
 
+			//Find the distance between the node
+			// distance btw node and nodeB
+			float distance = pkr::Vector2::distance(nodeA->pos, nodeB->pos);
 
-	////Connect up adjacent neighbouring nodes
-	//for (auto m_map.)
-	////Left edge
-	//if (col > 0)
-	//	m_map->addConnection()
+			// magnitude of the distance 
+			//if (pkr::Vector2::magnitude)
 
-	//	//Top edge
+			//If they're below a certain range then connect the nodes
+			// check if the length < 50
+			if (distance < 60) {
+				// add connection
+				m_map->addConnection(nodeA, nodeB);
+			}
 
-	//	//Right edge
-
-	//	//Bottom edge
+		}
+	}
 
 	return true;
 }

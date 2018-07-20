@@ -39,6 +39,7 @@ std::list<Node*>& Graph::findNodes(pkr::Vector2 position, float searchRadius)
 
 NodeList Graph::AStarSearch(Node * startNode, Node * endNode)
 {
+	//Set all parents nodes to
 
 
 

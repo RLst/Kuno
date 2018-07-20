@@ -65,6 +65,7 @@ namespace PF {
 		void	removeNode(Node* node) { m_nodes.remove(node); }
 
 		void	addConnection(Node* nodeFrom, Node* nodeTo, float cost = 1.0f);
+		Node*	findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that matches position
 
 		void	draw(aie::Renderer2D* renderer);
 

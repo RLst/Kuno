@@ -17,6 +17,15 @@ void PF::Graph::addConnection(Node * nodeFrom, Node * nodeTo, float cost)
 	//nodeFrom->connections.push_back(edge);			//Connect edge to RECEIVING node
 }
 
+Node * Graph::findNode(pkr::Vector2 position, float searchRadius)
+{
+	for (auto node : m_nodes) {
+		//Return node that is within range of search position
+		if (pkr::Vector2::distance(node->pos, position) < searchRadius)
+			return node;
+	}
+}
+
 void PF::Graph::draw(aie::Renderer2D * renderer)
 {
 	for (auto node : m_nodes) {

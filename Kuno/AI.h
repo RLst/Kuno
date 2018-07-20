@@ -42,23 +42,23 @@ namespace AI {
 
 
 	//Composites
-	class Composite : public iBehaviour
+	class aComposite : public iBehaviour
 	{
 	protected:
 		std::list<iBehaviour*>		m_childBehaviours;
 	public:
-		~Composite() override;
+		~aComposite() override;
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 		void addChild(iBehaviour* behaviour);
 	};
 
-	class Selector : public Composite
+	class Selector : public aComposite
 	{
 	public:
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class Sequence : public Composite
+	class Sequence : public aComposite
 	{
 	public:
 		eResult execute(Agent* agent, float deltaTime) override;
@@ -67,24 +67,24 @@ namespace AI {
 
 
 	//Decorators
-	class iDecorator : public iBehaviour
+	class aDecorator : public iBehaviour
 	{
 	protected:
 		iBehaviour * m_child;
 	public:
-		~iDecorator() override { delete m_child; }
+		~aDecorator() override { delete m_child; }
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 		void	setChild(iBehaviour * behaviour) { m_child = behaviour; }
 	};
 
-	class NotDecorator : public iDecorator
+	class NotDecorator : public aDecorator
 		//Inverts SUCCESS or FAILURE
 	{
 	public:
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class TimeoutDecorator : public iDecorator
+	class TimeoutDecorator : public aDecorator
 		//Executes child behaviour until timeout
 	{
 	private:

@@ -9,20 +9,21 @@ namespace PF {
 
 enum eTileType
 {
-	WALKABLE,
+	INACCESSIBLE = 0,
+	ACCESSIBLE,
 	CLIMBABLE,
-	TILETYPE_COUNT		//The total number of type tiles
+	TILETYPE_COUNT		//The total number of tile types
 };
 
 class Tile : public Node
 {
 protected:
-	//Texture specs
+	//Texture properties
 	aie::Texture*	m_texture;
 	pkr::Vector2	m_offset;
 	pkr::Vector2	m_pos;
 
-	//General tile info
+	//General properties
 	eTileType		m_type;
 
 	//Draw
@@ -31,7 +32,7 @@ public:
 	int				X, Y;
 
 	Tile() = default;
-	Tile(int X_index, int Y_index, pkr::Vector2 position);
+	Tile(int xIndex, int yIndex, pkr::Vector2 pos);
 	~Tile();
 
 	//Cores

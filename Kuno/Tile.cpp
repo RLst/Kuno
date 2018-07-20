@@ -2,11 +2,11 @@
 
 namespace PF {
 
-PF::Tile::Tile(int X_index, int Y_index, pkr::Vector2 position) :
-	X(X_index),
-	Y(Y_index)
+PF::Tile::Tile(int xIndex, int yIndex, pkr::Vector2 pos) :
+	X(xIndex),
+	Y(yIndex)
 {
-	(*this).pos = position;
+	(*this).pos = pos;		//Node::pos
 }
 
 PF::Tile::~Tile()

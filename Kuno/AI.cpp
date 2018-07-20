@@ -85,6 +85,7 @@ namespace AI {
 			delete behaviour;			//Do the behaviours have to be deleted?
 			behaviour = nullptr;
 		}
+		if (m_texture != nullptr) delete m_texture;
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)
@@ -201,6 +202,8 @@ namespace AI {
 		
 		return eResult::SUCCESS;
 	}
+
+
 
 
 

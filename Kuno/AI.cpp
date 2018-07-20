@@ -70,63 +70,49 @@ namespace AI {
 	}
 
 	eResult tEnemiesCloseCondition::execute(Agent * agent, float deltaTime)
+	eResult BasicController::execute(Agent * agent, float deltaTime)
 	{
-		//Return success if an enemy is within range
-		for (auto enemy : m_enemies) {
-			if (pkr::Vector2::distance(agent->getPos(), enemy->getPos()) < m_range) {
-				//Retrieve the enemy that is in range
-				m_enemyFoundInRange = enemy;
-				return eResult::SUCCESS;
-			}
-		}
-		return eResult::FAILURE;
-	}
-
-	eResult tAttackAction::execute(Agent * agent, float deltaTime)
-	{
-		//For each enemy within range of agent
-		for (auto enemy : m_enemiesInRange) {
-
-			//Deal damage to enemy
-
-
-			if ()
-		}
-
-		return eResult::SUCCESS;
-	}
-
-
-	eResult BasicKeyboardController::execute(Agent * agent, float deltaTime)
-	{
-		//Control this agent
+		//Mouse controls
 		//int mouseX = input->getMouseX();
 		//int mouseY = input->getMouseY();
 
-		if (m_input->isKeyDown(aie::INPUT_KEY_W))
+		//Keyboard controls
+		if (m_input->isKeyDown(aie::INPUT_KEY_W || aie::INPUT_KEY_UP))
 		{
-			agent->addForce(pkr::Vector2(0.0f, 100.0f));
+			agent->addForce(pkr::Vector2(0.0f, m_maxForce));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_S))
 		{
-			agent->addForce(pkr::Vector2(0.0f, -100.0f));
+			agent->addForce(pkr::Vector2(0.0f, -m_maxForce));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_A))
 		{
-			agent->addForce(pkr::Vector2(-100.0f, 0.0f));
+			agent->addForce(pkr::Vector2(-m_maxForce, 0.0f));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_D))
 		{
-			agent->addForce(pkr::Vector2(100.0f, 0.0f));
+			agent->addForce(pkr::Vector2(m_maxForce, 0.0f));
 		}
 		//agent->rotation = -mouseX * deltaTime;
 
 		return eResult::SUCCESS;
 	}
 
+	SeekAction::SeekAction(Agent * target, float maxSpeed) :
+		m_target(target), m_maxForce(maxSpeed) {}
+
 	eResult SeekAction::execute(Agent * agent, float deltaTime)
+		//Seek vector = Target position - Agent position
 	{
-		return eResult();
+		//Find the normalised seek vector towards target
+		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
+
+		//Apply max force towards target
+		agent->addForce(nrmSeekVector * m_maxForce);
+		
+		return eResult::SUCCESS;
 	}
+
+
 
 }

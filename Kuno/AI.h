@@ -143,24 +143,27 @@ namespace AI {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class BasicKeyboardController : public iBehaviour
+	//Standard
+	class BasicController : public iBehaviour
 	{
 	private:
 		aie::Input* m_input;
+		float m_maxForce;
 	public:
-		BasicKeyboardController(aie::Input * input = aie::Input::getInstance()) : m_input(input) {}
+		BasicController(aie::Input * input = aie::Input::getInstance(), float maxSpeed = 200.0f) : 
+			m_input(input), m_maxForce(maxSpeed) {}
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
+
 
 	class SeekAction : public iBehaviour 
 		//This needs to take in the target agent
 	{
 	private:
 		Agent *		m_target;
-		float		m_maxSpeed;
+		float		m_maxForce;
 	public:
-		SeekAction(Agent* target, float maxSpeed = 200.0f) :	//Comprehensive
-			m_target(target), m_maxSpeed(maxSpeed) {}
+		SeekAction(Agent* target, float maxSpeed = 200.0f);		//Comprehensive
 		~SeekAction() { delete m_target; }						//Destructor
 		eResult execute(Agent* agent, float deltaTime) override;
 	};

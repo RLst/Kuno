@@ -13,7 +13,7 @@ namespace PF {
 	struct Edge
 	{
 		Node*	connectTo;
-		float	cost;
+		float	cost;			//The traversal cost to move through this edge
 
 		Edge() : connectTo(nullptr), cost(0) {}		//Default
 

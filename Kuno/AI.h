@@ -30,42 +30,40 @@ namespace AI {
 	};
 
 
+
 	class iBehaviour
 	{
 	public:
 		iBehaviour() {}
-		virtual ~iBehaviour() {}	//CHECK how these are supposed to be setup
+		virtual ~iBehaviour() {}
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 	};
 
 
+
 	//Composites
-	class iComposite : public iBehaviour
+	class Composite : public iBehaviour
 	{
 	protected:
 		std::list<iBehaviour*>		m_childBehaviours;
 	public:
-		iComposite() {}
-		~iComposite() override;
+		~Composite() override;
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 		void addChild(iBehaviour* behaviour);
 	};
 
-	class Selector : public iComposite
+	class Selector : public Composite
 	{
 	public:
-		Selector() {}
-		~Selector() override {}
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class Sequence : public iComposite
+	class Sequence : public Composite
 	{
 	public:
-		Sequence() {}
-		~Sequence() override {}
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
+
 
 
 	//Decorators
@@ -74,17 +72,15 @@ namespace AI {
 	protected:
 		iBehaviour * m_child;
 	public:
-		iDecorator() {}
-		~iDecorator() {}
+		~iDecorator() override { delete m_child; }
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 		void	setChild(iBehaviour * behaviour) { m_child = behaviour; }
 	};
+
 	class NotDecorator : public iDecorator
 		//Inverts SUCCESS or FAILURE
 	{
 	public:
-		NotDecorator() {}
-		~NotDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
@@ -99,6 +95,7 @@ namespace AI {
 		~TimeoutDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
+
 
 
 	////Agents
@@ -123,9 +120,12 @@ namespace AI {
 
 	public:
 		Agent(const Agent &other);		//Copy
+		
 		Agent(float maxForce = 200.0f, const pkr::Vector2 &startingPos = pkr::Vector2(300,300));	//Standard
-		Agent(float size, const pkr::Vector3 &colour = pkr::Vector3(1, 1, 1), const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));	//Circle agent constructor
-		Agent(aie::Texture* texture, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));		//Texture agent
+
+		Agent(float circleSize, const pkr::Vector3 &colour = pkr::Vector3(1, 1, 1), const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));	//Circle agent constructor
+		
+		Agent(aie::Texture* agentTexture, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));		//Texture agent
 		virtual ~Agent();	//Destructor 
 
 		//Add
@@ -144,51 +144,10 @@ namespace AI {
 	///////////////////////////////////////////////////
 	//// Leafs - Where all the action takes place! ////
 	///////////////////////////////////////////////////
-	////Composites
-	//class tAttackSequence : public Sequence
-	//{
-	//private:
-	//	std::vector<Agent*>	m_enemiesInRange;
-	//public:
-	//	tAttackSequence() { m_enemiesInRange.clear(); }
-	//	~tAttackSequence() {}
-	//	
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
+	////Conditions
 
 
-	//////Conditions
-	//class tEnemiesCloseCondition : public iBehaviour
-	//{
-	//private:
-	//	std::vector<Agent*> m_enemies;
-	//	float		m_range;
-
-	//	std::vector<Agent*>	m_enemyFoundInRange;		//How do you relay this information to AttackAction?
-	//public:
-	//	//This class will need to take in a list of enemy agents
-	//	tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range);
-
-	//	//void setEnemyList(std::vector<Agent*> listOfEnemies);
-	//	//std::vector<Agent*> getEnemyList() const;
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
-
-
-	//////Actions
-	//class tAttackAction : public iBehaviour
-	//{
-	//private:
-	//	std::vector<Agent*> m_enemiesInRange;
-	//	Agent*		m_enemyInRange;
-	//	int			m_damageToApply;
-	//	float		m_range;
-
-	//public:
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
-
-
+	////Actions
 	//Standard
 	class BasicController : public iBehaviour
 	{
@@ -200,7 +159,6 @@ namespace AI {
 			m_input(input), m_maxForce(maxSpeed) {}
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
-
 
 	class SeekAction : public iBehaviour 
 		//This needs to take in the target agent
@@ -214,5 +172,40 @@ namespace AI {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+
+	////Composites
+	//class tAttackSequence : public Sequence
+	//{
+	//private:
+	//	std::vector<Agent*>	m_enemiesInRange;
+	//public:
+	//	tAttackSequence() { m_enemiesInRange.clear(); }
+	//	~tAttackSequence() {}
+	//	
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+	//class tEnemiesCloseCondition : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemies;
+	//	float		m_range;
+	//	std::vector<Agent*>	m_enemyFoundInRange;		//How do you relay this information to AttackAction?
+	//public:
+	//	//This class will need to take in a list of enemy agents
+	//	tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range);
+	//	//void setEnemyList(std::vector<Agent*> listOfEnemies);
+	//	//std::vector<Agent*> getEnemyList() const;
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+	//class tAttackAction : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemiesInRange;
+	//	Agent*		m_enemyInRange;
+	//	int			m_damageToApply;
+	//	float		m_range;
+	//public:
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
 }
 

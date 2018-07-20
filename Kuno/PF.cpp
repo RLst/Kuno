@@ -26,6 +26,17 @@ Node * Graph::findNode(pkr::Vector2 position, float searchRadius)
 	}
 }
 
+std::list<Node*>& Graph::findNodes(pkr::Vector2 position, float searchRadius)
+{
+	NodeList foundNodes;
+	for (auto node : m_nodes) {
+		//Push within range nodes onto list
+		if (pkr::Vector2::distance(node->pos, position) < searchRadius)
+			foundNodes.push_back(node);
+	}
+	return foundNodes;
+}
+
 void PF::Graph::draw(aie::Renderer2D * renderer)
 {
 	for (auto node : m_nodes) {

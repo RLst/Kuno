@@ -70,6 +70,8 @@ namespace PF {
 		void	draw(aie::Renderer2D* renderer);
 
 		std::list<Node*>	AStarSearch(Node* startNode, Node* endNode);		//Returns A* path
+		Node*	findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that is at position or within range
+		NodeList& findNodes(pkr::Vector2 position, float searchRadius = 0.0f);	//Return a list of nodes that are within a certain search radius
 
 		std::list<Node*>	DjikstraSearch(Node* startNode, Node* endNode);		//Returns djikstra path
 

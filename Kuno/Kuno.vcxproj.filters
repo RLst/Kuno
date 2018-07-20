@@ -42,7 +42,7 @@
       <Filter>PF\src</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PF\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +65,7 @@
       <Filter>PF</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
+      <Filter>PF</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

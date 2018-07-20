@@ -68,10 +68,10 @@ namespace PF {
 		//Remove the given node
 		void	removeNode(Node* node) { m_nodes.remove(node); }
 		void	addConnection(Node* nodeFrom, Node* nodeTo, float cost = 1.0f);
-		std::list<Node*>	AStarSearch(Node* startNode, Node* endNode);		//Returns A* path
 		Node*	findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that is at position or within range
 		NodeList& findNodes(pkr::Vector2 position, float searchRadius = 0.0f);	//Return a list of nodes that are within a certain search radius
 
+		NodeList	AStarSearch(Node* startNode, Node* endNode);		//Returns A* path
 		NodeList	DjikstraSearch(Node* startNode, Node* endNode);		//Returns djikstra path
 
 		//Cores

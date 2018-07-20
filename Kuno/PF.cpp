@@ -37,6 +37,14 @@ std::list<Node*>& Graph::findNodes(pkr::Vector2 position, float searchRadius)
 	return foundNodes;
 }
 
+NodeList Graph::AStarSearch(Node * startNode, Node * endNode)
+{
+
+
+
+	return NodeList();
+}
+
 void PF::Graph::draw(aie::Renderer2D * renderer)
 {
 	//Draw edges on the bottom

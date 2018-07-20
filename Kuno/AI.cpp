@@ -4,7 +4,19 @@
 #include <Renderer2D.h>
 
 namespace AI {
-
+	//Composites
+	iComposite::~iComposite()
+	{
+		//Delete all children
+		for (auto &child : m_childBehaviours) {
+			delete child;
+			child = nullptr;
+		}
+	}
+	void iComposite::addChild(iBehaviour * behaviour)
+	{
+		m_childBehaviours.push_back(behaviour);
+	}
 	eResult Selector::execute(Agent * agent, float deltaTime)
 	{
 		//OR node; Returns SUCCESS if any child returns SUCCESS

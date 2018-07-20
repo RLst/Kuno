@@ -46,8 +46,9 @@ namespace AI {
 		std::list<iBehaviour*>		m_childBehaviours;
 	public:
 		iComposite() {}
-		virtual ~iComposite() {}
+		~iComposite() override;
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
+		void addChild(iBehaviour* behaviour);
 	};
 
 	class Selector : public iComposite

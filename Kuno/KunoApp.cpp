@@ -62,11 +62,6 @@ bool KunoApp::setupPF()
 		for (int col = 0; col < maxCols; ++col) {
 			//Add a node and position appropriately
 			m_map->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
-
-			//float x = offset.x + col * nodeWidth;
-			//float y = offset.y + row * nodeHeight;
-			//pkr::Vector2 workingPos = { x, y };
-			//m_map->addNode(pkr::Vector2(x, y));
 		}
 	}
 	
@@ -80,17 +75,12 @@ bool KunoApp::setupPF()
 				continue;
 
 			//Find the distance between the node
-			// distance btw node and nodeB
 			float distance = pkr::Vector2::distance(nodeA->pos, nodeB->pos);
 
-			// magnitude of the distance 
-			//if (pkr::Vector2::magnitude)
-
 			//If they're below a certain range then connect the nodes
-			// check if the length < 50
 			if (distance < 60) {
-				// add connection
 				m_map->addConnection(nodeA, nodeB);
+				//This should also connect it both ways
 			}
 
 		}

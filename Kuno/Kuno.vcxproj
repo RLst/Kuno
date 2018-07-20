@@ -166,14 +166,18 @@
     <ClCompile Include="Iso.cpp" />
     <ClCompile Include="KunoApp.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="PF.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="GameDefines.h" />
     <ClInclude Include="Iso.h" />
     <ClInclude Include="KunoApp.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="PF.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

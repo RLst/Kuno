@@ -18,6 +18,9 @@
     <Filter Include="Iso">
       <UniqueIdentifier>{498638f9-f12f-42d5-876d-69c8a929db66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PF\src">
+      <UniqueIdentifier>{43194d5c-da78-48fa-9195-b81706571a46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KunoApp.cpp">
@@ -29,11 +32,17 @@
     <ClCompile Include="Iso.cpp">
       <Filter>Iso</Filter>
     </ClCompile>
-    <ClCompile Include="PF.cpp">
-      <Filter>PF</Filter>
-    </ClCompile>
     <ClCompile Include="AI.cpp">
       <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>PF\src</Filter>
+    </ClCompile>
+    <ClCompile Include="PF.cpp">
+      <Filter>PF\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +60,12 @@
     </ClInclude>
     <ClInclude Include="AI.h">
       <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>PF</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

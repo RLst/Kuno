@@ -39,17 +39,19 @@ std::list<Node*>& Graph::findNodes(pkr::Vector2 position, float searchRadius)
 
 void PF::Graph::draw(aie::Renderer2D * renderer)
 {
+	//Draw edges on the bottom
 	for (auto node : m_nodes) {
-		//Draw the edges first (below)
 		for (auto it : node->connections)
 		{
 			Edge* edge = it;
 			renderer->setRenderColour(1, 1, 1);
 			renderer->drawLine(node->pos.x, node->pos.y, edge->connectTo->pos.x, edge->connectTo->pos.y);
 		}
+	}
 
-		//Draw the nodes after (top)
-		renderer->setRenderColour(1, 0.3, 0);		//Required?
+	//Draw nodes on top
+	for (auto node : m_nodes) {
+		renderer->setRenderColour(1, 0.3f, 0);		//Required?
 		//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
 		renderer->drawCircle(node->pos.x, node->pos.y, 5);
 	}

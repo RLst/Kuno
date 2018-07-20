@@ -44,11 +44,12 @@ namespace PF {
 		}
 	};
 
+	typedef std::list<Node*> NodeList;
+
 	class Graph
 	{
 	protected:
-		std::list<Node*>	m_nodes;		//***The graph's container of nodes; should I use list or vectors?
-		aie::Texture*		m_texture;
+		NodeList	m_nodes;		//***The graph's container of nodes; should I use list or vectors?
 
 	public:
 		Graph() {};
@@ -59,26 +60,23 @@ namespace PF {
 			}
 		}
 
+		//Accessors
+		NodeList& getNodes() { return m_nodes; }
+
 		Node*	addNode(pkr::Vector2 pos);
 
 		//Remove the given node
 		void	removeNode(Node* node) { m_nodes.remove(node); }
-
 		void	addConnection(Node* nodeFrom, Node* nodeTo, float cost = 1.0f);
-		Node*	findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that matches position
-
-		void	draw(aie::Renderer2D* renderer);
-
 		std::list<Node*>	AStarSearch(Node* startNode, Node* endNode);		//Returns A* path
 		Node*	findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that is at position or within range
 		NodeList& findNodes(pkr::Vector2 position, float searchRadius = 0.0f);	//Return a list of nodes that are within a certain search radius
 
-		std::list<Node*>	DjikstraSearch(Node* startNode, Node* endNode);		//Returns djikstra path
+		NodeList	DjikstraSearch(Node* startNode, Node* endNode);		//Returns djikstra path
 
-		void	findNodes(std::list<Node*> &list, pkr::Vector2 position, float distance);	//do I need this?
-		void	update(float deltaTime);		//Don't think this is needed
-		//void	findPathDijkstra(Node* nodeStart, const std::list<Node*> &endNodes, std::list<Node*> &outPath);
-
+		//Cores
+		void	draw(aie::Renderer2D* renderer);
+		//void	findNodes(std::list<Node*> &list, pkr::Vector2 position, float distance);	//do I need this?
 	};
 }
 

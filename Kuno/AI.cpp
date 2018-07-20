@@ -57,19 +57,23 @@ namespace AI {
 	//Agent
 	Agent::Agent(const Agent & other) :
 		m_behaviours(other.m_behaviours),
+		m_maxForce(other.m_maxForce),
+		m_force(other.m_force),
+		m_accel(other.m_accel),
+		m_vel(other.m_vel),
 		m_pos(other.m_pos),
 		m_size(other.m_size),
-		m_colour(other.m_colour)
-	{}
+		m_colour(other.m_colour),
+		m_texture(other.m_texture)	{}
 
-	Agent::Agent(const pkr::Vector2 & startingPos, float maxForce) : 
-		m_pos(startingPos),
-		m_maxForce(maxForce) {}
+	Agent::Agent( float maxForce, const pkr::Vector2 & startingPos) :
+		m_maxForce(maxForce),
+		m_pos(startingPos) {}
 
-	Agent::Agent(float size, const pkr::Vector2 & startingPos, const pkr::Vector3 & colour) :
+	Agent::Agent(float size, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
 		m_size(size),
-		m_pos(startingPos),
-		m_colour(colour) {}
+		m_colour(colour),
+		m_pos(startingPos) {}
 
 	Agent::Agent(aie::Texture * texture, const pkr::Vector2 & startingPos) :
 		m_texture(texture),

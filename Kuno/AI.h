@@ -122,8 +122,8 @@ namespace AI {
 
 	public:
 		Agent(const Agent &other);		//Copy
-		Agent(const pkr::Vector2 &startingPos = pkr::Vector2(300,300), float maxForce = 200.0f);	//Standard
-		Agent(float size, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300), const pkr::Vector3 &colour = pkr::Vector3(1,1,1));	//Circle agent constructor
+		Agent(float maxForce = 200.0f, const pkr::Vector2 &startingPos = pkr::Vector2(300,300));	//Standard
+		Agent(float size, const pkr::Vector3 &colour = pkr::Vector3(1, 1, 1), const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));	//Circle agent constructor
 		Agent(aie::Texture* texture, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));		//Texture agent
 		virtual ~Agent();	//Destructor 
 

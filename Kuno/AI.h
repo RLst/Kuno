@@ -16,6 +16,7 @@ namespace aie {
 	//class Input;
 }
 
+
 //AI methods and implementations ie. Behaviour tree
 namespace AI {
 
@@ -28,13 +29,15 @@ namespace AI {
 		RUNNING,
 	};
 
-	class iBehaviour 
+
+	class iBehaviour
 	{
 	public:
 		iBehaviour() {}
 		virtual ~iBehaviour() {}	//CHECK how these are supposed to be setup
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 	};
+
 
 	//Composites
 	class iComposite : public iBehaviour
@@ -72,41 +75,44 @@ namespace AI {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+
 	////Agents
-	class Agent 
+	class Agent
 	{
 	protected:
 		std::vector<iBehaviour*>	m_behaviours;
 
 		//Some basic transformation data
+		float						m_maxForce;
 		pkr::Vector2				m_force;
 		pkr::Vector2				m_accel;
 		pkr::Vector2				m_vel;
 		pkr::Vector2				m_pos;
-		float						m_size;
+
+		//Circle agent
+		float						m_size = 0;
 		pkr::Vector3				m_colour;
 
+		//Texture agent
+		aie::Texture*				m_texture = nullptr;
+
 	public:
-		Agent() {}
 		Agent(const Agent &other);		//Copy
-
-		Agent(	const pkr::Vector2 &pos,	//Agent drawn as circle
-				float size,
-				const pkr::Vector3 &colour = pkr::Vector3());
-
+		Agent(const pkr::Vector2 &startingPos = pkr::Vector2(300,300), float maxForce = 200.0f);	//Standard
+		Agent(float size, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300), const pkr::Vector3 &colour = pkr::Vector3(1,1,1));	//Circle agent constructor
+		Agent(aie::Texture* texture, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));		//Texture agent
 		virtual ~Agent();	//Destructor 
 
 		//Add
-		void		addBehaviour(iBehaviour* behaviour);
-
-		void		addForce(const pkr::Vector2 &force);
+		void						addBehaviour(iBehaviour* behaviour);
+		void						addForce(const pkr::Vector2 &force);
 
 		//State accessors
-		pkr::Vector2		getPos() const { return m_pos; }
+		pkr::Vector2				getPos() const { return m_pos; }
 
 		//Core
-		void		update(float deltaTime);
-		void		draw(aie::Renderer2D* renderer);
+		void						update(float deltaTime);
+		void						draw(aie::Renderer2D* renderer);
 	};
 
 	///////////////////////////////////////////////////

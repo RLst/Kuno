@@ -25,6 +25,8 @@ namespace AI {
 		return eResult::SUCCESS;
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//Agent
 	Agent::Agent(const Agent & other) :
 		m_behaviours(other.m_behaviours),
 		m_pos(other.m_pos),
@@ -32,9 +34,18 @@ namespace AI {
 		m_colour(other.m_colour)
 	{}
 
-	Agent::Agent(const pkr::Vector2 & pos, float size, const pkr::Vector3 & colour) :
-		m_pos(pos), m_size(size), m_colour(colour)
-	{}
+	Agent::Agent(const pkr::Vector2 & startingPos, float maxForce) : 
+		m_pos(startingPos),
+		m_maxForce(maxForce) {}
+
+	Agent::Agent(float size, const pkr::Vector2 & startingPos, const pkr::Vector3 & colour) :
+		m_size(size),
+		m_pos(startingPos),
+		m_colour(colour) {}
+
+	Agent::Agent(aie::Texture * texture, const pkr::Vector2 & startingPos) :
+		m_texture(texture),
+		m_pos(startingPos) {}
 
 	Agent::~Agent()
 	{

@@ -26,6 +26,8 @@ bool KunoApp::startup() {
 
 	////////////////////////////////////////////////////////////////////////
 	//Setup map
+	//Set sky to night
+	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
 	if (setupPF() == false) return false;
 
 	//Setup player

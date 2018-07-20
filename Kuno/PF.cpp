@@ -20,16 +20,17 @@ void PF::Graph::addConnection(Node * nodeFrom, Node * nodeTo, float cost)
 void PF::Graph::draw(aie::Renderer2D * renderer)
 {
 	for (auto node : m_nodes) {
+		//Draw the edges first (below)
 		for (auto it : node->connections)
 		{
-			//Draw the edges
 			Edge* edge = it;
 			renderer->setRenderColour(1, 1, 1);
 			renderer->drawLine(node->pos.x, node->pos.y, edge->connectTo->pos.x, edge->connectTo->pos.y);
 		}
-		//draw the nodes
+
+		//Draw the nodes after (top)
 		renderer->setRenderColour(1, 0, 0);		//Required?
-												//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
+		//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
 		renderer->drawCircle(node->pos.x, node->pos.y, 10);
 	}
 }

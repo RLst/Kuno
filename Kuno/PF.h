@@ -47,7 +47,7 @@ namespace PF {
 	class Graph
 	{
 	protected:
-		std::list<Node*>	m_nodes;		//The graph's container of nodes; should I use list or vectors?
+		std::list<Node*>	m_nodes;		//***The graph's container of nodes; should I use list or vectors?
 		aie::Texture*		m_texture;
 
 	public:

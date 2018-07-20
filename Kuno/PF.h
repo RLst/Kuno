@@ -75,6 +75,7 @@ namespace PF {
 		void	findNodes(std::list<Node*> &list, pkr::Vector2 position, float distance);	//do I need this?
 		void	update(float deltaTime);		//Don't think this is needed
 		//void	findPathDijkstra(Node* nodeStart, const std::list<Node*> &endNodes, std::list<Node*> &outPath);
+
 	};
 }
 

@@ -29,9 +29,9 @@ void PF::Graph::draw(aie::Renderer2D * renderer)
 		}
 
 		//Draw the nodes after (top)
-		renderer->setRenderColour(1, 0, 0);		//Required?
+		renderer->setRenderColour(1, 0.3, 0);		//Required?
 		//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
-		renderer->drawCircle(node->pos.x, node->pos.y, 10);
+		renderer->drawCircle(node->pos.x, node->pos.y, 5);
 	}
 }
 

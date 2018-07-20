@@ -5,7 +5,7 @@
 
 namespace AI {
 	//Composites
-	iComposite::~iComposite()
+	Composite::~Composite()
 	{
 		//Delete all children
 		for (auto &child : m_childBehaviours) {
@@ -13,7 +13,7 @@ namespace AI {
 			child = nullptr;
 		}
 	}
-	void iComposite::addChild(iBehaviour * behaviour)
+	void Composite::addChild(iBehaviour * behaviour)
 	{
 		m_childBehaviours.push_back(behaviour);
 	}

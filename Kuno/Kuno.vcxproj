@@ -168,6 +168,7 @@
     <ClCompile Include="KunoApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Path.cpp" />
     <ClCompile Include="PF.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
@@ -177,8 +178,17 @@
     <ClInclude Include="Iso.h" />
     <ClInclude Include="KunoApp.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
     <ClInclude Include="Tile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\bootstrap\Bootstrap.vcxproj">
+      <Project>{af59bb0b-e059-4773-83dc-728a949647da}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\pkrMathLib\PKRmathlib.vcxproj">
+      <Project>{f112ddca-72c5-4ff8-93ea-fa9d994c6a84}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

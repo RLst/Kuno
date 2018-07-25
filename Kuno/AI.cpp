@@ -64,6 +64,28 @@ namespace AI {
 		return m_child->execute(agent, deltaTime);
 	}
 
+	pkr::Vector2 Agent::pathFollowing()
+	{
+		//Clear target way point
+		auto targetPoint = pkr::Vector2();
+
+		//If there is an available path
+		if (!m_currentPath.empty()) {
+			//Get the way points
+			auto workingPath = m_currentPath;
+
+			targetPoint = workingPath[m_currentWaypointIndex];
+
+			//If agent has arrived at a waypoint
+			if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) {
+				++m_currentWaypointIndex;
+				if (m_currentWaypointIndex >= workingPath.size()) {
+					m_currentWaypointIndex = workingPath.size() - 1;
+				}
+			}
+		}
+		return pkr::Vector2();		//Return NULL
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//Agent
@@ -125,6 +147,50 @@ namespace AI {
 		renderer->drawCircle(m_pos.x, m_pos.y, m_size);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////
+
+	eResult BasicController::execute(Agent * agent, float deltaTime)
+	{
+		//Mouse controls
+		//int mouseX = input->getMouseX();
+		//int mouseY = input->getMouseY();
+
+		//Keyboard controls
+		if (m_input->isKeyDown(aie::INPUT_KEY_W || aie::INPUT_KEY_UP))
+		{
+			agent->addForce(pkr::Vector2(0.0f, m_maxForce));
+		}
+		if (m_input->isKeyDown(aie::INPUT_KEY_S))
+		{
+			agent->addForce(pkr::Vector2(0.0f, -m_maxForce));
+		}
+		if (m_input->isKeyDown(aie::INPUT_KEY_A))
+		{
+			agent->addForce(pkr::Vector2(-m_maxForce, 0.0f));
+		}
+		if (m_input->isKeyDown(aie::INPUT_KEY_D))
+		{
+			agent->addForce(pkr::Vector2(m_maxForce, 0.0f));
+		}
+		//agent->rotation = -mouseX * deltaTime;
+
+		return eResult::SUCCESS;
+	}
+
+	SeekAction::SeekAction(Agent * target, float maxSpeed) :
+		m_target(target), m_maxForce(maxSpeed) {}
+
+	eResult SeekAction::execute(Agent * agent, float deltaTime)
+	{	//Seek vector = Target position - Agent position
+		//Find the normalised seek vector towards target
+		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
+
+		//Apply max force towards target
+		agent->addForce(nrmSeekVector * m_maxForce);
+
+		return eResult::SUCCESS;
+	}
+
+
 	//////////////////////////////////////////////////////////////////////////////////////
 	//TEST leafs
 	//eResult tAttackSequence::execute(Agent * agent, float deltaTime)
@@ -172,51 +238,25 @@ namespace AI {
 	//}
 	//////////////////////////////////////////////////////////////////////////////////////////
 
-	eResult BasicController::execute(Agent * agent, float deltaTime)
+
+	PatrolAction::PatrolAction(Agent * pathObject)
 	{
-		//Mouse controls
-		//int mouseX = input->getMouseX();
-		//int mouseY = input->getMouseY();
-
-		//Keyboard controls
-		if (m_input->isKeyDown(aie::INPUT_KEY_W || aie::INPUT_KEY_UP))
-		{
-			agent->addForce(pkr::Vector2(0.0f, m_maxForce));
-		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_S))
-		{
-			agent->addForce(pkr::Vector2(0.0f, -m_maxForce));
-		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_A))
-		{
-			agent->addForce(pkr::Vector2(-m_maxForce, 0.0f));
-		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_D))
-		{
-			agent->addForce(pkr::Vector2(m_maxForce, 0.0f));
-		}
-		//agent->rotation = -mouseX * deltaTime;
-
-		return eResult::SUCCESS;
-	}
-
-	SeekAction::SeekAction(Agent * target, float maxSpeed) :
-		m_target(target), m_maxForce(maxSpeed) {}
-
-	eResult SeekAction::execute(Agent * agent, float deltaTime)
-		//Seek vector = Target position - Agent position
-	{
-		//Find the normalised seek vector towards target
-		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
-
-		//Apply max force towards target
-		agent->addForce(nrmSeekVector * m_maxForce);
+		SeekAction* pathFollower = new SeekAction(pathObject);
 		
-		return eResult::SUCCESS;
+
+
 	}
 
+	eResult PatrolAction::execute(Agent * agent, float deltaTime)
+	{
+		SeekAction* followPath = new SeekAction(agent, m_maxForce);
 
+		//Get a new point from path agent/object
+		
 
+		//Seek towards the new point
 
+		return eResult();
+	}
 
 }

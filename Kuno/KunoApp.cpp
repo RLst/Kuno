@@ -8,6 +8,8 @@
 #include "pkr\Vector2.h"
 #include "pkr\Vector3.h"
 
+#include "imgui.h"
+
 KunoApp::KunoApp() {
 
 }
@@ -75,7 +77,7 @@ bool KunoApp::setupPF()
 				continue;
 
 			//Find the distance between the node
-			float distance = pkr::Vector2::distance(nodeA->pos, nodeB->pos);
+			float distance = pkr::Vector2::distance(nodeA->pos_tmp, nodeB->pos_tmp);
 
 			//If they're below a certain range then connect the nodes
 			if (distance < 60) {
@@ -122,6 +124,21 @@ void KunoApp::update(float deltaTime) {
 	//Update the agents
 
 
+	//Update GUI
+
+	//Get control input
+
+	//Control camera edge scrolling
+	m_camera
+
+
+
+	ImGui::Begin("EdgeScrolling");
+	ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
+	ImGui::End();
+	
+
+
 	////////////////////////////////////////////////
 
 	// exit the application
@@ -143,6 +160,7 @@ void KunoApp::draw() {
 
 
 	//Draw agents
+
 
 
 	// output some text, uses the last used colour

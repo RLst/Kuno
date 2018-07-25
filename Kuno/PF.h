@@ -26,16 +26,18 @@ namespace PF {
 	{
 		Node*				parent;
 		float				gScore;
-		pkr::Vector2		pos;
+		float				hScore;
+		float				fScore() const { return gScore + hScore; }
+		pkr::Vector2		pos_tmp;				//Might put this in Tile instead
 		std::vector<Edge*>	connections;
 
-		Node() : gScore(0), pos(0, 0), parent(nullptr) {}		//Default
+		Node() : gScore(0), /*pos(0, 0),*/ parent(nullptr) {}		//Default
 
-		Node(pkr::Vector2 pos) : gScore(0), pos(pos), parent(nullptr) {}		//Overload (nullptr parent)
+		Node(pkr::Vector2 pos) : gScore(0), /*pos(pos),*/ parent(nullptr) {}		//Overload (nullptr parent)
 
-		Node(pkr::Vector2 pos, Node* parent) : gScore(0), pos(pos), parent(parent) {}		//Overload
+		Node(pkr::Vector2 pos, Node* parent) : gScore(0), /*pos(pos),*/ parent(parent) {}		//Overload
 
-																							//Set connection (helper function?)
+		//Set connection (helper function?)
 		void static connect(Node *nodeFrom, Node *nodeTo, float cost) {
 			//Create new edge and connect to TARGET node and set costs
 			Edge* edge = new Edge(nodeTo, cost);

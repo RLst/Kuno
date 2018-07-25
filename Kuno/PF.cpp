@@ -21,7 +21,7 @@ Node * Graph::findNode(pkr::Vector2 position, float searchRadius)
 {
 	for (auto node : m_nodes) {
 		//Return node that is within range of search position
-		if (pkr::Vector2::distance(node->pos, position) < searchRadius)
+		if (pkr::Vector2::distance(node->pos_tmp, position) < searchRadius)
 			return node;
 	}
 }
@@ -31,7 +31,7 @@ std::list<Node*>& Graph::findNodes(pkr::Vector2 position, float searchRadius)
 	NodeList foundNodes;
 	for (auto node : m_nodes) {
 		//Push within range nodes onto list
-		if (pkr::Vector2::distance(node->pos, position) < searchRadius)
+		if (pkr::Vector2::distance(node->pos_tmp, position) < searchRadius)
 			foundNodes.push_back(node);
 	}
 	return foundNodes;
@@ -54,7 +54,7 @@ void PF::Graph::draw(aie::Renderer2D * renderer)
 		{
 			Edge* edge = it;
 			renderer->setRenderColour(1, 1, 1);
-			renderer->drawLine(node->pos.x, node->pos.y, edge->connectTo->pos.x, edge->connectTo->pos.y);
+			renderer->drawLine(node->pos_tmp.x, node->pos_tmp.y, edge->connectTo->pos_tmp.x, edge->connectTo->pos_tmp.y);
 		}
 	}
 
@@ -62,7 +62,7 @@ void PF::Graph::draw(aie::Renderer2D * renderer)
 	for (auto node : m_nodes) {
 		renderer->setRenderColour(1, 0.3f, 0);		//Required?
 		//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
-		renderer->drawCircle(node->pos.x, node->pos.y, 5);
+		renderer->drawCircle(node->pos_tmp.x, node->pos_tmp.y, 5);
 	}
 }
 

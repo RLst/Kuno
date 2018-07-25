@@ -5,13 +5,14 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kuno", "Kuno\Kuno.vcxproj", "{DEA49362-B428-4215-8D64-4EA0B4FF0858}"
 	ProjectSection(ProjectDependencies) = postProject
-		{AF59BB0B-E059-4773-83DC-728A949647DA} = {AF59BB0B-E059-4773-83DC-728A949647DA}
 		{F112DDCA-72C5-4FF8-93EA-FA9D994C6A84} = {F112DDCA-72C5-4FF8-93EA-FA9D994C6A84}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bootstrap", "bootstrap\Bootstrap.vcxproj", "{AF59BB0B-E059-4773-83DC-728A949647DA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pkrMathLib", "pkrMathLib\PKRmathlib.vcxproj", "{F112DDCA-72C5-4FF8-93EA-FA9D994C6A84}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tmxparser", "tmxparser\tmxparser.vcxproj", "{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +46,14 @@ Global
 		{F112DDCA-72C5-4FF8-93EA-FA9D994C6A84}.Release|x64.Build.0 = Release|x64
 		{F112DDCA-72C5-4FF8-93EA-FA9D994C6A84}.Release|x86.ActiveCfg = Release|Win32
 		{F112DDCA-72C5-4FF8-93EA-FA9D994C6A84}.Release|x86.Build.0 = Release|Win32
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Debug|x64.ActiveCfg = Debug|x64
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Debug|x64.Build.0 = Debug|x64
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Debug|x86.ActiveCfg = Debug|Win32
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Debug|x86.Build.0 = Debug|Win32
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Release|x64.ActiveCfg = Release|x64
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Release|x64.Build.0 = Release|x64
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Release|x86.ActiveCfg = Release|Win32
+		{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,7 @@
 //For header definitions
 #include <Renderer2D.h>
 #include <Input.h>
+#include "Path.h"
 
 namespace aie {
 	class Renderer2D;
@@ -99,24 +100,33 @@ namespace AI {
 
 
 	////Agents
+	//namespace PF { 
+	//	class Path;
+	//}
 	class Agent
 	{
 	protected:
-		std::vector<iBehaviour*>	m_behaviours;
+		std::vector<iBehaviour*> m_behaviours;
 
 		//Some basic transformation data
-		float						m_maxForce;
-		pkr::Vector2				m_force;
-		pkr::Vector2				m_accel;
-		pkr::Vector2				m_vel;
-		pkr::Vector2				m_pos;
+		float					m_maxForce;
+		pkr::Vector2			m_force;
+		pkr::Vector2			m_accel;
+		pkr::Vector2			m_vel;
+		pkr::Vector2			m_pos;
 
 		//Circle agent
-		float						m_size = 0;
-		pkr::Vector3				m_colour;
+		float					m_size = 0;
+		pkr::Vector3			m_colour;
 
 		//Texture agent
-		aie::Texture*				m_texture = nullptr;
+		aie::Texture*			m_texture = nullptr;
+
+		//Path Following
+		int						m_currentWaypointIndex;	//???Is this right?
+		PF::PointList&			m_currentPath;
+		float					m_waypointSearchRadius;
+		pkr::Vector2			pathFollowing();
 
 	public:
 		Agent(const Agent &other);		//Copy
@@ -129,15 +139,15 @@ namespace AI {
 		virtual ~Agent();	//Destructor 
 
 		//Add
-		void						addBehaviour(iBehaviour* behaviour);
-		void						addForce(const pkr::Vector2 &force);
+		void				addBehaviour(iBehaviour* behaviour);
+		void				addForce(const pkr::Vector2 &force);
 
 		//State accessors
-		pkr::Vector2				getPos() const { return m_pos; }
+		pkr::Vector2		getPos() const { return m_pos; }
 
 		//Core
-		void						update(float deltaTime);
-		void						draw(aie::Renderer2D* renderer);
+		void				update(float deltaTime);
+		void				draw(aie::Renderer2D* renderer);
 	};
 
 
@@ -161,18 +171,31 @@ namespace AI {
 	};
 
 	class SeekAction : public iBehaviour 
-		//This needs to take in the target agent
+	{
+	//This needs to take in a target agent
+	private:
+		Agent *			m_target;
+		float			m_maxForce;
+	public:
+		SeekAction(Agent* target, float maxSpeed = 200.0f);		//Point based if target agent not specified
+		~SeekAction() { delete m_target; }									//Destructor
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
+	//Pathfinding
+	class PatrolAction : public iBehaviour
 	{
 	private:
-		Agent *		m_target;
-		float		m_maxForce;
+		Agent *			m_pathAgent;
+		float			m_maxForce;
 	public:
-		SeekAction(Agent* target, float maxSpeed = 200.0f);		//Comprehensive
-		~SeekAction() { delete m_target; }						//Destructor
+		PatrolAction(Agent* pathObject);
+		~PatrolAction() { delete m_pathAgent; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
 
+	////////////// TESTS /////////////////////
 	////Composites
 	//class tAttackSequence : public Sequence
 	//{

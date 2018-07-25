@@ -6,7 +6,7 @@ PF::Tile::Tile(int xIndex, int yIndex, pkr::Vector2 pos) :
 	X(xIndex),
 	Y(yIndex)
 {
-	(*this).pos = pos;		//Node::pos
+	(*this).pos_tmp = pos;		//Node::pos
 }
 
 PF::Tile::~Tile()
@@ -16,7 +16,7 @@ PF::Tile::~Tile()
 
 void Tile::draw(aie::Renderer2D * renderer)
 {
-	renderer->drawSprite(m_texture, m_pos.x, m_pos.y);
+	renderer->drawSprite(m_texture, pos.x, pos.y);
 }
 
 }

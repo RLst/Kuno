@@ -17,19 +17,22 @@ enum eTileType
 
 class Tile : public Node
 {
-protected:
+protected:	
 	//Texture properties
 	aie::Texture*	m_texture;
-	pkr::Vector2	m_offset;
-	pkr::Vector2	m_pos;
 
-	//General properties
+	//Tile properties
 	eTileType		m_type;
 
-	//Draw
+	//Draw...
 public:
+	///////////////////////
+	//PUBLIC VARS
 	//Array indices
 	int				X, Y;
+	pkr::Vector2	offset;
+	pkr::Vector2	pos;		//Position info for tiles only
+	///////////////////////////
 
 	Tile() = default;
 	Tile(int xIndex, int yIndex, pkr::Vector2 pos);

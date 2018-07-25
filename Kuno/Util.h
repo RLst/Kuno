@@ -44,7 +44,7 @@ namespace Util {
 		void	addTexture(const char* path);							//Add texture by path
 		void	addTexture(const char* name, aie::Texture* texture);	//Add texture by name and tex pointer
 
-		aie::Texture* getTexture(char* name) const;						//Retrieves texture
+		aie::Texture* getTexture(char* name);						//Retrieves texture
 		aie::Texture* getTextureAuto(char* filename);					//Retrieves texture if available; else attempts to load
 	};
 

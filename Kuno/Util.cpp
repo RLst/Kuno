@@ -42,7 +42,7 @@ namespace Util {
 		}
 	}
 
-	aie::Texture * TextureManager::getTexture(char * name) const
+	aie::Texture * TextureManager::getTexture(char * name)
 	{
 		//Attempt to retrive texture from map
 		aie::Texture* load = m_textures[name];

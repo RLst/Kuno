@@ -1,4 +1,11 @@
-//#pragma once
+#pragma once
+
+#define WORLD_WIDTH 40		//Tiles along X axis
+#define WORLD_DEPTH 25		//Tiles along Y axis
+#define TILE_WIDTH 100		//Width of tile in px
+#define TILE_HEIGHT 50		//Height of tile in px
+
+
 //#include "Vector2.h"
 //
 //class Vector2;
@@ -22,3 +29,5 @@
 //	isometric.y = (2.0f * cartesian.y - cartesian.x) / 2.0f;
 //	return isometric;
 //}
+
+

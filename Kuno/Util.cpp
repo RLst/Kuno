@@ -6,6 +6,31 @@
 #include <Application.h>
 
 namespace Util {
+
+	void Camera::screenToWorld(float & X, float & Y)
+	{
+		
+	}
+
+	void Camera::update(float deltaTime, aie::Application * app)
+	{
+		aie::Input * input = aie::Input::getInstance();
+
+		//Handle edge scrolling
+		if (input->getMouseX() < app ) {		//LEFT EDGE
+		}
+
+		//
+		////Left edge
+		//if (input->getMouseX() )
+
+		//Handle zoom (scale)
+		if (input->getMouseScroll()) {
+
+		}
+
+
+	}
 	
 	TextureManager::~TextureManager()
 	{		
@@ -85,17 +110,5 @@ namespace Util {
 		{
 			return loaded;
 		}
-	}
-
-	void Camera::update(float deltaTime, aie::Input * input, aie::Application * app)
-	{
-		//Handles moving the camera
-		//
-		////Left edge
-		//if (input->getMouseX() )
-
-
-
-
 	}
 }

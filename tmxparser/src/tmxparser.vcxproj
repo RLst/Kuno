@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{D7E4E3B5-4AED-4E51-A2A6-19D8731CF71A}</ProjectGuid>
+    <ProjectGuid>{7586D4B1-6E6B-4C21-9DEB-52CC506F1C5A}</ProjectGuid>
     <RootNamespace>tmxparser</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -115,6 +115,57 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="miniz.c" />
+    <ClCompile Include="TmxColor.cpp" />
+    <ClCompile Include="TmxEllipse.cpp" />
+    <ClCompile Include="TmxGroupLayer.cpp" />
+    <ClCompile Include="TmxImage.cpp" />
+    <ClCompile Include="TmxImageLayer.cpp" />
+    <ClCompile Include="TmxLayer.cpp" />
+    <ClCompile Include="TmxMap.cpp" />
+    <ClCompile Include="TmxObject.cpp" />
+    <ClCompile Include="TmxObjectGroup.cpp" />
+    <ClCompile Include="TmxPolygon.cpp" />
+    <ClCompile Include="TmxPolyline.cpp" />
+    <ClCompile Include="TmxProperty.cpp" />
+    <ClCompile Include="TmxPropertySet.cpp" />
+    <ClCompile Include="TmxTerrain.cpp" />
+    <ClCompile Include="TmxTerrainArray.cpp" />
+    <ClCompile Include="TmxText.cpp" />
+    <ClCompile Include="TmxTile.cpp" />
+    <ClCompile Include="TmxTileLayer.cpp" />
+    <ClCompile Include="TmxTileOffset.cpp" />
+    <ClCompile Include="TmxTileset.cpp" />
+    <ClCompile Include="TmxUtil.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tmx.h.in" />
+    <None Include="tmxparser.pc.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TmxColor.h" />
+    <ClInclude Include="TmxEllipse.h" />
+    <ClInclude Include="TmxGroupLayer.h" />
+    <ClInclude Include="TmxImage.h" />
+    <ClInclude Include="TmxImageLayer.h" />
+    <ClInclude Include="TmxLayer.h" />
+    <ClInclude Include="TmxMap.h" />
+    <ClInclude Include="TmxMapTile.h" />
+    <ClInclude Include="TmxObject.h" />
+    <ClInclude Include="TmxObjectGroup.h" />
+    <ClInclude Include="TmxPoint.h" />
+    <ClInclude Include="TmxPolygon.h" />
+    <ClInclude Include="TmxPolyline.h" />
+    <ClInclude Include="TmxProperty.h" />
+    <ClInclude Include="TmxPropertySet.h" />
+    <ClInclude Include="TmxTerrain.h" />
+    <ClInclude Include="TmxTerrainArray.h" />
+    <ClInclude Include="TmxText.h" />
+    <ClInclude Include="TmxTile.h" />
+    <ClInclude Include="TmxTileLayer.h" />
+    <ClInclude Include="TmxTileOffset.h" />
+    <ClInclude Include="TmxTileset.h" />
+    <ClInclude Include="TmxUtil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

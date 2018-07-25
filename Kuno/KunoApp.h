@@ -9,6 +9,11 @@
 #include "Map.h"
 #include "Util.h"
 	
+//Tony Le
+//Date: 25 Jul 2018
+//Kuno; Ninja isometric stealth based
+//Yuna Okuma name found here: http://www.fantasynamegenerators.com/japanese_names.php
+
 //namespace AI {
 //	class Agent;
 //}
@@ -23,16 +28,17 @@
 class KunoApp : public aie::Application {
 public:
 
-	KunoApp();
-	virtual ~KunoApp();
+	KunoApp() = default;
+	virtual ~KunoApp() = default;
 
+	//Setups
 	bool startup() override;
-	void shutdown() override;
-
 	bool loadTextures();
 	bool setupAI();
 	bool setupPF();
 	bool setupPlayer();
+
+	void shutdown() override;
 
 	void update(float deltaTime) override;
 	void draw() override;

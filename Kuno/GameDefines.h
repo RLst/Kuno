@@ -1,12 +1,12 @@
 #pragma once
 
-#define WORLD_WIDTH 40		//Tiles along X axis
-#define WORLD_DEPTH 25		//Tiles along Y axis
-#define TILE_WIDTH 100		//Width of tile in px
-#define TILE_HEIGHT 50		//Height of tile in px
+#define WORLD_WIDTH 5		//Tiles along X axis
+#define WORLD_DEPTH 5		//Tiles along Y axis
+#define ISO_TILE_WIDTH 100		//Width of isometric tile in px
+#define ISO_TILE_HEIGHT 50		//Height of isometric tile in px
 
-#define tmpCARTESIAN_WIDTH 25
-#define tmpCARTESIAN_HEIGHT 25
+#define tmpCARTESIAN_WIDTH 200
+#define tmpCARTESIAN_HEIGHT 100
 
 
 //#include "Vector2.h"

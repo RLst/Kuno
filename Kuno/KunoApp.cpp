@@ -14,14 +14,6 @@
 #include "Tile.h"
 #include "Map.h"
 
-KunoApp::KunoApp() {
-
-}
-
-KunoApp::~KunoApp() {
-
-}
-
 bool KunoApp::startup() {
 	
 	m_2dRenderer = new aie::Renderer2D();
@@ -135,13 +127,13 @@ bool KunoApp::setupPF()
 	//Should make this load a map from some data or file
 	
 	//Load the tiles
-	m_tiles = new PF::Tile**[WORLD_DEPTH];
-	for (int col = 0; col < WORLD_DEPTH; ++col) 
+	m_tiles = new PF::Tile**[WORLD_WIDTH];
+	for (int row = 0; row < WORLD_WIDTH; ++row)
 	{
-		m_tiles[col] = new PF::Tile*[WORLD_WIDTH];
-		for (int row = 0; row < WORLD_WIDTH; ++row) 
+		m_tiles[row] = new PF::Tile*[WORLD_DEPTH];
+		for (int col = 0; col < WORLD_DEPTH; ++col)
 		{
-			m_tiles[col][row] = new PF::Tile(m_texManager->getTexture("Floor"));
+			m_tiles[row][col] = new PF::Tile(m_texManager->getTexture("Floor"));
 			//assert()
 		}
 	}
@@ -216,6 +208,8 @@ void KunoApp::draw() {
 
 	//Draw the map
 	m_graph->draw(m_2dRenderer);
+
+	m_2dRenderer->setRenderColour(1.0f, 1.0f, 1.0f);
 	m_map->draw(m_2dRenderer);
 
 	//Draw agents

@@ -40,26 +40,25 @@ private:
 	int				m_tileHeightpx;
 
 	//Tile container
-	Tile***			m_tileArray;		//Pointer to the 2D array of tiles
+	Tile***			m_tiles;		//Pointer to the 2D array of tiles
+	//std::vector<Tile*>	m_tiles;
 
 	//Layer container
-	std::vector<Layer*>		m_layers;
+	//std::vector<Layer*>		m_layers;
 
 	//Object container?
 
-	//Other
-	bool			hasError;
-	unsigned char	errorCode;
-	std::string		errorText;
-
-	//PropertySet		m_properties;
-
-
 public:
-	static pkr::Vector2	IsometricToCartesian(const pkr::Vector2 &isometric);
-	static pkr::Vector2	CartesianToIsometric(const pkr::Vector2 &cartesian);
+	pkr::Vector2	IsometricToCartesian(const pkr::Vector2 &isometric);
+	pkr::Vector2	CartesianToIsometric(const pkr::Vector2 &cartesian);
 
-	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector3 offset = pkr::Vector3());
+	//Constructor
+	Map(int mapWidth, 
+		int mapDepth, 
+		Tile*** tileArray, 
+		pkr::Vector3 offset = pkr::Vector3());
+	
+	//Destructor
 	~Map();
 
 	//void	loadMap();	//From file? Implement later

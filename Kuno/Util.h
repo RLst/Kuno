@@ -3,7 +3,13 @@
 #include <map>
 #include <string>
 
-namespace aie { class Texture; }
+#
+
+namespace aie { 
+	class Texture; 
+	class Input;
+	class Application;
+}
 
 namespace Util {
 //Other utilities
@@ -36,7 +42,7 @@ namespace Util {
 	{
 	private:
 		std::map<std::string, aie::Texture*> m_textures;
-	
+
 	public:
 		TextureManager() {}
 		~TextureManager();

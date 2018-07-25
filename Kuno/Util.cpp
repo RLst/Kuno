@@ -34,7 +34,8 @@ namespace Util {
 	{
 		if (texture != nullptr) {
 			//Texture exists so load into manager
-			m_textures[name] = texture;
+			m_textures.insert_or_assign(name, texture);
+			//m_textures[name] = texture;
 		}
 		else {
 			//Texture doesn't exist, notify

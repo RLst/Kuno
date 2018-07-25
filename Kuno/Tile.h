@@ -30,16 +30,20 @@ public:
 	//PUBLIC VARS
 	//Array indices
 	int				X, Y;
-	pkr::Vector2	offset;
-	pkr::Vector2	pos;		//Position info for tiles only
+	//pkr::Vector2	offset;
+	//pkr::Vector2	pos;		//Position info for tiles only
 	///////////////////////////
 
 	Tile() = default;
-	Tile(int xIndex, int yIndex, pkr::Vector2 pos);
+	Tile(aie::Texture* texture);
 	~Tile();
+	//Tile(int xIndex, int yIndex, pkr::Vector2 pos);
+
+	//Accessors
+	aie::Texture*	getTexture() const { return m_texture; }
 
 	//Cores
-	void			draw(aie::Renderer2D* renderer);
+	//void			draw(aie::Renderer2D* renderer);
 };
 
 }

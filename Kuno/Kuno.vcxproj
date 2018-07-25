@@ -171,6 +171,7 @@
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="PF.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\bootstrap\Bootstrap.vcxproj">

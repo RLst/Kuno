@@ -21,6 +21,9 @@
     <Filter Include="PF\src">
       <UniqueIdentifier>{43194d5c-da78-48fa-9195-b81706571a46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{7adfc851-35b4-4c20-8683-08ef4ae19128}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KunoApp.cpp">
@@ -47,6 +50,9 @@
     <ClCompile Include="Path.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KunoApp.h">
@@ -71,6 +77,9 @@
       <Filter>PF</Filter>
     </ClInclude>
     <ClInclude Include="Path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

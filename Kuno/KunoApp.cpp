@@ -9,6 +9,10 @@
 #include "pkr\Vector3.h"
 
 #include "imgui.h"
+#include "GameDefines.h"
+
+#include "Tile.h"
+#include "Map.h"
 
 KunoApp::KunoApp() {
 
@@ -30,6 +34,8 @@ bool KunoApp::startup() {
 	//Setup map
 	//Set sky to night
 	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
+	if (loadTextures() == false) return false;
+
 	if (setupPF() == false) return false;
 
 	//Setup player
@@ -44,14 +50,49 @@ bool KunoApp::startup() {
 
 void KunoApp::shutdown() {
 
-	delete m_font;
 	delete m_2dRenderer;
+	delete m_font;
+
+	delete m_player;
+	for (auto enemy : m_enemyList)
+		delete enemy;
+
+	delete m_graph;
+	delete m_map;
+	for (int col = 0; col < WORLD_DEPTH; ++col) {
+		for (int row = 0; row < WORLD_WIDTH; ++row) {
+			if (m_tiles[col][row] != nullptr)
+				delete m_tiles[col][row];	//Delete the cells
+		}
+		delete[] m_tiles[col];	//Delete the array of rows
+	}
+	delete[] m_tiles;	//Delete the array of columns
+
+	delete m_camera;
+}
+
+bool KunoApp::loadTextures()
+{
+	//Startup texture manager
+	m_texManager = new Util::TextureManager();
+
+	//Test: Load in some core textures
+	//MAKE THE FINAL PATH AS:
+	m_texManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
+	m_texManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
+	m_texManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
+	m_texManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
+	m_texManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
+	m_texManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
+	m_texManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
+
+	return true;
 }
 
 bool KunoApp::setupPF()
 {
 	//Just setup a raw graph
-	m_map = new PF::Graph();
+	m_graph = new PF::Graph();
 
 	pkr::Vector2 offset = { 60, 60 };
 	int maxCols = 30;
@@ -59,18 +100,20 @@ bool KunoApp::setupPF()
 	float nodeWidth = 40;
 	float nodeHeight = 40;
 
+	
+	/////////// NODE //////////////
 	//Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
 	for (int row = 0; row < maxRows; ++row) {
 		for (int col = 0; col < maxCols; ++col) {
 			//Add a node and position appropriately
-			m_map->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
+			m_graph->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
 		}
 	}
 	
 	//Connect up adjacent neighbouring nodes
-	for (auto nodeA : m_map->getNodes()) 
+	for (auto nodeA : m_graph->getNodes()) 
 	{
-		for (auto nodeB : m_map->getNodes())
+		for (auto nodeB : m_graph->getNodes())
 		{
 			//Skip if they're both the same node
 			if (nodeA == nodeB)
@@ -81,12 +124,30 @@ bool KunoApp::setupPF()
 
 			//If they're below a certain range then connect the nodes
 			if (distance < 60) {
-				m_map->addConnection(nodeA, nodeB);
+				m_graph->addConnection(nodeA, nodeB);
 				//This should also connect it both ways
 			}
 
 		}
 	}
+
+	//////////// MAP /////////////
+	//Should make this load a map from some data or file
+	
+	//Load the tiles
+	m_tiles = new PF::Tile**[WORLD_DEPTH];
+	for (int col = 0; col < WORLD_DEPTH; ++col) 
+	{
+		m_tiles[col] = new PF::Tile*[WORLD_WIDTH];
+		for (int row = 0; row < WORLD_WIDTH; ++row) 
+		{
+			m_tiles[col][row] = new PF::Tile(m_texManager->getTexture("Floor"));
+			//assert()
+		}
+	}
+
+	//Build the actual map!
+	m_map = new PF::Map(WORLD_WIDTH, WORLD_DEPTH, m_tiles);
 
 	return true;
 }
@@ -129,13 +190,11 @@ void KunoApp::update(float deltaTime) {
 	//Get control input
 
 	//Control camera edge scrolling
-	m_camera
+	m_camera->update(deltaTime, input, this);
 
-
-
-	ImGui::Begin("EdgeScrolling");
-	ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
-	ImGui::End();
+	//ImGui::Begin("EdgeScrolling");
+	//ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
+	//ImGui::End();
 	
 
 
@@ -156,11 +215,11 @@ void KunoApp::draw() {
 	m_2dRenderer->begin();
 
 	//Draw the map
+	m_graph->draw(m_2dRenderer);
 	m_map->draw(m_2dRenderer);
 
-
 	//Draw agents
-
+	// m_2dRenderer->setUVRect()
 
 
 	// output some text, uses the last used colour

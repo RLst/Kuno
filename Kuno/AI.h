@@ -124,12 +124,12 @@ namespace AI {
 
 		//Path Following
 		int						m_currentWaypointIndex;	//???Is this right?
-		PF::PointList&			m_currentPath;
+		PF::PointList*			m_currentPath;
 		float					m_waypointSearchRadius;
 		pkr::Vector2			pathFollowing();
 
 	public:
-		Agent(const Agent &other);		//Copy
+		//Agent(const Agent &other);		//Copy
 		
 		Agent(float maxForce = 200.0f, const pkr::Vector2 &startingPos = pkr::Vector2(300,300));	//Standard
 

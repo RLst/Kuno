@@ -66,39 +66,45 @@ namespace AI {
 
 	pkr::Vector2 Agent::pathFollowing()
 	{
-		//Clear target way point
-		auto targetPoint = pkr::Vector2();
+		////Clear target way point
+		//auto targetPoint = pkr::Vector2();
 
-		//If there is an available path
-		if (!m_currentPath.empty()) {
-			//Get the way points
-			auto workingPath = m_currentPath;
+		////If there is an available path
+		//if (!m_currentPath.empty()) {
+		//	//Get the way points
+		//	auto workingPath = m_currentPath;
 
-			targetPoint = workingPath[m_currentWaypointIndex];
+		//	targetPoint = workingPath[m_currentWaypointIndex];
 
-			//If agent has arrived at a waypoint
-			if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) {
-				++m_currentWaypointIndex;
-				if (m_currentWaypointIndex >= workingPath.size()) {
-					m_currentWaypointIndex = workingPath.size() - 1;
-				}
-			}
-		}
+		//	//If agent has arrived at a waypoint
+		//	if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) {
+		//		++m_currentWaypointIndex;
+		//		if (m_currentWaypointIndex >= workingPath.size()) {
+		//			m_currentWaypointIndex = workingPath.size() - 1;
+		//		}
+		//	}
+		//}
+
+		//NOT FINISHED!!!
 		return pkr::Vector2();		//Return NULL
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//Agent
-	Agent::Agent(const Agent & other) :
-		m_behaviours(other.m_behaviours),
-		m_maxForce(other.m_maxForce),
-		m_force(other.m_force),
-		m_accel(other.m_accel),
-		m_vel(other.m_vel),
-		m_pos(other.m_pos),
-		m_size(other.m_size),
-		m_colour(other.m_colour),
-		m_texture(other.m_texture)	{}
+	//Agent::Agent(const Agent & other) :
+	//	m_behaviours(other.m_behaviours),
+	//	m_maxForce(other.m_maxForce),
+	//	m_force(other.m_force),
+	//	m_accel(other.m_accel),
+	//	m_vel(other.m_vel),
+	//	m_pos(other.m_pos),
+	//	m_size(other.m_size),
+	//	m_colour(other.m_colour),
+	//	m_texture(other.m_texture),
+	//	m_currentWaypointIndex(other.m_currentWaypointIndex),
+	//	m_currentPath(other.m_currentPath),
+	//	m_waypointSearchRadius(other.m_waypointSearchRadius)
+	//{}
 
 	Agent::Agent( float maxForce, const pkr::Vector2 & startingPos) :
 		m_maxForce(maxForce),
@@ -119,7 +125,8 @@ namespace AI {
 			delete behaviour;			//Do the behaviours have to be deleted?
 			behaviour = nullptr;
 		}
-		if (m_texture != nullptr) delete m_texture;
+		//if (m_texture != nullptr) 
+		//	delete m_texture;
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)

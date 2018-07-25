@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <Vector3.h>
 
 namespace aie {
 	class Renderer2D;
@@ -32,14 +33,14 @@ class Map
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
+	pkr::Vector3	m_offset;
 	int				m_width;
-	int				m_height;
-	int				m_tileWidth;
-	int				m_tileHeight;
+	int				m_depth;
+	int				m_tileWidthpx;
+	int				m_tileHeightpx;
 
 	//Tile container
-	//std::vector<Tile*>		m_tiles;
-	Tile***			m_tiles;	//How to make a set array in c++??
+	Tile***			m_tileArray;		//Pointer to the 2D array of tiles
 
 	//Layer container
 	std::vector<Layer*>		m_layers;
@@ -51,17 +52,25 @@ private:
 	unsigned char	errorCode;
 	std::string		errorText;
 
-	PropertySet		m_properties;
+	//PropertySet		m_properties;
 
 
-
-	//void	addTile(int xIndex, int yIndex, Tile* tile);
 public:
-	Map(int mapWidth, int mapHeight);
+	static pkr::Vector2	IsometricToCartesian(const pkr::Vector2 &isometric);
+	static pkr::Vector2	CartesianToIsometric(const pkr::Vector2 &cartesian);
+
+	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector3 offset = pkr::Vector3());
 	~Map();
 
-	void	loadMap();
-	void	draw(aie::Renderer2D* renderer);
+	//void	loadMap();	//From file? Implement later
+	//void	addTile(int xIndex, int yIndex, Tile* tile);
+
+	void			draw(aie::Renderer2D* renderer);
+
+	//Need to separate these out?
+	void			drawTiles();
+	void			drawAgents();
+	void			drawObjects();
 
 private:
 	Map(const Map &map);	//Prevent copy constructor
@@ -69,7 +78,5 @@ private:
 
 }
 
-
-//
 
 

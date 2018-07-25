@@ -5,6 +5,9 @@
 #define TILE_WIDTH 100		//Width of tile in px
 #define TILE_HEIGHT 50		//Height of tile in px
 
+#define tmpCARTESIAN_WIDTH 25
+#define tmpCARTESIAN_HEIGHT 25
+
 
 //#include "Vector2.h"
 //

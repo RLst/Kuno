@@ -33,17 +33,29 @@ namespace Util {
 		float scrnWidth = m_app->getWindowWidth();
 		float scrnHeight = m_app->getWindowHeight();
 
-		//Handle edge scrolling
-		if (mouseX < 0 + m_edgeScrlSize) { //LEFT EDGE
+		////Camera panning (edge + arrow keys)
+		//Left Pan
+		if (mouseX < 0 + m_edgeScrlSize || 
+			input->isKeyDown(aie::INPUT_KEY_LEFT)) 
+		{
 			x -= m_scrollSpeed;
 		}
-		if (mouseX > scrnWidth - m_edgeScrlSize) { //RIGHT EDGE
+		//Right Pan
+		if (mouseX > scrnWidth - m_edgeScrlSize ||
+			input->isKeyDown(aie::INPUT_KEY_RIGHT)) 
+		{
 			x += m_scrollSpeed;
 		}
-		if (mouseY < 0 + m_edgeScrlSize) { //BOTTOM EDGE
+		//Backwards Pan
+		if (mouseY < 0 + m_edgeScrlSize ||
+			input->isKeyDown(aie::INPUT_KEY_DOWN)) 
+		{
 			y -= m_scrollSpeed;
 		}
-		if (mouseY > scrnHeight - m_edgeScrlSize) { //TOP EDGE
+		//Forward Pan
+		if (mouseY > scrnHeight - m_edgeScrlSize ||
+			input->isKeyDown(aie::INPUT_KEY_UP)) 
+		{
 			y += m_scrollSpeed;
 		}
 

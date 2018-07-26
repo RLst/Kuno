@@ -18,6 +18,22 @@
 #include "pkr\Vector3.h"
 
 
+KunoApp* KunoApp::getInstance()
+{
+	//Modern and thread-safe
+	//C++ 11 mandates that the initializer for a local static variable is only run once, 
+	//even in the presence of concurrency
+	static KunoApp *m_instance = new KunoApp();
+	return m_instance;
+}
+
+void KunoApp::resetInstance()
+{
+	KunoApp* m_toDelete = getInstance();
+	delete m_toDelete;
+	m_toDelete = nullptr;		//CHECK WITH TEACHER!!!
+}
+
 bool KunoApp::startup() {
 	
 	m_2dRenderer = new aie::Renderer2D();
@@ -180,6 +196,23 @@ bool KunoApp::setupPF()
 
 bool KunoApp::setupAI()
 {
+	////Behaviour tree
+	//
+	//if (GuardBehaviour)
+	//{
+	//	//Idle
+	//	if (Idle)
+	//	{
+	//		wait 30 - 60 seconds;
+	//		move to patrol
+	//	}
+	//	//Patrol
+	//	if (Patrol)
+	//
+	//
+	//	//
+	//
+	//}
 	return false;
 }
 

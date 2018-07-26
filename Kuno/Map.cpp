@@ -1,8 +1,11 @@
 #include "Map.h"
 #include "Tile.h"
 #include "GameDefines.h"
+#include <Texture.h>
 
 #include "imgui/imgui.h"
+
+#include <ctime>
 
 namespace PF {
 
@@ -37,17 +40,18 @@ namespace PF {
 
 		//VERSION 3: Draw tiles by map's offset
 
-		////////////////
-		//DEBUG: to find the proper tile offsets?
-		static float cartWidth = 147;
-		static float cartHeight = 147;
-		ImGui::Begin("Map::Tile width adjustment");
-		ImGui::SliderFloat("CartWidth", &cartWidth, -256, 256);
-		ImGui::SliderFloat("CartHeight", &cartHeight, -256, 256);
-		ImGui::End();
+		//// DEBUG: to find the proper tile offsets? //////
+		//static float cartWidth = -127;
+		//static float cartHeight = -127;
+		//ImGui::Begin("Map::Tile width adjustment");
+		//ImGui::SliderFloat("CartWidth", &cartWidth, -256, 256);
+		//ImGui::SliderFloat("CartHeight", &cartHeight, -256, 256);
+		//ImGui::End();
 		////////////
 
 		//auto thisTile = m_tileArray;
+		float mapDrawStartTime = time(NULL);
+
 		for (int row = 0; row < m_width; ++row) {
 			for (int col = 0; col < m_depth; ++col) {
 				//thisTile++;
@@ -55,42 +59,61 @@ namespace PF {
 				pkr::Vector2 isoPos, cartPos;
 
 				//Get cartesian coords
-				cartPos.x = col * cartWidth;
-				cartPos.y = row * cartHeight;
-				//cartPos.x = col * tmpCARTESIAN_WIDTH;
-				//cartPos.y = row * tmpCARTESIAN_HEIGHT;
+				cartPos.x = col * CART_TILE_WIDTH;
+				cartPos.y = row * CART_TILE_HEIGHT;
+				//cartPos.x = col * cartWidth;
+				//cartPos.y = row * cartHeight;
 
 				//Convert to isometric
 				isoPos = CartesianToIsometric(cartPos);
 
 				//Adjust for height of tile if needed
+				//float tmpDifY = ISO_TILE_HEIGHT - (float)thisTile->getTexture()->getHeight();
 
+				// account for the difference in height in the texture
+				// and keep the bottoms aligned
+				//float dify = TILE_HEIGHT -
+				//	(float)thisTile->getTexture()->getHeight();
 
 				//Draw the tile
+				renderer->setRenderColour(1, 1, 1);
 				renderer->drawSprite(
-					m_tiles[row][col]->getTexture(),		//Texture*
+					thisTile->getTexture(),					//Texture*
 					isoPos.x + m_offset.x,					//X
 					isoPos.y + m_offset.y,					//Y
 					0,						
 					0,
 					0,
-					0,
+					10,										//Depth
 					0.0f,									//Xorigin
-					0.5f);									//Yorigin
+					0.0f);									//Yorigin
+
+
+				//// DEBUG ////
+				//Draw a debug point
+				//renderer->setRenderColour(1, 0, 0);
+				//renderer->drawCircle(isoPos.x, isoPos.y, 5);
+				///////////////
 
 				//renderer->drawSprite((***thisTile).getTexture(), isoPos.x, isoPos.y);
 			}
 		}
 
-
+		//// DEBUG ////
+		float mapDrawEndTime = time(NULL);
+		ImGui::Begin("Map Draw Duration");
+		ImGui::Text("%f",mapDrawEndTime - mapDrawStartTime);
+		ImGui::End();
+		//////////////
 	}
 
 	//These are Right Down render order I believe
 	pkr::Vector2 Map::IsometricToCartesian(const pkr::Vector2 & isometric)
 	{
+		static float tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
 		pkr::Vector2 cartesian;
-		cartesian.x = (2.0f * isometric.y + isometric.x) / 2.0f;
-		cartesian.y = (2.0f * isometric.y - isometric.x) / 2.0f;
+		cartesian.x = (tileRatio * isometric.y + isometric.x) / tileRatio;
+		cartesian.y = (tileRatio * isometric.y - isometric.x) / tileRatio;
 		return cartesian;
 		//cartesian.x = (2.0f * isometric.y - isometric.x) / 2.0f;
 		//cartesian.y = (2.0f * isometric.y + isometric.x) / 2.0f;
@@ -98,10 +121,11 @@ namespace PF {
 
 	pkr::Vector2 Map::CartesianToIsometric(const pkr::Vector2 & cartesian)
 	{
-		pkr::Vector2 isometric = { 0,0 };
 
+		static float tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
+		pkr::Vector2 isometric = { 0,0 };
 		isometric.x = cartesian.x - cartesian.y;
-		isometric.y = (cartesian.x + cartesian.y) / 2.0f;
+		isometric.y = (cartesian.x + cartesian.y) / tileRatio;			
 		return isometric;
 		//isometric.x = (2.0f * cartesian.y - cartesian.x) / 2.0f;
 		//isometric.y = (2.0f * cartesian.y + cartesian.x) / 2.0f;

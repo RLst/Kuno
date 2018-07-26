@@ -21,11 +21,14 @@
     <Filter Include="PF\src">
       <UniqueIdentifier>{43194d5c-da78-48fa-9195-b81706571a46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{7adfc851-35b4-4c20-8683-08ef4ae19128}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>{2f24b136-d5bd-4e72-a0cf-14cd7e8f2e5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{7adfc851-35b4-4c20-8683-08ef4ae19128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\src">
+      <UniqueIdentifier>{4550bc9e-76b9-49ee-afe0-502d84847732}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +53,14 @@
     <ClCompile Include="Map.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
-    <ClCompile Include="Path.cpp">
+    <ClCompile Include="GameDefines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Util\src</Filter>
     </ClCompile>
-    <ClCompile Include="GameDefines.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Path.cpp">
+      <Filter>PF\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +89,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util.h">
-      <Filter>Header Files</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

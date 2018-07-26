@@ -283,7 +283,7 @@ void KunoApp::draw() {
 	ImGui::Begin("Camera Position");
 	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
 	ImGui::End();
-	m_camera->testWindowToCanvas(m_2dRenderer);
+	m_camera->testViewportToCanvas(m_2dRenderer);
 	////////////////////////
 	// begin drawing sprites
 	m_2dRenderer->begin();

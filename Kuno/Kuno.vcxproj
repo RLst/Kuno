@@ -165,8 +165,8 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DepthSorter.cpp" />
     <ClCompile Include="GameDefines.cpp" />
-    <ClCompile Include="Iso.cpp" />
     <ClCompile Include="KunoApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -178,12 +178,13 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DepthSorter.h" />
     <ClInclude Include="GameDefines.h" />
-    <ClInclude Include="Iso.h" />
     <ClInclude Include="KunoApp.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

@@ -49,12 +49,10 @@ namespace PF {
 		//ImGui::End();
 		////////////
 
-		//auto thisTile = m_tileArray;
 		float mapDrawStartTime = time(NULL);
 
 		for (int row = 0; row < m_width; ++row) {
 			for (int col = 0; col < m_depth; ++col) {
-				//thisTile++;
 				auto thisTile = m_tiles[row][col];
 				pkr::Vector2 isoPos, cartPos;
 
@@ -65,7 +63,7 @@ namespace PF {
 				//cartPos.y = row * cartHeight;
 
 				//Convert to isometric
-				isoPos = CartesianToIsometric(cartPos);
+				isoPos = CartToIso(cartPos);
 
 				//Adjust for height of tile if needed
 				//float tmpDifY = ISO_TILE_HEIGHT - (float)thisTile->getTexture()->getHeight();
@@ -91,8 +89,8 @@ namespace PF {
 
 				//// DEBUG ////
 				//Draw a debug point
-				//renderer->setRenderColour(1, 0, 0);
-				//renderer->drawCircle(isoPos.x, isoPos.y, 5);
+				renderer->setRenderColour(1, 0, 0);
+				renderer->drawCircle(isoPos.x, isoPos.y, 5);
 				///////////////
 
 				//renderer->drawSprite((***thisTile).getTexture(), isoPos.x, isoPos.y);
@@ -108,25 +106,22 @@ namespace PF {
 	}
 
 	//These are Right Down render order I believe
-	pkr::Vector2 Map::IsometricToCartesian(const pkr::Vector2 & isometric)
+	pkr::Vector2 Map::IsoToCart(const pkr::Vector2 & iso)
 	{
-		static float tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
-		pkr::Vector2 cartesian;
-		cartesian.x = (tileRatio * isometric.y + isometric.x) / tileRatio;
-		cartesian.y = (tileRatio * isometric.y - isometric.x) / tileRatio;
-		return cartesian;
+		pkr::Vector2 cart;
+		cart.x = (TILE_RATIO * iso.y + iso.x) / TILE_RATIO;
+		cart.y = (TILE_RATIO * iso.y - iso.x) / TILE_RATIO;
+		return cart;
 		//cartesian.x = (2.0f * isometric.y - isometric.x) / 2.0f;
 		//cartesian.y = (2.0f * isometric.y + isometric.x) / 2.0f;
 	}
 
-	pkr::Vector2 Map::CartesianToIsometric(const pkr::Vector2 & cartesian)
+	pkr::Vector2 Map::CartToIso(const pkr::Vector2 & cart)
 	{
-
-		static float tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
-		pkr::Vector2 isometric = { 0,0 };
-		isometric.x = cartesian.x - cartesian.y;
-		isometric.y = (cartesian.x + cartesian.y) / tileRatio;			
-		return isometric;
+		pkr::Vector2 iso = { 0,0 };
+		iso.x = cart.x - cart.y;
+		iso.y = (cart.x + cart.y) / TILE_RATIO;			
+		return iso;
 		//isometric.x = (2.0f * cartesian.y - cartesian.x) / 2.0f;
 		//isometric.y = (2.0f * cartesian.y + cartesian.x) / 2.0f;
 		//isometric.x = (cartesian.x - cartesian.y) * ISO_TILE_WIDTH / 2.0f + m_offset.x;

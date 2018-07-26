@@ -17,12 +17,9 @@ class PropertySet;
 
 enum eLayerType {	//Also holds the depth setting
 	BACKGROUND = 0,
-
 	GROUND = 1,
-
 	OBJECT = 10,
 	WALLS = 10,
-
 	ROOF = 100,
 };
 
@@ -49,8 +46,8 @@ private:
 	//Object container?
 
 public:
-	pkr::Vector2	IsometricToCartesian(const pkr::Vector2 &isometric);
-	pkr::Vector2	CartesianToIsometric(const pkr::Vector2 &cartesian);
+	pkr::Vector2	IsoToCart(const pkr::Vector2 &iso);
+	pkr::Vector2	CartToIso(const pkr::Vector2 &cart);
 
 	//Constructor
 	Map(int mapWidth, 

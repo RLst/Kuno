@@ -7,9 +7,6 @@
     <Filter Include="PF">
       <UniqueIdentifier>{b87febe3-3bf2-4fc2-a35d-4004871dbe5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Iso">
-      <UniqueIdentifier>{498638f9-f12f-42d5-876d-69c8a929db66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PF\src">
       <UniqueIdentifier>{43194d5c-da78-48fa-9195-b81706571a46}</UniqueIdentifier>
     </Filter>
@@ -28,9 +25,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Iso.cpp">
-      <Filter>Iso</Filter>
-    </ClCompile>
     <ClCompile Include="AI.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -61,11 +55,11 @@
     <ClCompile Include="KunoApp.cpp">
       <Filter>zsrc</Filter>
     </ClCompile>
+    <ClCompile Include="DepthSorter.cpp">
+      <Filter>Util\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Iso.h">
-      <Filter>Iso</Filter>
-    </ClInclude>
     <ClInclude Include="PF.h">
       <Filter>PF</Filter>
     </ClInclude>
@@ -89,6 +83,10 @@
     </ClInclude>
     <ClInclude Include="GameDefines.h" />
     <ClInclude Include="KunoApp.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="DepthSorter.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">

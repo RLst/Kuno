@@ -19,14 +19,16 @@ namespace Util {
 	{
 	private:
 		KunoApp*		m_app;				//this required to access screen width and height?
-		float			m_edgeScrlSize = 15.0f;	//px; Pixels from edge of screen where the mouse will move 
-		float			m_scrollSpeed = 50.0f;
+		float			m_edgeScrlSize = 30.0f;	//px; Pixels from edge of screen where the mouse will move 
+		float			m_scrollSpeed = 100.0f;
 		float			m_zoomSpeed = 0.2f;
+		int				m_windowWidth;
+		int				m_windowHeight;
 
 	public:
 		//// PUBLIC!!! ////
-		float			x, y;			//px; position
-		float			scale;			//arb; scale/zoom
+		float	x, y;			//px; position
+		float	scale;			//arb; scale/zoom
 		///////////////////
 		
 		Camera(KunoApp* app) : m_app(app), x(0), y(0), scale(1.0f) {}

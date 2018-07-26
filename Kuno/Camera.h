@@ -13,8 +13,8 @@ namespace Util {
 	{
 	private:
 		KunoApp*		m_app;				//this required to access screen width and height?
-		float			m_edgeScrlSize = 30.0f;	//px; Pixels from edge of screen where the mouse will move 
-		float			m_scrollSpeed = 100.0f;
+		float			m_edgeScrlSize = 0.0f;	//px; Pixels from edge of screen where the mouse will move 
+		float			m_scrollSpeed = 200.0f;
 		float			m_zoomSpeed = 0.2f;
 		int				m_windowWidth;
 		int				m_windowHeight;

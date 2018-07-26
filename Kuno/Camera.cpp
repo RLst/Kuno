@@ -93,21 +93,12 @@ namespace Util {
 		if (scale < 1.0f) scale = 1.0f;
 		if (scale > 5.0f) scale = 5.0f;
 
+		//// DEBUG ////
 		ImGui::Begin("Camera Zoom");
 		ImGui::Text("camera.scale = %f", scale);
 		ImGui::Text("mouseScroll = %f", mouseScroll);
 		ImGui::End();
-	}
-
-	void Camera::testWindowToCanvas(aie::Renderer2D * renderer)
-	{
-		aie::Input* input = aie::Input::getInstance();
-
-		float mousex = input->getMouseX();
-		float mousey = input->getMouseY();
-
-
-
+		///////////////
 	}
 
 }

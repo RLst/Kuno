@@ -54,8 +54,8 @@ bool KunoApp::startup() {
 bool KunoApp::setupCamera()
 {
 	m_camera = new Util::Camera(this);
-	m_camera->x = -250;
-	m_camera->y = -250;
+	m_camera->x = -0;
+	m_camera->y = -0;
 	m_camera->scale = 2.0f;
 	return true;
 }
@@ -247,13 +247,10 @@ void KunoApp::draw() {
 	
 	//// DEBUB: Test screenToWorld() ////
 	aie::Input* input = aie::Input::getInstance();
-	float mousex = input->getMouseX();
-	float mousey = input->getMouseY();
-	m_camera->WindowToCanvas(mousex, mousey);
-	ImGui::Begin("screenToWorld()");
-	ImGui::Text("X: %d, Y: %d", mousex, mousey);
+	ImGui::Begin("Camera Position");
+	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
 	ImGui::End();
-
+	m_camera->testWindowToCanvas(m_2dRenderer);
 	////////////////////////
 	// begin drawing sprites
 	m_2dRenderer->begin();

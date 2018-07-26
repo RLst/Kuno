@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="AI">
       <UniqueIdentifier>{802d3f41-23d1-468d-a7f2-0b9494d39091}</UniqueIdentifier>
     </Filter>
@@ -30,14 +22,12 @@
     <Filter Include="Util\src">
       <UniqueIdentifier>{4550bc9e-76b9-49ee-afe0-502d84847732}</UniqueIdentifier>
     </Filter>
+    <Filter Include="zsrc">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KunoApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Iso.cpp">
       <Filter>Iso</Filter>
     </ClCompile>
@@ -53,9 +43,6 @@
     <ClCompile Include="Map.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
-    <ClCompile Include="GameDefines.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Path.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
@@ -65,14 +52,17 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>zsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDefines.cpp">
+      <Filter>zsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="KunoApp.cpp">
+      <Filter>zsrc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KunoApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameDefines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Iso.h">
       <Filter>Iso</Filter>
     </ClInclude>
@@ -88,15 +78,17 @@
     <ClInclude Include="Map.h">
       <Filter>PF</Filter>
     </ClInclude>
-    <ClInclude Include="Path.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>PF</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDefines.h" />
+    <ClInclude Include="KunoApp.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">

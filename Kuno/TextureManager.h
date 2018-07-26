@@ -32,8 +32,5 @@ namespace Util {
 		aie::Texture*	getTextureAuto(char* filename);					//Retrieves texture if available; else attempts to load
 	};
 
-
-
-
 };
 

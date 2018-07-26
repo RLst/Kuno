@@ -2,34 +2,19 @@
 
 int main() {
 	
-	// allocation
-	auto app = new KunoApp();
+	//Create master singleton
+	auto kuno = KunoApp::getInstance();
+
+	//// NOTICE!!! Change to fullscreen when doing release version ////
+	//// Window size parameters MUST match with native monitor resolution otherwise there will be
+	//// errors with functions converting between viewport to canvas to world coordinates
+	//// Suggested resolutions: 1280, 720 | 1440, 900 | 1650, 1050
 
 	// initialise and loop
-	app->run("AIE", 1280, 720, false);
+	kuno->run("Kuno", 1440, 900, false);		
 
-	// deallocation
-	delete app;
+	//Destroy master singleton
+	KunoApp::resetInstance();
 
 	return 0;
 }
-
-
-
-////Behaviour tree
-//
-//if (GuardBehaviour)
-//{
-//	//Idle
-//	if (Idle)
-//	{
-//		wait 30 - 60 seconds;
-//		move to patrol
-//	}
-//	//Patrol
-//	if (Patrol)
-//
-//
-//	//
-//
-//}

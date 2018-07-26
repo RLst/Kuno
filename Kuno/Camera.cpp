@@ -13,7 +13,7 @@ namespace Util {
 	{
 	}
 
-	pkr::Vector2 Camera::WindowToCanvas(float & windowX, float & windowY)
+	pkr::Vector2 Camera::ViewportToCanvas(float viewportX, float viewportY)
 	{
 		//Init vars for return
 		pkr::Vector2 canvas = { 0,0 };
@@ -21,29 +21,43 @@ namespace Util {
 		auto windowWidth = KunoApp::getInstance()->getWindowWidth();
 		auto windowHeight = KunoApp::getInstance()->getWindowHeight();
 
-		//Adjust for camera scale/zoom
+		//Account for scale
+		float xPcentage = viewportX / windowWidth;
+		float yPcentage = viewportY / windowHeight;
+
+		float scaledWidth = windowWidth * scale;
+		float scaledHeight = windowHeight * scale;
+
+		float midX = x + (windowWidth / 2.0f);
+		float midY = y + (windowHeight / 2.0f);
+
+		float left = midX - (scaledWidth / 2.0f);
+		float bottom = midY - (scaledHeight / 2.0f);
+
+		canvas.x = left + (xPcentage * scaledWidth);
+		canvas.y = bottom + (yPcentage * scaledHeight);
 
 		return canvas;
 	}
 
-	void Camera::testWindowToCanvas(aie::Renderer2D * renderer)
+	void Camera::testViewportToCanvas(aie::Renderer2D * renderer)
 	{
 		aie::Input* input = aie::Input::getInstance();
 
 		//Get mouse position in window coords
-		float mousex = input->getMouseX();
-		float mousey = input->getMouseY();
+		float windowX = input->getMouseX();
+		float windowY = input->getMouseY();
 
 		//Transform from window coords to canvas coords
-		pkr::Vector2 transformed = WindowToCanvas(mousex, mousey);
+		pkr::Vector2 canvas = ViewportToCanvas(windowX, windowY);
 
 		renderer->setRenderColour(0.25f, 1, 0.25f);
-		renderer->drawCircle(transformed.x, transformed.y, 10);
+		renderer->drawCircle(canvas.x, canvas.y, 50.0f);
 
 		//// DEBUG ////
 		ImGui::Begin("WindowToCanvas(test)");
-		ImGui::Text("Before > X: %f, Y: %f", mousex, mousey);
-		ImGui::Text("After > X: %f, Y: %f", transformed.x, transformed.y);
+		ImGui::Text("Before > X: %f, Y: %f", windowX, windowY);
+		ImGui::Text("After > X: %f, Y: %f", canvas.x, canvas.y);
 		ImGui::End();
 		//////////////
 	}

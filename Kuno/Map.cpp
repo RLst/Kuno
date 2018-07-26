@@ -5,7 +5,8 @@
 
 #include "imgui/imgui.h"
 
-#include <ctime>
+#include "KunoApp.h"
+//#include <ctime>
 
 namespace PF {
 
@@ -49,7 +50,7 @@ namespace PF {
 		//ImGui::End();
 		////////////
 
-		float mapDrawStartTime = time(NULL);
+		float mapDrawStartTime = KunoApp::getInstance()->getTime();
 
 		for (int row = 0; row < m_width; ++row) {
 			for (int col = 0; col < m_depth; ++col) {
@@ -74,6 +75,7 @@ namespace PF {
 				//	(float)thisTile->getTexture()->getHeight();
 
 				//Draw the tile
+				//float depth = 1.0f + abs(0.01f * isoPos.y);	//just to test out the zbuffer
 				renderer->setRenderColour(1, 1, 1);
 				renderer->drawSprite(
 					thisTile->getTexture(),					//Texture*
@@ -84,7 +86,7 @@ namespace PF {
 					0,
 					10,										//Depth
 					0.0f,									//Xorigin
-					0.0f);									//Yorigin
+					0.5f);									//Yorigin
 
 
 				//// DEBUG ////
@@ -97,8 +99,8 @@ namespace PF {
 			}
 		}
 
-		//// DEBUG ////
-		float mapDrawEndTime = time(NULL);
+		//// DEBUG: Check the time it takes to draw the map ////
+		float mapDrawEndTime = KunoApp::getInstance()->getTime();
 		ImGui::Begin("Map Draw Duration");
 		ImGui::Text("%f",mapDrawEndTime - mapDrawStartTime);
 		ImGui::End();

@@ -1,19 +1,16 @@
 #include "Camera.h"
 #include <iostream>
 #include "imgui\imgui.h"
+#include "GameDefines.h"
 
 #include "KunoApp.h"
 
 namespace Util {
 
 	//// Camera ////
-	Camera::Camera(KunoApp * app) :
-		m_app(app), x(0), y(0), scale(1.0f)
+	Camera::Camera() :
+		x(0), y(0), scale(1.0f)
 	{
-		m_windowWidth = m_app->getWindowWidth();
-		m_windowHeight = m_app->getWindowHeight();
-		//x = y = 0;
-		//scale = 1.0f;
 	}
 
 	pkr::Vector2 Camera::WindowToCanvas(float & windowX, float & windowY)
@@ -21,9 +18,8 @@ namespace Util {
 		//Init vars for return
 		pkr::Vector2 canvas = { 0,0 };
 
-		//Transform into canvas coordinates
-		canvas.x = this->x + (windowX * scale);
-		canvas.y = this->y + (windowY * scale);
+		auto windowWidth = KunoApp::getInstance()->getWindowWidth();
+		auto windowHeight = KunoApp::getInstance()->getWindowHeight();
 
 		//Adjust for camera scale/zoom
 
@@ -59,8 +55,8 @@ namespace Util {
 		float mouseX = input->getMouseX();
 		float mouseY = input->getMouseY();
 		float mouseScroll = input->getMouseScroll();
-		float scrnWidth = m_app->getWindowWidth();
-		float scrnHeight = m_app->getWindowHeight();
+		float windowWidth = KunoApp::getInstance()->getWindowWidth();
+		float windowHeight = KunoApp::getInstance()->getWindowHeight();
 
 		////Camera panning (edge + arrow keys)
 		//Left Pan
@@ -70,7 +66,7 @@ namespace Util {
 			x -= m_scrollSpeed;
 		}
 		//Right Pan
-		if (mouseX > scrnWidth - m_edgeScrlSize ||
+		if (mouseX > windowWidth - m_edgeScrlSize ||
 			input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		{
 			x += m_scrollSpeed;
@@ -82,7 +78,7 @@ namespace Util {
 			y -= m_scrollSpeed;
 		}
 		//Forward Pan
-		if (mouseY > scrnHeight - m_edgeScrlSize ||
+		if (mouseY > windowHeight - m_edgeScrlSize ||
 			input->isKeyDown(aie::INPUT_KEY_UP))
 		{
 			y += m_scrollSpeed;

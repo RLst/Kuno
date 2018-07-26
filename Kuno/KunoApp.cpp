@@ -69,7 +69,7 @@ bool KunoApp::startup() {
 
 bool KunoApp::setupCamera()
 {
-	m_camera = new Util::Camera(this);
+	m_camera = new Util::Camera();
 	m_camera->x = -0;
 	m_camera->y = -0;
 	m_camera->scale = 2.0f;

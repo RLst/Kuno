@@ -36,7 +36,7 @@ public:
 
 	Tile() = default;
 	Tile(aie::Texture* texture);
-	~Tile();
+	virtual ~Tile() = default;	//Texture manager will delete the textures
 	//Tile(int xIndex, int yIndex, pkr::Vector2 pos);
 
 	//Accessors

@@ -2,21 +2,9 @@
 
 namespace PF {
 
-//PF::Tile::Tile(int xIndex, int yIndex, pkr::Vector2 pos) :
-//	X(xIndex),
-//	Y(yIndex)
-//{
-//	(*this).pos_tmp = pos;		//Node::pos
-//}
-
 	Tile::Tile(aie::Texture * texture) :
 		m_texture(texture)
 	{
-	}
-
-	Tile::~Tile()
-	{
-		//delete m_texture;
 	}
 
 	//void Tile::draw(aie::Renderer2D * renderer)

@@ -31,7 +31,7 @@ namespace Util {
 		float	scale;			//arb; scale/zoom
 		///////////////////
 		
-		Camera(KunoApp* app) : m_app(app), x(0), y(0), scale(1.0f) {}
+		Camera(KunoApp* app);
 
 		void	screenToWorld(float &X, float &Y);	//Input screen pos passed in as reference will be converted to world pos 
 

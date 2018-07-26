@@ -8,6 +8,15 @@
 #include "imgui/imgui.h"
 
 namespace Util {
+	
+	Camera::Camera(KunoApp * app) : 
+		m_app(app), x(0), y(0), scale(1.0f)
+	{
+		m_windowWidth = m_app->getWindowWidth();
+		m_windowHeight = m_app->getWindowHeight();
+		//x = y = 0;
+		//scale = 1.0f;
+	}
 
 	void Camera::screenToWorld(float & X, float & Y)
 	{

@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameDefines.cpp" />
     <ClCompile Include="Iso.cpp" />
     <ClCompile Include="KunoApp.cpp" />
@@ -172,10 +173,11 @@
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="PF.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="GameDefines.h" />
     <ClInclude Include="Iso.h" />
     <ClInclude Include="KunoApp.h" />
@@ -183,7 +185,7 @@
     <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="Util.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\bootstrap\Bootstrap.vcxproj">

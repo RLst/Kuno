@@ -4,7 +4,7 @@
 #define SCREEN_HEIGHT 720
 
 #define WORLD_WIDTH 10		//Tiles along X axis
-#define WORLD_DEPTH 10		//Tiles along Y axis
+#define WORLD_DEPTH 2		//Tiles along Y axis
 
 #define ISO_TILE_WIDTH 255		//Width of isometric tile in px
 #define ISO_TILE_HEIGHT 148		//Height of isometric tile in px

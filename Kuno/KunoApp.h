@@ -7,23 +7,13 @@
 #include "AI.h"
 #include "PF.h"
 #include "Map.h"
-#include "Util.h"
+#include "TextureManager.h"
+#include "Camera.h"
 	
 //Tony Le
 //Date: 25 Jul 2018
 //Kuno; Ninja isometric stealth based
 //Yuna Okuma name found here: http://www.fantasynamegenerators.com/japanese_names.php
-
-//namespace AI {
-//	class Agent;
-//}
-//
-//namespace PF {
-//	class Graph;
-//}
-//namespace Util {
-//	class Camera;
-//}
 
 class KunoApp : public aie::Application {
 public:

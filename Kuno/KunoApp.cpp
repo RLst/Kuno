@@ -1,21 +1,22 @@
-#include <ctime>
-
 #include "KunoApp.h"
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include "imgui.h"
+#include "GameDefines.h"
+#include <ctime>
 
-#include "Util.h"
+#include "Camera.h"
+#include "TextureManager.h"
+
 #include "AI.h"
 #include "PF.h"
+#include "Tile.h"
+#include "Map.h"
+
 #include "pkr\Vector2.h"
 #include "pkr\Vector3.h"
 
-#include "imgui.h"
-#include "GameDefines.h"
-
-#include "Tile.h"
-#include "Map.h"
 
 bool KunoApp::startup() {
 	
@@ -248,7 +249,7 @@ void KunoApp::draw() {
 	aie::Input* input = aie::Input::getInstance();
 	float mousex = input->getMouseX();
 	float mousey = input->getMouseY();
-	m_camera->screenToWorld(mousex, mousey);
+	m_camera->WindowToCanvas(mousex, mousey);
 	ImGui::Begin("screenToWorld()");
 	ImGui::Text("X: %d, Y: %d", mousex, mousey);
 	ImGui::End();
@@ -259,7 +260,6 @@ void KunoApp::draw() {
 
 	//Draw the map
 	m_graph->draw(m_2dRenderer);
-
 	m_map->draw(m_2dRenderer);
 
 	//Draw agents

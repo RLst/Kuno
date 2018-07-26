@@ -56,11 +56,14 @@
     <ClCompile Include="GameDefines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util.cpp">
-      <Filter>Util\src</Filter>
-    </ClCompile>
     <ClCompile Include="Path.cpp">
       <Filter>PF\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Util\src</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Util\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +91,10 @@
     <ClInclude Include="Path.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Util.h">
+    <ClInclude Include="Camera.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>

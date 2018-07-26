@@ -3,7 +3,9 @@
 
 #include <Texture.h>
 #include <Input.h>
-#include <Application.h>
+#include "KunoApp.h"
+
+#include "imgui/imgui.h"
 
 namespace Util {
 
@@ -12,24 +14,39 @@ namespace Util {
 		
 	}
 
-	void Camera::update(float deltaTime, aie::Application * app)
+	void Camera::update(float deltaTime)
 	{
 		aie::Input * input = aie::Input::getInstance();
 
-		//Handle edge scrolling
-		if (input->getMouseX() < app ) {		//LEFT EDGE
-		}
+		float mouseX = input->getMouseX();
+		float mouseY = input->getMouseY();
+		float mouseScroll = input->getMouseScroll();
+		float scrnWidth = m_app->getWindowWidth();
+		float scrnHeight = m_app->getWindowHeight();
 
-		//
-		////Left edge
-		//if (input->getMouseX() )
+		//Handle edge scrolling
+		if (mouseX < 0 + m_edgeScrlSize) { //LEFT EDGE
+			x -= m_scrollSpeed;
+		}
+		if (mouseX > scrnWidth - m_edgeScrlSize) { //RIGHT EDGE
+			x += m_scrollSpeed;
+		}
+		if (mouseY < 0 + m_edgeScrlSize) { //BOTTOM EDGE
+			y -= m_scrollSpeed;
+		}
+		if (mouseY > scrnHeight - m_edgeScrlSize) { //TOP EDGE
+			y += m_scrollSpeed;
+		}
 
 		//Handle zoom (scale)
-		if (input->getMouseScroll()) {
+		scale -= mouseScroll * m_zoomSpeed;
+		if (scale < 1.0f) scale = 1.0f;
+		if (scale > 5.0f) scale = 5.0f;
 
-		}
-
-
+		ImGui::Begin("Camera Zoom");
+		ImGui::Text("camera.scale = %f", scale);
+		ImGui::Text("mouseScroll = %f", mouseScroll);
+		ImGui::End();
 	}
 	
 	TextureManager::~TextureManager()

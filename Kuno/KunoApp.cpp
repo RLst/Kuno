@@ -1,8 +1,11 @@
+#include <ctime>
+
 #include "KunoApp.h"
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
 
+#include "Util.h"
 #include "AI.h"
 #include "PF.h"
 #include "pkr\Vector2.h"
@@ -18,25 +21,38 @@ bool KunoApp::startup() {
 	
 	m_2dRenderer = new aie::Renderer2D();
 
+	setVSync(true);
+
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
 	////////////////////////////////////////////////////////////////////////
-	//Setup map
-	//Set sky to night
-	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
+	//Randomize seed
+	srand((unsigned int)time(NULL));
+
+	if (setupCamera() == false) return false;
+
 	if (loadTextures() == false) return false;
 
+	//Setup map and pathfinding
+	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
 	if (setupPF() == false) return false;
 
-	//Setup player
-	if (setupPlayer() == false) return false;
+	//Setup AI systems
+	//if (setupAI() == false) return false;
 
-	//Setup AI agents
-	if (setupAI() == false) return false;
+	//Setup Agents
+	if (setupPlayer() == false) return false;
+	if (setupEnemies() == false) return false;
 
 	//////////////////////////////////////////////////////////////////////
+	return true;
+}
+
+bool KunoApp::setupCamera()
+{
+	m_camera = new Util::Camera(this);
 	return true;
 }
 
@@ -126,15 +142,29 @@ bool KunoApp::setupPF()
 	//////////// MAP /////////////
 	//Should make this load a map from some data or file
 	
-	//Load the tiles
+	//Build tile array !!!
 	m_tiles = new PF::Tile**[WORLD_WIDTH];
 	for (int row = 0; row < WORLD_WIDTH; ++row)
 	{
 		m_tiles[row] = new PF::Tile*[WORLD_DEPTH];
 		for (int col = 0; col < WORLD_DEPTH; ++col)
 		{
-			m_tiles[row][col] = new PF::Tile(m_texManager->getTexture("Floor"));
-			//assert()
+			aie::Texture* inputTex = nullptr;
+			switch (Random(1, 2)) {
+			case 1:	//Floor
+				inputTex = m_texManager->getTexture("Floor");
+				break;
+			case 2:	//Slab
+				inputTex = m_texManager->getTexture("Slab");
+				break;
+			case 3: //Column
+				inputTex = m_texManager->getTexture("Column");
+				break;
+			case 4: //Huge block
+				inputTex = m_texManager->getTexture("HugeBlock");
+				break;
+			}
+			m_tiles[row][col] = new PF::Tile(inputTex);
 		}
 	}
 
@@ -144,13 +174,18 @@ bool KunoApp::setupPF()
 	return true;
 }
 
+bool KunoApp::setupAI()
+{
+	return false;
+}
+
 bool KunoApp::setupPlayer()
 {
 	m_player = new AI::Agent(50, pkr::Vector3(1, 0, 0));
 	return true;
 }
 
-bool KunoApp::setupAI()
+bool KunoApp::setupEnemies()
 {
 	static int numOfEnemies = 10;
 
@@ -171,6 +206,9 @@ void KunoApp::update(float deltaTime) {
 	aie::Input* input = aie::Input::getInstance();
 
 	////////////////////////////////////////////////
+	//Edge scrolling, Zooming
+	m_camera->update(deltaTime);
+
 	//Update the map
 
 
@@ -181,8 +219,6 @@ void KunoApp::update(float deltaTime) {
 
 	//Get control input
 
-	//Control camera edge scrolling
-	m_camera->update(deltaTime, input, this);
 
 	//ImGui::Begin("EdgeScrolling");
 	//ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
@@ -202,6 +238,10 @@ void KunoApp::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
+	//// SET THE CAMERA ////
+	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
+	m_2dRenderer->setCameraScale(m_camera->scale);
+
 	/////////////////////////////////////////////////////
 	// begin drawing sprites
 	m_2dRenderer->begin();
@@ -213,8 +253,6 @@ void KunoApp::draw() {
 	m_map->draw(m_2dRenderer);
 
 	//Draw agents
-	// m_2dRenderer->setUVRect()
-
 
 	// output some text, uses the last used colour
 	m_2dRenderer->setRenderColour(0.4f, 0.4f, 0.4f);

@@ -24,6 +24,9 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{7adfc851-35b4-4c20-8683-08ef4ae19128}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{2f24b136-d5bd-4e72-a0cf-14cd7e8f2e5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KunoApp.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDefines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -82,5 +88,28 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\blockLarge_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\blockSmall_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\column_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\columnBlocks_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\floor_N.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\bin\textures\prototype_iso\slab_N.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

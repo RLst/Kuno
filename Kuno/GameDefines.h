@@ -1,12 +1,19 @@
 #pragma once
 
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
 #define WORLD_WIDTH 5		//Tiles along X axis
 #define WORLD_DEPTH 5		//Tiles along Y axis
-#define ISO_TILE_WIDTH 100		//Width of isometric tile in px
-#define ISO_TILE_HEIGHT 50		//Height of isometric tile in px
+//#define ISO_TILE_WIDTH 512		//Width of isometric tile in px
+//#define ISO_TILE_HEIGHT 256		//Height of isometric tile in px
 
-#define tmpCARTESIAN_WIDTH 200
-#define tmpCARTESIAN_HEIGHT 100
+#define tmpCARTESIAN_WIDTH 256
+#define tmpCARTESIAN_HEIGHT 256
+//127,344: Top corner of tile
+//Tiles are ~147px square
+
+int Random(int min, int max);
 
 
 //#include "Vector2.h"

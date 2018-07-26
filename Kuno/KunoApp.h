@@ -33,10 +33,12 @@ public:
 
 	//Setups
 	bool startup() override;
+	bool setupCamera();
 	bool loadTextures();
-	bool setupAI();
 	bool setupPF();
+	bool setupAI();
 	bool setupPlayer();
+	bool setupEnemies();
 
 	void shutdown() override;
 

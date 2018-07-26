@@ -53,6 +53,9 @@ bool KunoApp::startup() {
 bool KunoApp::setupCamera()
 {
 	m_camera = new Util::Camera(this);
+	m_camera->x = -250;
+	m_camera->y = -250;
+	m_camera->scale = 2.0f;
 	return true;
 }
 
@@ -150,18 +153,18 @@ bool KunoApp::setupPF()
 		for (int col = 0; col < WORLD_DEPTH; ++col)
 		{
 			aie::Texture* inputTex = nullptr;
-			switch (Random(1, 2)) {
+			switch (Random(1, 3)) {
 			case 1:	//Floor
 				inputTex = m_texManager->getTexture("Floor");
 				break;
 			case 2:	//Slab
 				inputTex = m_texManager->getTexture("Slab");
 				break;
-			case 3: //Column
-				inputTex = m_texManager->getTexture("Column");
-				break;
-			case 4: //Huge block
+			case 3: //Huge block
 				inputTex = m_texManager->getTexture("HugeBlock");
+				break;
+			case 4: //Column
+				inputTex = m_texManager->getTexture("Column");
 				break;
 			}
 			m_tiles[row][col] = new PF::Tile(inputTex);
@@ -210,21 +213,20 @@ void KunoApp::update(float deltaTime) {
 	m_camera->update(deltaTime);
 
 	//Update the map
-
-
 	//Update the agents
-
-
 	//Update GUI
 
 	//Get control input
-
 
 	//ImGui::Begin("EdgeScrolling");
 	//ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
 	//ImGui::End();
 	
-
+	//// DEBUG ////
+	//Mouse position
+	ImGui::Begin("Mouse Position");
+	ImGui::Text("X: %d, Y: %d", input->getMouseX(), input->getMouseY());
+	ImGui::End();
 
 	////////////////////////////////////////////////
 
@@ -241,22 +243,30 @@ void KunoApp::draw() {
 	//// SET THE CAMERA ////
 	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
 	m_2dRenderer->setCameraScale(m_camera->scale);
+	
+	//// DEBUB: Test screenToWorld() ////
+	aie::Input* input = aie::Input::getInstance();
+	float mousex = input->getMouseX();
+	float mousey = input->getMouseY();
+	m_camera->screenToWorld(mousex, mousey);
+	ImGui::Begin("screenToWorld()");
+	ImGui::Text("X: %d, Y: %d", mousex, mousey);
+	ImGui::End();
 
-	/////////////////////////////////////////////////////
+	////////////////////////
 	// begin drawing sprites
 	m_2dRenderer->begin();
 
 	//Draw the map
 	m_graph->draw(m_2dRenderer);
 
-	m_2dRenderer->setRenderColour(1.0f, 1.0f, 1.0f);
 	m_map->draw(m_2dRenderer);
 
 	//Draw agents
 
 	// output some text, uses the last used colour
-	m_2dRenderer->setRenderColour(0.4f, 0.4f, 0.4f);
-	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+	//m_2dRenderer->setRenderColour(0.4f, 0.4f, 0.4f);
+	//m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
 
 	// done drawing sprites
 	m_2dRenderer->end();

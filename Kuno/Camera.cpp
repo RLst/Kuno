@@ -19,19 +19,37 @@ namespace Util {
 	pkr::Vector2 Camera::WindowToCanvas(float & windowX, float & windowY)
 	{
 		//Init vars for return
-		pkr::Vector2 canvasCoord = { 0,0 };
+		pkr::Vector2 canvas = { 0,0 };
 
-		//Get the screen/window position (Done! windowX and windowY)
+		//Transform into canvas coordinates
+		canvas.x = this->x + (windowX * scale);
+		canvas.y = this->y + (windowY * scale);
 
-		//Transpose/Convert/Project into canvas coordinates
 		//Adjust for camera scale/zoom
-		//canvasCoord.x = 
 
+		return canvas;
+	}
 
+	void Camera::testWindowToCanvas(aie::Renderer2D * renderer)
+	{
+		aie::Input* input = aie::Input::getInstance();
 
-		//Return canvas coords
+		//Get mouse position in window coords
+		float mousex = input->getMouseX();
+		float mousey = input->getMouseY();
 
-		return pkr::Vector2();
+		//Transform from window coords to canvas coords
+		pkr::Vector2 transformed = WindowToCanvas(mousex, mousey);
+
+		renderer->setRenderColour(0.25f, 1, 0.25f);
+		renderer->drawCircle(transformed.x, transformed.y, 10);
+
+		//// DEBUG ////
+		ImGui::Begin("WindowToCanvas(test)");
+		ImGui::Text("Before > X: %f, Y: %f", mousex, mousey);
+		ImGui::Text("After > X: %f, Y: %f", transformed.x, transformed.y);
+		ImGui::End();
+		//////////////
 	}
 
 	void Camera::update(float deltaTime)

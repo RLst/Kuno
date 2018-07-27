@@ -84,12 +84,12 @@ namespace pf {
 					thisTile->getTexture(),				//Texture*
 					tilePos.x,							//X
 					tilePos.y,							//Y
-					0,						
-					0,
-					0,
-					10,									//Depth
-					0.0f,								//Xorigin
-					0.5f);								//Yorigin
+					0,									//Width
+					0,									//Height
+					0,									//Rotation
+					depth,								//Depth
+					0.5f,								//Xorigin
+					0.0f);								//Yorigin
 
 
 				//// DEBUG ////

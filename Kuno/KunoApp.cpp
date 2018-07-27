@@ -17,10 +17,10 @@
 #include "pkr\Vector2.h"
 #include "pkr\Vector3.h"
 
-
+//// MODERN SINGLETON PATTERN ////
 KunoApp* KunoApp::getInstance()
 {
-	//Modern and thread-safe
+	//Modern, thread-safe
 	//C++ 11 mandates that the initializer for a local static variable is only run once, 
 	//even in the presence of concurrency
 	static KunoApp *m_instance = new KunoApp();
@@ -33,6 +33,7 @@ void KunoApp::resetInstance()
 	delete m_toDelete;
 	m_toDelete = nullptr;		//CHECK WITH TEACHER!!!
 }
+/////////////////////////////////
 
 bool KunoApp::startup() {
 	
@@ -56,7 +57,7 @@ bool KunoApp::startup() {
 	if (setupPF() == false) return false;
 
 	//Setup AI systems
-	//if (setupAI() == false) return false;
+	if (setupAI() == false) return false;
 
 	//Setup Agents
 	if (setupPlayer() == false) return false;
@@ -107,17 +108,17 @@ bool KunoApp::setupUtilities()
 bool KunoApp::loadTextures()
 {
 	//Startup texture manager
-	m_texManager = new Util::TextureManager();
+	m_textureManager = new util::TextureManager();
 
 	//Test: Load in some core textures
 	//MAKE THE FINAL PATH AS:
-	m_texManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
-	m_texManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
-	m_texManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
-	m_texManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
-	m_texManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
-	m_texManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
-	m_texManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
+	m_textureManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
+	m_textureManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
+	m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
+	m_textureManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
+	m_textureManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
+	m_textureManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
+	m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
 
 	return true;
 }
@@ -125,7 +126,7 @@ bool KunoApp::loadTextures()
 bool KunoApp::setupPF()
 {
 	//Just setup a raw graph
-	m_graph = new PF::Graph();
+	m_graph = new pf::Graph();
 
 	pkr::Vector2 offset = { 60, 60 };
 	int maxCols = 30;
@@ -168,33 +169,33 @@ bool KunoApp::setupPF()
 	//Should make this load a map from some data or file
 	
 	//Build tile array !!!
-	m_tiles = new PF::Tile**[WORLD_WIDTH];
+	m_tiles = new pf::Tile**[WORLD_WIDTH];
 	for (int row = 0; row < WORLD_WIDTH; ++row)
 	{
-		m_tiles[row] = new PF::Tile*[WORLD_DEPTH];
+		m_tiles[row] = new pf::Tile*[WORLD_DEPTH];
 		for (int col = 0; col < WORLD_DEPTH; ++col)
 		{
 			aie::Texture* inputTex = nullptr;
-			switch (Random(1, 3)) {
+			switch (pkr::Random(1, 3)) {
 			case 1:	//Floor
-				inputTex = m_texManager->getTexture("Floor");
+				inputTex = m_textureManager->getTexture("Floor");
 				break;
 			case 2:	//Slab
-				inputTex = m_texManager->getTexture("Slab");
+				inputTex = m_textureManager->getTexture("Slab");
 				break;
 			case 3: //Huge block
-				inputTex = m_texManager->getTexture("HugeBlock");
+				inputTex = m_textureManager->getTexture("HugeBlock");
 				break;
 			case 4: //Column
-				inputTex = m_texManager->getTexture("Column");
+				inputTex = m_textureManager->getTexture("Column");
 				break;
 			}
-			m_tiles[row][col] = new PF::Tile(inputTex);
+			m_tiles[row][col] = new pf::Tile(inputTex);
 		}
 	}
 
 	//Build the actual map!
-	m_map = new PF::Map(WORLD_WIDTH, WORLD_DEPTH, m_tiles);
+	m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, m_tiles);
 
 	return true;
 }
@@ -223,7 +224,7 @@ bool KunoApp::setupAI()
 
 bool KunoApp::setupPlayer()
 {
-	m_player = new AI::Agent(50, pkr::Vector3(1, 0, 0));
+	m_player = new ai::Agent(50, pkr::Vector3(1, 0, 0));
 	return true;
 }
 
@@ -235,13 +236,14 @@ bool KunoApp::setupEnemies()
 	pkr::Vector3 seekerColour = pkr::Vector3(100, 50, 255);
 	for (int i = 0; i < numOfEnemies; ++i) {
 		//Seekers
-		AI::Agent* newEnemy = new AI::Agent(40.0f, seekerColour, pkr::Vector2(getWindowWidth() / 3.0f, getWindowHeight() / 3.0f));
+		ai::Agent* newEnemy = new ai::Agent(40.0f, seekerColour, pkr::Vector2(getWindowWidth() / 3.0f, getWindowHeight() / 3.0f));
 		m_enemyList.push_back(newEnemy);
 	}
 
 	return true;
 }
 
+//// CORE ////
 void KunoApp::update(float deltaTime) {
 
 	// input example
@@ -284,13 +286,14 @@ void KunoApp::draw() {
 	m_2dRenderer->setCameraScale(m_camera->scale);
 	
 	//// DEBUB: Test screenToWorld() ////
-	aie::Input* input = aie::Input::getInstance();
-	ImGui::Begin("Camera Position");
-	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
-	ImGui::End();
-	m_camera->testViewportToCanvas(m_2dRenderer);
-	////////////////////////
-	// begin drawing sprites
+	//aie::Input* input = aie::Input::getInstance();
+	//ImGui::Begin("Camera Position");
+	//ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
+	//ImGui::End();
+	//m_camera->testViewportToCanvas(m_2dRenderer);
+	//// SUCCESS! 27 July 2018, 10:45
+
+	//// START DRAW ////
 	m_2dRenderer->begin();
 
 	//Draw the map
@@ -303,7 +306,7 @@ void KunoApp::draw() {
 	//m_2dRenderer->setRenderColour(0.4f, 0.4f, 0.4f);
 	//m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
 
-	// done drawing sprites
+	//// END DRAW ////
 	m_2dRenderer->end();
-	/////////////////////////////////////////////////////////
 }
+///////////////////////////////////////////////////////////////////

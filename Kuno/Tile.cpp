@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-namespace PF {
+namespace pf {
 
 	Tile::Tile(aie::Texture * texture) :
 		m_texture(texture)

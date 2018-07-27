@@ -1,6 +1,6 @@
 #include "Path.h"
 
-namespace PF {
+namespace pf {
 
 	Path::Path()
 	{

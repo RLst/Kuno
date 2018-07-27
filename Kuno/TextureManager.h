@@ -13,7 +13,7 @@ namespace aie {
 	class Renderer2D;
 }
 
-namespace Util {
+namespace util {
 //Other utilities
 	
 	class TextureManager 

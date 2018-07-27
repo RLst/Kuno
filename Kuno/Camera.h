@@ -7,7 +7,7 @@ namespace aie {
 	class Renderer2D;
 }
 
-namespace Util {
+namespace util {
 
 	class Camera
 	{

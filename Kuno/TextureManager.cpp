@@ -5,7 +5,7 @@
 
 #include "imgui/imgui.h"
 
-namespace Util {
+namespace util {
 	
 	//// Texture Manager ////
 	TextureManager::~TextureManager()

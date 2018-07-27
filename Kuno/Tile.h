@@ -5,7 +5,7 @@ namespace aie {
 	class Texture;
 }
 
-namespace PF {
+namespace pf {
 
 enum eTileType
 {

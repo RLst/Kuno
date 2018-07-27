@@ -6,7 +6,7 @@ namespace aie {
 	class Renderer2D;
 }
 
-namespace PF {
+namespace pf {
 
 class Tile;
 class Layer;

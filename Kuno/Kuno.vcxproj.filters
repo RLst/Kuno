@@ -23,11 +23,11 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="AI\src">
+      <UniqueIdentifier>{205f2c3b-7786-431c-9c59-c00da5ae703a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
@@ -58,6 +58,12 @@
     <ClCompile Include="DepthSorter.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
+    <ClCompile Include="Agent.cpp">
+      <Filter>AI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>AI\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PF.h">
@@ -86,6 +92,9 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="DepthSorter.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Agent.h">
+      <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

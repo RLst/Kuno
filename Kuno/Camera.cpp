@@ -5,7 +5,7 @@
 
 #include "KunoApp.h"
 
-namespace Util {
+namespace util {
 
 	//// Camera ////
 	Camera::Camera() :

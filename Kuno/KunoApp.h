@@ -27,21 +27,22 @@ protected:
 	aie::Font*			m_font;
 
 	//Texture manager
-	Util::TextureManager* m_texManager;
+	util::TextureManager* m_textureManager;
+
 	//Depth sorter
 	util::DepthSorter*	m_depthSorter;
 	
 	//Agents
-	AI::Agent*			m_player;
-	std::vector<AI::Agent*>	m_enemyList;
+	ai::Agent*			m_player;
+	std::vector<ai::Agent*>	m_enemyList;
 
 	//Map and pathfinding
-	PF::Graph*			m_graph;
-	PF::Map*			m_map;
-	PF::Tile***			m_tiles;
+	pf::Graph*			m_graph;
+	pf::Map*			m_map;
+	pf::Tile***			m_tiles;
 
 	//Camera
-	Util::Camera*		m_camera;
+	util::Camera*		m_camera;
 
 	//GUI
 	//GUI::Gui*			m_gui;

@@ -1,8 +1,8 @@
 #include "PF.h"
 
-namespace PF {
+namespace pf {
 
-PF::Node * PF::Graph::addNode(pkr::Vector2 pos)
+pf::Node * pf::Graph::addNode(pkr::Vector2 pos)
 {
 	//Create new node with set properties, push it onto graph node list and return
 	Node* newNode = new Node(pos);
@@ -10,7 +10,7 @@ PF::Node * PF::Graph::addNode(pkr::Vector2 pos)
 	return newNode;
 }
 
-void PF::Graph::addConnection(Node * nodeFrom, Node * nodeTo, float cost)
+void pf::Graph::addConnection(Node * nodeFrom, Node * nodeTo, float cost)
 {
 	Node::connect(nodeFrom, nodeTo, cost);
 	//Edge* edge = new Edge(nodeTo, cost);			//Create new edge and connect to TARGET node and set costs
@@ -46,7 +46,7 @@ NodeList Graph::AStarSearch(Node * startNode, Node * endNode)
 	return NodeList();
 }
 
-void PF::Graph::draw(aie::Renderer2D * renderer)
+void pf::Graph::draw(aie::Renderer2D * renderer)
 {
 	//Draw edges on the bottom
 	for (auto node : m_nodes) {

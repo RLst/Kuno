@@ -6,7 +6,7 @@
 #include <Renderer2D.h>
 
 //Pathfinding related methods and implementations
-namespace PF {
+namespace pf {
 
 	struct Node;
 

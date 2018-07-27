@@ -8,7 +8,7 @@
 #include "KunoApp.h"
 //#include <ctime>
 
-namespace PF {
+namespace pf {
 
 	Map::Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector3 offset) :
 		m_width(mapWidth),
@@ -94,8 +94,6 @@ namespace PF {
 				renderer->setRenderColour(1, 0, 0);
 				renderer->drawCircle(isoPos.x, isoPos.y, 5);
 				///////////////
-
-				//renderer->drawSprite((***thisTile).getTexture(), isoPos.x, isoPos.y);
 			}
 		}
 
@@ -114,8 +112,6 @@ namespace PF {
 		cart.x = (TILE_RATIO * iso.y + iso.x) / TILE_RATIO;
 		cart.y = (TILE_RATIO * iso.y - iso.x) / TILE_RATIO;
 		return cart;
-		//cartesian.x = (2.0f * isometric.y - isometric.x) / 2.0f;
-		//cartesian.y = (2.0f * isometric.y + isometric.x) / 2.0f;
 	}
 
 	pkr::Vector2 Map::CartToIso(const pkr::Vector2 & cart)
@@ -124,25 +120,5 @@ namespace PF {
 		iso.x = cart.x - cart.y;
 		iso.y = (cart.x + cart.y) / TILE_RATIO;			
 		return iso;
-		//isometric.x = (2.0f * cartesian.y - cartesian.x) / 2.0f;
-		//isometric.y = (2.0f * cartesian.y + cartesian.x) / 2.0f;
-		//isometric.x = (cartesian.x - cartesian.y) * ISO_TILE_WIDTH / 2.0f + m_offset.x;
-		//isometric.y = (cartesian.x + cartesian.y) * ISO_TILE_HEIGHT / 3.0f + m_offset.y;
 	}
-
-	//These are Right Down render order I believe
-	//pkr::Vector2 Map::IsometricToCartesian(const pkr::Vector2 & isometric)
-	//{
-	//	pkr::Vector2 cartesian;
-	//	cartesian.x = (2.0f * isometric.y + isometric.x) / 2.0f;
-	//	cartesian.y = (2.0f * isometric.y - isometric.x) / 2.0f;
-	//	return cartesian;
-	//}
-	//pkr::Vector2 Map::CartesianToIsometric(const pkr::Vector2 & cartesian)
-	//{
-	//	pkr::Vector2 isometric;
-	//	isometric.x = (2.0f * cartesian.y + cartesian.x) / 2.0f;
-	//	isometric.y = (2.0f * cartesian.y - cartesian.x) / 2.0f;
-	//	return isometric;
-	//}
 }

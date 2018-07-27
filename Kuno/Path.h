@@ -2,7 +2,7 @@
 #include <vector>
 #include <Vector2.h>
 
-namespace PF {
+namespace pf {
 
 	typedef std::vector<pkr::Vector2> PointList;
 

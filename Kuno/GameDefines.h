@@ -34,3 +34,101 @@ T Clamp(const T& value, const T& min, const T& max)
 }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//// RANDOM TRASH BIN ////
+	//////////////////////////////////////////////////////////////////////////////////////
+	//TEST leafs
+	//eResult tAttackSequence::execute(Agent * agent, float deltaTime)
+	//{
+	//	//If condition node returns success then get the list of enemies found in range
+	//	
+	//	//////////////////////
+	//	//GIVE UP!!!
+	//	//////////////////////
+
+	//	return eResult::SUCCESS;
+	//}
+	//tEnemiesCloseCondition::tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range) :
+	//	m_enemies(listOfEnemies), m_range(range) {}
+	//eResult tEnemiesCloseCondition::execute(Agent * agent, float deltaTime)
+	//{
+	//	m_enemyFoundInRange.clear();		//Clear found enemies
+	//	bool successfullyFoundEnemiesInRange = false;		//Clear found flag 
+
+	//	//Return success if an enemy is within range
+	//	for (auto enemy : m_enemies) {
+	//		if (pkr::Vector2::distance(agent->getPos(), enemy->getPos()) < m_range) {
+	//			//Retrieve the enemy that is in range
+	//			m_enemyFoundInRange.push_back(enemy);
+	//			successfullyFoundEnemiesInRange = true;
+	//		}
+	//	}
+
+	//	//Return success if found
+	//	if (successfullyFoundEnemiesInRange)
+	//			return eResult::SUCCESS;
+	//	else 
+	//		return eResult::FAILURE;
+	//}
+
+	//eResult tAttackAction::execute(Agent * agent, float deltaTime)
+	//{
+	//	//For each enemy within range of agent
+	//	for (auto enemy : m_enemiesInRange) {
+
+	//		//Deal damage to enemy
+	//		//enemy.health -= m_damageToApply;
+	//	}
+	//	return eResult::SUCCESS;
+	//}
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////// TESTS /////////////////////
+	////Composites
+	//class tAttackSequence : public Sequence
+	//{
+	//private:
+	//	std::vector<Agent*>	m_enemiesInRange;
+	//public:
+	//	tAttackSequence() { m_enemiesInRange.clear(); }
+	//	~tAttackSequence() {}
+	//	
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+	//class tEnemiesCloseCondition : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemies;
+	//	float		m_range;
+	//	std::vector<Agent*>	m_enemyFoundInRange;		//How do you relay this information to AttackAction?
+	//public:
+	//	//This class will need to take in a list of enemy agents
+	//	tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range);
+	//	//void setEnemyList(std::vector<Agent*> listOfEnemies);
+	//	//std::vector<Agent*> getEnemyList() const;
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};
+	//class tAttackAction : public iBehaviour
+	//{
+	//private:
+	//	std::vector<Agent*> m_enemiesInRange;
+	//	Agent*		m_enemyInRange;
+	//	int			m_damageToApply;
+	//	float		m_range;
+	//public:
+	//	eResult execute(Agent* agent, float deltaTime) override;
+	//};

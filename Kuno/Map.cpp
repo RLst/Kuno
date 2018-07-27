@@ -74,19 +74,22 @@ namespace pf {
 				//float dify = TILE_HEIGHT -
 				//	(float)thisTile->getTexture()->getHeight();
 
-				//Draw the tile
-				//float depth = 1.0f + abs(0.01f * isoPos.y);	//just to test out the zbuffer
+				//// DRAW THE TILE ////
+				//Find final tile positions
+				pkr::Vector2 tilePos = isoPos + m_offset;
+				//Calculate the depth
+				float depth = KunoApp::getInstance()->getDepthSorter()->getSortDepth(tilePos.y);
 				renderer->setRenderColour(1, 1, 1);
 				renderer->drawSprite(
-					thisTile->getTexture(),					//Texture*
-					isoPos.x + m_offset.x,					//X
-					isoPos.y + m_offset.y,					//Y
+					thisTile->getTexture(),				//Texture*
+					tilePos.x,							//X
+					tilePos.y,							//Y
 					0,						
 					0,
 					0,
-					10,										//Depth
-					0.0f,									//Xorigin
-					0.5f);									//Yorigin
+					10,									//Depth
+					0.0f,								//Xorigin
+					0.5f);								//Yorigin
 
 
 				//// DEBUG ////

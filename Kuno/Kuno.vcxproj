@@ -163,9 +163,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actions.cpp" />
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Condition.cpp" />
     <ClCompile Include="DepthSorter.cpp" />
     <ClCompile Include="GameDefines.cpp" />
     <ClCompile Include="KunoApp.cpp" />
@@ -177,9 +179,11 @@
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actions.h" />
     <ClInclude Include="Agent.h" />
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Condition.h" />
     <ClInclude Include="DepthSorter.h" />
     <ClInclude Include="GameDefines.h" />
     <ClInclude Include="KunoApp.h" />

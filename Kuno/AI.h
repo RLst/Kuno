@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <list>
-#include <pkr\Vector3.h>
-#include <pkr\Vector2.h>
+//#include <pkr\Vector3.h>
+//#include <pkr\Vector2.h>
 
 //For header definitions
 #include <Renderer2D.h>
@@ -99,40 +99,5 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	////////////// TESTS /////////////////////
-	////Composites
-	//class tAttackSequence : public Sequence
-	//{
-	//private:
-	//	std::vector<Agent*>	m_enemiesInRange;
-	//public:
-	//	tAttackSequence() { m_enemiesInRange.clear(); }
-	//	~tAttackSequence() {}
-	//	
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
-	//class tEnemiesCloseCondition : public iBehaviour
-	//{
-	//private:
-	//	std::vector<Agent*> m_enemies;
-	//	float		m_range;
-	//	std::vector<Agent*>	m_enemyFoundInRange;		//How do you relay this information to AttackAction?
-	//public:
-	//	//This class will need to take in a list of enemy agents
-	//	tEnemiesCloseCondition(std::vector<Agent*> listOfEnemies, float range);
-	//	//void setEnemyList(std::vector<Agent*> listOfEnemies);
-	//	//std::vector<Agent*> getEnemyList() const;
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
-	//class tAttackAction : public iBehaviour
-	//{
-	//private:
-	//	std::vector<Agent*> m_enemiesInRange;
-	//	Agent*		m_enemyInRange;
-	//	int			m_damageToApply;
-	//	float		m_range;
-	//public:
-	//	eResult execute(Agent* agent, float deltaTime) override;
-	//};
 }
 

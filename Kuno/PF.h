@@ -81,4 +81,3 @@ namespace pf {
 		//void	findNodes(std::list<Node*> &list, pkr::Vector2 position, float distance);	//do I need this?
 	};
 }
-

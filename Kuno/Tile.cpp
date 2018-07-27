@@ -17,9 +17,4 @@ namespace pf {
 		renderer->drawSprite(m_tex, m_pos.x, m_pos.y, 0, 0, 0, depth);
 	}
 
-
-
-
-
-
 }

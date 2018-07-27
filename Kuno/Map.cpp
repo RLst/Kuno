@@ -6,7 +6,6 @@
 #include "imgui/imgui.h"
 
 #include "KunoApp.h"
-//#include <ctime>
 
 namespace pf {
 
@@ -14,7 +13,7 @@ namespace pf {
 		m_width(mapWidth),
 		m_depth(mapDepth),
 		m_tiles(tileArray), 
-		m_offset(offset)
+		m_mapOffset(offset)
 	{}
 
 	Map::~Map()
@@ -32,9 +31,6 @@ namespace pf {
 		//ImGui::SliderFloat("CartHeight", &cartHeight, -256, 256);
 		//ImGui::End();
 		////////////
-		float mapDrawStartTime = KunoApp::getInstance()->getTime();
-		////////////
-
 
 		for (int row = 0; row < m_width; ++row) {
 			for (int col = 0; col < m_depth; ++col) {
@@ -48,7 +44,8 @@ namespace pf {
 				//cartPos.y = row * cartHeight;
 
 				//Convert to isometric
-				isoPos = CartToIso(cartPos);
+				isoPos = KunoApp::getInstance()->getCoordConverter()->CartesianToIsometric(cartPos);
+				//isoPos = CartToIso(cartPos);
 
 				//Adjust for height of tile if needed
 				//float tmpDifY = ISO_TILE_HEIGHT - (float)thisTile->getTexture()->getHeight();
@@ -60,7 +57,7 @@ namespace pf {
 
 				//// DRAW THE TILE ////
 				//Find final tile positions
-				pkr::Vector2 tilePos = isoPos + m_offset;
+				pkr::Vector2 tilePos = isoPos + m_mapOffset;
 				//Calculate the depth
 				float depth = KunoApp::getInstance()->getDepthSorter()->getSortDepth(tilePos.y);
 				renderer->setRenderColour(1, 1, 1);
@@ -78,34 +75,10 @@ namespace pf {
 
 				//// DEBUG ////
 				//Draw a debug point
-				renderer->setRenderColour(1, 0.75f, 0);
-				renderer->drawCircle(isoPos.x, isoPos.y, 5);
+				//renderer->setRenderColour(1, 0.75f, 0);
+				//renderer->drawCircle(isoPos.x, isoPos.y, 5);
 				///////////////
 			}
 		}
-
-		//// DEBUG: Check the time it takes to draw the map ////
-		float mapDrawEndTime = KunoApp::getInstance()->getTime();
-		ImGui::Begin("Map Draw Duration");
-		ImGui::Text("%f",mapDrawEndTime - mapDrawStartTime);
-		ImGui::End();
-		////////////
-	}
-
-	//These are Right Down render order I believe
-	pkr::Vector2 Map::IsoToCart(const pkr::Vector2 & iso)
-	{
-		pkr::Vector2 cart;
-		cart.x = (TILE_RATIO * iso.y + iso.x) / TILE_RATIO;
-		cart.y = (TILE_RATIO * iso.y - iso.x) / TILE_RATIO;
-		return cart;
-	}
-
-	pkr::Vector2 Map::CartToIso(const pkr::Vector2 & cart)
-	{
-		pkr::Vector2 iso = { 0,0 };
-		iso.x = cart.x - cart.y;
-		iso.y = (cart.x + cart.y) / TILE_RATIO;			
-		return iso;
 	}
 }

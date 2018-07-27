@@ -62,7 +62,7 @@ void pf::Graph::draw(aie::Renderer2D * renderer)
 	for (auto node : m_nodes) {
 		renderer->setRenderColour(1, 0.3f, 0);		//Required?
 		//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
-		renderer->drawCircle(node->pos_tmp.x, node->pos_tmp.y, 5);
+		renderer->drawCircle(node->pos_tmp.x, node->pos_tmp.y, 10);
 	}
 }
 

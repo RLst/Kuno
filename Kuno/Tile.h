@@ -36,7 +36,6 @@ protected:
 
 	//Cartesian World
 	pkr::Vector2	m_pos;
-	eTileType		m_type;
 
 public:
 	///////////////////////

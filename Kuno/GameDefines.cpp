@@ -3,9 +3,9 @@
 
 namespace pkr {
 
-int Random(int min, int max)
-{
-	return min + (rand() % (max - min + 1));
-}
+	int Random(int min, int max)
+	{
+		return min + (rand() % (max - min + 1));
+	}
 
 }

@@ -19,10 +19,6 @@
     <Filter Include="Util\src">
       <UniqueIdentifier>{4550bc9e-76b9-49ee-afe0-502d84847732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="zsrc">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="AI\src">
       <UniqueIdentifier>{205f2c3b-7786-431c-9c59-c00da5ae703a}</UniqueIdentifier>
     </Filter>
@@ -46,12 +42,6 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
-    <ClCompile Include="GameDefines.cpp">
-      <Filter>zsrc</Filter>
-    </ClCompile>
-    <ClCompile Include="KunoApp.cpp">
-      <Filter>zsrc</Filter>
-    </ClCompile>
     <ClCompile Include="DepthSorter.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
@@ -68,9 +58,13 @@
     <ClCompile Include="Condition.cpp">
       <Filter>AI\src</Filter>
     </ClCompile>
-    <ClCompile Include="GameDefines.cpp" />
     <ClCompile Include="KunoApp.cpp" />
-    <ClCompile Include="CoordConverter.cpp" />
+    <ClCompile Include="CoordConverter.cpp">
+      <Filter>Util\src</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDefines.cpp">
+      <Filter>Util\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PF.h">
@@ -94,9 +88,7 @@
     <ClInclude Include="Path.h">
       <Filter>PF</Filter>
     </ClInclude>
-    <ClInclude Include="GameDefines.h" />
     <ClInclude Include="KunoApp.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="DepthSorter.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -109,7 +101,12 @@
     <ClInclude Include="Condition.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="CoordConverter.h" />
+    <ClInclude Include="CoordConverter.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDefines.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">

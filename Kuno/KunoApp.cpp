@@ -1,15 +1,23 @@
+#include <ctime>
+
 #include "KunoApp.h"
+#include "GameDefines.h"
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
 #include "imgui.h"
-#include "GameDefines.h"
-#include <ctime>
 
-#include "Camera.h"
+//Utils
 #include "TextureManager.h"
+#include "Camera.h"
+#include "DepthSorter.h"
+#include "CoordConverter.h"
 
+//AI
 #include "AI.h"
+#include "Agent.h"
+
+//PF
 #include "PF.h"
 #include "Tile.h"
 #include "Map.h"
@@ -102,6 +110,9 @@ bool KunoApp::setupUtilities()
 	m_depthSorter = new util::DepthSorter(-2000.0f, 2000.0f);
 				//note: Z buffer depth of between 0-1 is reserved for the GUI
 
+	//// Coord Converter ////
+	m_coordConverter = new util::CoordConverter(m_camera);
+
 	return true;
 }
 
@@ -128,11 +139,11 @@ bool KunoApp::setupPF()
 	//Just setup a raw graph
 	m_graph = new pf::Graph();
 
-	pkr::Vector2 offset = { 60, 60 };
-	int maxCols = 30;
-	int maxRows = 16;
-	float nodeWidth = 40;
-	float nodeHeight = 40;
+	pkr::Vector2 offset = { 100, 100 };
+	int maxCols = 10;
+	int maxRows = 10;
+	float nodeWidth = 100;
+	float nodeHeight = 100;
 
 	
 	/////////// NODE //////////////
@@ -190,7 +201,7 @@ bool KunoApp::setupPF()
 				inputTex = m_textureManager->getTexture("Column");
 				break;
 			}
-			m_tiles[row][col] = new pf::Tile(inputTex);
+			m_tiles[row][col] = new pf::Tile({ 0,0 }, inputTex);
 		}
 	}
 
@@ -219,7 +230,18 @@ bool KunoApp::setupAI()
 	//	//
 	//
 	//}
-	return false;
+
+	//Setup player
+	m_player = new ai::Agent();
+	
+	//Setup enemies
+	int numOfEnemies = 10;
+	for (int i = 0; i < numOfEnemies; ++i) {
+		//Create an enemy and push into list
+		ai::Agent* newEnemy = new ai::Agent(100.0f, pkr::Vector2(800, 800));
+		m_enemyList.push_back(newEnemy);
+	}
+	return true;
 }
 
 bool KunoApp::setupPlayer()
@@ -273,6 +295,11 @@ void KunoApp::update(float deltaTime) {
 
 void KunoApp::draw() {
 
+	//// FPS ////
+	ImGui::Begin("FPS");
+	ImGui::Text("%d", this->getFPS());
+	ImGui::End();
+
 	// wipe the screen to the background colour
 	clearScreen();
 
@@ -282,7 +309,7 @@ void KunoApp::draw() {
 	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
 	m_2dRenderer->setCameraScale(m_camera->scale);
 	
-	//// DEBUB: Test screenToWorld() ////
+	//// DEBUG: Test screenToWorld() ////
 	ImGui::Begin("Camera Position");
 	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
 	ImGui::End();
@@ -293,8 +320,17 @@ void KunoApp::draw() {
 	//// START DRAW ////
 	m_2dRenderer->begin();
 
-	//Draw the map
+	//// Draw the map ////
+	float mapDrawStartTime = KunoApp::getInstance()->getTime();
+	////////////
 	m_graph->draw(m_2dRenderer);
+	//// DEBUG: Check the time it takes to draw the map ////
+	float mapDrawEndTime = KunoApp::getInstance()->getTime();
+	ImGui::Begin("Graph Draw Duration");
+	ImGui::Text("%f", mapDrawEndTime - mapDrawStartTime);
+	ImGui::End();
+	////////////
+
 	m_map->draw(m_2dRenderer);
 
 	//Draw agents

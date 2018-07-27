@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <Vector3.h>
+#include "PF.h"
 
 namespace aie {
 	class Renderer2D;
@@ -23,16 +24,16 @@ enum eLayerType {	//Also holds the depth setting
 	ROOF = 100,
 };
 
-class Map
+class Map : public Graph
 {
 	//A map contains a grid of tiles
 	//A grid is 
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
-	pkr::Vector3	m_offset;
-	int				m_width;
-	int				m_depth;
+	pkr::Vector3	m_mapOffset;
+	int				m_width;			//Columns
+	int				m_depth;			//Rows
 	int				m_tileWidthpx;
 	int				m_tileHeightpx;
 
@@ -45,10 +46,7 @@ public:
 	pkr::Vector2	CartToIso(const pkr::Vector2 &cart);
 
 	//Constructor
-	Map(int mapWidth, 
-		int mapDepth, 
-		Tile*** tileArray, 
-		pkr::Vector3 offset = pkr::Vector3());
+	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector3 offset = pkr::Vector3());
 	
 	//Destructor
 	~Map();
@@ -68,6 +66,3 @@ private:
 };
 
 }
-
-
-

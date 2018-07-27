@@ -13,7 +13,7 @@ namespace util {
 	{
 	private:
 		float			m_edgeScrlSize = 30.0f;	//px; Pixels from edge of screen where the mouse will move 
-		float			m_scrollSpeed = 100.0f;
+		float			m_scrollSpeed = 20.0f;
 		float			m_zoomSpeed = 0.2f;
 		int				windowWidth;
 		int				windowHeight;

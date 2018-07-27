@@ -21,6 +21,12 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	class MouseController : public iBehaviour
+	{
+	private:
+		aie::Input*		m_input;
+	public:
+		MouseController(aie::Input * input = aie::Input::getInstance());
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 

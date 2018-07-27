@@ -30,6 +30,7 @@ T Clamp(const T& value, const T& min, const T& max)
 	else if (value > max)
 		return max;
 	//Else it is already clamped OR the min/max values are invalid :P
+	return value;
 }
 
 }

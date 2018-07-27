@@ -25,7 +25,7 @@ float DepthSorter::getSortDepth(float spriteYpos) const
 	spriteYpos = pkr::Clamp(spriteYpos, m_nearestYpos, m_furthestYpos);	//In this case just clamp
 
 	//Add nearestYpos to spriteYpos
-	spriteYpos += m_nearestYpos;
+	spriteYpos += abs(m_nearestYpos);
 
 	//Multiply spriteYpos by depthIterator to find the correct depth
 	float sortedDepth = spriteYpos * m_depthIterator;

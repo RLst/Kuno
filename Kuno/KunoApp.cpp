@@ -259,16 +259,11 @@ void KunoApp::update(float deltaTime) {
 
 	//Get control input
 
-	//ImGui::Begin("EdgeScrolling");
-	//ImGui::Text("Camera pos x: %d, y: %d", m_camera->x, m_camera->y);
-	//ImGui::End();
-	
 	//// DEBUG ////
 	//Mouse position
 	ImGui::Begin("Mouse Position");
 	ImGui::Text("X: %d, Y: %d", input->getMouseX(), input->getMouseY());
 	ImGui::End();
-
 	////////////////////////////////////////////////
 
 	// exit the application
@@ -281,17 +276,19 @@ void KunoApp::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
+	aie::Input* input = aie::Input::getInstance();
+
 	//// SET THE CAMERA ////
 	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
 	m_2dRenderer->setCameraScale(m_camera->scale);
 	
 	//// DEBUB: Test screenToWorld() ////
-	//aie::Input* input = aie::Input::getInstance();
-	//ImGui::Begin("Camera Position");
-	//ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
-	//ImGui::End();
-	//m_camera->testViewportToCanvas(m_2dRenderer);
-	//// SUCCESS! 27 July 2018, 10:45
+	ImGui::Begin("Camera Position");
+	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
+	ImGui::End();
+
+	//m_camera->testViewportToCanvas(m_2dRenderer);		// SUCCESS! 27 July 2018, 10:45
+	/////////
 
 	//// START DRAW ////
 	m_2dRenderer->begin();
@@ -302,9 +299,14 @@ void KunoApp::draw() {
 
 	//Draw agents
 
-	// output some text, uses the last used colour
-	//m_2dRenderer->setRenderColour(0.4f, 0.4f, 0.4f);
-	//m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+
+	//// DEBUG: Depth sorting ////
+	pkr::Vector2 cartmousepos = pkr::Vector2(input->getMouseX(), input->getMouseY());
+	pkr::Vector2 isomousepos = m_camera->ViewportToCanvas(cartmousepos.x, cartmousepos.y);
+	float depth = m_depthSorter->getSortDepth(isomousepos.y);
+	m_2dRenderer->setRenderColour(0.25f, 1, 0.25f);
+	m_2dRenderer->drawCircle(isomousepos.x, isomousepos.y, 50.0f, depth);
+	////////
 
 	//// END DRAW ////
 	m_2dRenderer->end();

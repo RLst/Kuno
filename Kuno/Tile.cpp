@@ -6,10 +6,4 @@ namespace pf {
 		m_texture(texture)
 	{
 	}
-
-	//void Tile::draw(aie::Renderer2D * renderer)
-	//{
-	//	renderer->drawSprite(m_texture, pos.x, pos.y);
-	//}
-
 }

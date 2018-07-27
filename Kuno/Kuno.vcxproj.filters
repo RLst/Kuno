@@ -46,9 +46,6 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>zsrc</Filter>
-    </ClCompile>
     <ClCompile Include="GameDefines.cpp">
       <Filter>zsrc</Filter>
     </ClCompile>
@@ -64,6 +61,7 @@
     <ClCompile Include="AI.cpp">
       <Filter>AI\src</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PF.h">

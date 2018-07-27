@@ -21,4 +21,15 @@ const float TILE_RATIO = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;	//Used 
 namespace pkr {
 
 int Random(int min, int max);		//int RNG
+
+template <typename T>
+T Clamp(const T& value, const T& min, const T& max)
+{
+	if (value < min)
+		return min;
+	else if (value > max)
+		return max;
+	//Else it is already clamped OR the min/max values are invalid :P
+}
+
 }

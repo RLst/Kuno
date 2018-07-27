@@ -44,12 +44,11 @@ bool KunoApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
-	////////////////////////////////////////////////////////////////////////
 	//Randomize seed
 	srand((unsigned int)time(NULL));
 
-	if (setupCamera() == false) return false;
-
+	//// SETUPS ////
+	if (setupUtilities() == false) return false;
 	if (loadTextures() == false) return false;
 
 	//Setup map and pathfinding
@@ -63,16 +62,6 @@ bool KunoApp::startup() {
 	if (setupPlayer() == false) return false;
 	if (setupEnemies() == false) return false;
 
-	//////////////////////////////////////////////////////////////////////
-	return true;
-}
-
-bool KunoApp::setupCamera()
-{
-	m_camera = new Util::Camera();
-	m_camera->x = -0;
-	m_camera->y = -0;
-	m_camera->scale = 2.0f;
 	return true;
 }
 
@@ -97,6 +86,22 @@ void KunoApp::shutdown() {
 	delete[] m_tiles;	//Delete the array of columns
 
 	delete m_camera;
+}
+
+//// SETUPS ////
+bool KunoApp::setupUtilities()
+{
+	//// Camera ////
+	m_camera = new util::Camera();
+	m_camera->x = -200;
+	m_camera->y = -200;
+	m_camera->scale = 2.0f;
+
+	//// Depth Sorter ////
+	m_depthSorter = new util::DepthSorter(-2000.0f, 2000.0f);
+				//note: Z buffer depth of between 0-1 is reserved for the GUI
+
+	return true;
 }
 
 bool KunoApp::loadTextures()

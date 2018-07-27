@@ -2,7 +2,11 @@
 
 #include <Texture.h>
 
-namespace Util {
+namespace ai {
+	class Agent;
+}
+
+namespace util {
 
 class DepthSorter
 {
@@ -14,17 +18,15 @@ private:
 	float		m_nearestYpos, m_furthestYpos;
 	float		m_minDepth, m_maxDepth;
 	float		m_totalDepthSegments;
-	float		m_depthIteration;
+	float		m_depthIterator;
 
 public:
-	DepthSorter();
 	DepthSorter(float nearestYpos, float furthestYpos, float minDepth = 1.0f, float maxDepth = 100.0f);
-	~DepthSorter();
+	~DepthSorter() = default;
 
-	float		getSortDepth(float spriteYpos) const;
-	float		getSortDepth(aie::Texture* tex) const;
-
-
+	float		getSortDepth(float spriteYpos) const;		//Sorts the z-depth based on sprite Y position
+	float		getSortDepth(ai::Agent *agent) const;			//Gets the agent Y position then pass through getSortDepth()
+	//float		getSortDepth(aie::Texture* tex) const;		//Dont think it's possible to get y pos from texture class
 };
 
 }

@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "TextureManager.h"
 #include "Camera.h"
+#include "DepthSorter.h"
 	
 //Tony Le
 //Date: 25 Jul 2018
@@ -27,6 +28,8 @@ protected:
 
 	//Texture manager
 	Util::TextureManager* m_texManager;
+	//Depth sorter
+	util::DepthSorter*	m_depthSorter;
 	
 	//Agents
 	AI::Agent*			m_player;
@@ -53,7 +56,7 @@ public:
 
 	//Setups
 	bool startup() override;
-	bool setupCamera();
+	bool setupUtilities();
 	bool loadTextures();
 	bool setupPF();
 	bool setupAI();
@@ -65,6 +68,7 @@ public:
 	void update(float deltaTime) override;
 	void draw() override;
 
-
+	//Access utilities
+	util::DepthSorter*	getDepthSorter() const { return m_depthSorter; }
 
 };

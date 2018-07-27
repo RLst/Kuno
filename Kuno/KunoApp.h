@@ -48,9 +48,9 @@ protected:
 	//GUI::Gui*			m_gui;
 
 	//Audio systems
-	//
 
 	//Log systems
+
 public:
 	static KunoApp*		getInstance();		//MODERN SINGLETON PATTERN
 	static void			resetInstance();	//MODERN SINGLETON PATTERN; call this to delete singleton

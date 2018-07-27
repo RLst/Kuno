@@ -26,7 +26,6 @@ public:
 
 	float		getSortDepth(float spriteYpos) const;		//Sorts the z-depth based on sprite Y position
 	float		getSortDepth(ai::Agent *agent) const;			//Gets the agent Y position then pass through getSortDepth()
-	//float		getSortDepth(aie::Texture* tex) const;		//Dont think it's possible to get y pos from texture class
 };
 
 }

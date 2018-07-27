@@ -41,24 +41,4 @@ float DepthSorter::getSortDepth(ai::Agent * agent) const
 	return getSortDepth(agentYpos);		//Hopefully the agent's Y position corresponds to it's sprite Y position too
 }
 
-//float DepthSorter::getSortDepth(aie::Texture * tex) const
-//{
-//	//Get sprite Y position then process as usual
-//	spriteYpos = tex.
-//
-//	//Dealt with sprites that are out of range
-//	spriteYpos = Clamp(spriteYpos, m_nearestYpos, m_furthestYpos);	//In this case just clamp
-//
-//																	//Add nearestYpos to spriteYpos
-//	spriteYpos += m_nearestYpos;
-//
-//	//Multiply spriteYpos by depthIterator to find the correct depth
-//	float correctDepth = spriteYpos * m_depthIterator;
-//
-//	return correctDepth;
-//	return 0.0f;
-//}
-
-
-
 }

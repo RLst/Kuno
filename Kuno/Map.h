@@ -40,11 +40,6 @@ private:
 	Tile***			m_tiles;		//Pointer to the 2D array of tiles
 	//std::vector<Tile*>	m_tiles;
 
-	//Layer container
-	//std::vector<Layer*>		m_layers;
-
-	//Object container?
-
 public:
 	pkr::Vector2	IsoToCart(const pkr::Vector2 &iso);
 	pkr::Vector2	CartToIso(const pkr::Vector2 &cart);

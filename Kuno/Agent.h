@@ -20,45 +20,41 @@ namespace ai {
 		std::vector<iBehaviour*> m_behaviours;
 
 		//Some basic transformation data
-		float					m_maxForce;
-		pkr::Vector2			m_force;
-		pkr::Vector2			m_accel;
-		pkr::Vector2			m_vel;
-		pkr::Vector2			m_pos;
+		//float					m_maxForce;
+		//pkr::Vector2			m_force;
+		//pkr::Vector2			m_accel;
+		//pkr::Vector2			m_vel;
+		pkr::Vector2			m_pos;			//px; Cartesian
+		pkr::Vector2			m_isoPos;		//px
 
 		//Circle agent
-		float					m_size = 0;
+		float					m_size;
 		pkr::Vector3			m_colour;
-
-		//Texture agent
-		aie::Texture*			m_texture = nullptr;
 
 		//Path Following
 		int						m_currentWaypointIndex;	//???Is this right?
-		std::vector<pkr::Vector2>* m_currentPath;
+		std::vector<pkr::Vector2*> m_currentPath;
 		float					m_waypointSearchRadius;
 		pkr::Vector2			pathFollowing();
 
 	public:
-		//Agent(const Agent &other);		//Copy
-
-		Agent(float maxForce = 200.0f, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));	//Standard
-
-		Agent(float circleSize, const pkr::Vector3 &colour = pkr::Vector3(1, 1, 1), const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));	//Circle agent constructor
-
-		Agent(aie::Texture* agentTexture, const pkr::Vector2 &startingPos = pkr::Vector2(300, 300));		//Texture agent
-		virtual ~Agent();	//Destructor 
+		//Agent(const Agent &other);	//Copy
+		virtual ~Agent();				//Destructor 
+		Agent(float circleSize = 25.0f, 
+			const pkr::Vector3 &colour = { 0.75f, 0.75f, 0.75f },
+			const pkr::Vector2 &startingPos = { 300, 300 });
 
 		//Add
 		void				addBehaviour(iBehaviour* behaviour);
-		void				addForce(const pkr::Vector2 &force);
+		//void				addForce(const pkr::Vector2 &force);
+		void				move(const pkr::Vector2 &lSpeed);			//Linear move (instant vel/accel)
 
 		//State accessors
-		pkr::Vector2		getPos() const { return m_pos; }
+		pkr::Vector2		getPos() const { return m_isoPos; }
 
 		//Core
 		void				update(float deltaTime);
-		void				draw(aie::Renderer2D* renderer);
+		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
 	};
 
 

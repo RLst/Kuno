@@ -1,11 +1,9 @@
 #include "Agent.h"
 #include <Vector2.h>
 #include "AI.h"
-
+#include "KunoApp.h"
 
 namespace ai {
-
-	//// Agent ////
 
 	//Agent::Agent(const Agent & other) :		//Copy constructor
 	//	m_behaviours(other.m_behaviours),
@@ -22,27 +20,25 @@ namespace ai {
 	//	m_waypointSearchRadius(other.m_waypointSearchRadius)
 	//{}
 
-	Agent::Agent(float maxForce, const pkr::Vector2 & startingPos) :
-		m_maxForce(maxForce),
-		m_pos(startingPos) {}
-
-	Agent::Agent(float size, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
-		m_size(size),
+	Agent::Agent(float circleSize, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
+		m_size(circleSize),
 		m_colour(colour),
-		m_pos(startingPos) {}
-
-	Agent::Agent(aie::Texture * texture, const pkr::Vector2 & startingPos) :
-		m_texture(texture),
 		m_pos(startingPos) {}
 
 	Agent::~Agent()
 	{
+		//Behaviours
 		for (auto &behaviour : m_behaviours) {
 			delete behaviour;			//Do the behaviours have to be deleted?
 			behaviour = nullptr;
 		}
-		//if (m_texture != nullptr) 
-		//	delete m_texture;
+
+		//Path
+		for (auto &point : m_currentPath) {
+			delete point;
+			point = nullptr;
+		}
+
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)
@@ -50,9 +46,14 @@ namespace ai {
 		m_behaviours.push_back(behaviour);
 	}
 
-	void Agent::addForce(const pkr::Vector2 & force)
+	//void Agent::addForce(const pkr::Vector2 & force)
+	//{
+	//	m_force += force;
+	//}
+
+	void Agent::move(const pkr::Vector2 & lMove)
 	{
-		m_force += force;
+		m_pos += lMove;
 	}
 
 
@@ -92,9 +93,12 @@ namespace ai {
 
 	void Agent::draw(aie::Renderer2D * renderer)
 	{
-		//Draw agent as a coloured circle
+		auto app = KunoApp::Instance();
+		auto depth = app->DepthSorter()->getSortDepth(m_pos.y);					//Sort drawing depth of agent
+		m_isoPos = app->CoordConverter()->CartesianToIsometric(m_pos);			//Convert agents coords to isometric
+
 		renderer->setRenderColour(m_colour.r, m_colour.g, m_colour.b);
-		renderer->drawCircle(m_pos.x, m_pos.y, m_size);
+		renderer->drawCircle(m_isoPos.x, m_isoPos.y + m_size, m_size, depth);	//By default draw agent as a coloured circle
 	}
 
 }

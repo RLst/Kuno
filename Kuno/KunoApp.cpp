@@ -243,23 +243,12 @@ bool KunoApp::setupAI()
 	//
 	//}
 
-	//Setup player
-	//m_player = new ai::Agent(50.0f, { 0,1,0 });
-	
-	//Setup enemies
-	int numOfEnemies = 10;
-	for (int i = 0; i < numOfEnemies; ++i) {
-		//Create an enemy and push into list
-		ai::Agent* newEnemy = new ai::Agent(40.0f, { 1,0,0 }, { 800,800 });
-		//ai::Agent* newEnemy = new ai::Agent(40.0f, pkr::Vector2(800, 800));
-		m_enemyList.push_back(newEnemy);
-	}
 	return true;
 }
 
 bool KunoApp::setupPlayer()
 {
-	m_player = new ai::Agent(50, pkr::Vector3(1, 0, 0));
+	m_player = new ai::Agent(50, pkr::Vector3(0, 0.75f, 0));
 	return true;
 }
 
@@ -268,10 +257,10 @@ bool KunoApp::setupEnemies()
 	static int numOfEnemies = 10;
 
 	//Load in a bunch of blue seekers
-	pkr::Vector3 seekerColour = pkr::Vector3(100, 50, 255);
+	pkr::Vector3 seekerColour = pkr::Vector3(0.35f, 0.35f, 0.35f);
 	for (int i = 0; i < numOfEnemies; ++i) {
 		//Seekers
-		ai::Agent* newEnemy = new ai::Agent(40.0f, seekerColour, pkr::Vector2(getWindowWidth() / 3.0f, getWindowHeight() / 3.0f));
+		ai::Agent* newEnemy = new ai::Agent(30.0f, seekerColour, pkr::Vector2(i * 100.0f, i * 100.0f));
 		m_enemyList.push_back(newEnemy);
 	}
 
@@ -304,9 +293,8 @@ void KunoApp::draw() {
 
 	aie::Input* input = aie::Input::getInstance();
 
-	//// SET THE CAMERA ////
-	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
-	m_2dRenderer->setCameraScale(m_camera->zoom);
+	//// Translate camera ////
+	m_camera->translate(m_2dRenderer);
 
 	//// START DRAW ////
 	m_2dRenderer->begin();
@@ -337,15 +325,16 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	//// FPS ////
 	char fps[10];
-	sprintf_s(fps, 10, "%i", getFPS());
+	sprintf_s(fps, 10, "%i FPS", getFPS());
 	pkr::Vector2 fpsPos = m_coordConverter->ViewportToCartesian(0, 0);		//Stick to the bottom left hand corner of screen
+	m_2dRenderer->setRenderColour(0.1f, 0.1f, 0.1f);
 	m_2dRenderer->drawText(m_font, fps, fpsPos.x, fpsPos.y);
 
 	//// Camera ////
 	ImGui::Begin("Camera");
-	ImGui::Text("x: %f, y: %f", m_camera->x, m_camera->y);
-	ImGui::Text("Zoom: %f", m_camera->zoom);
-	ImGui::Text("lastScrollPos: %f", m_camera->m_lastScrollPos);
+	ImGui::Text("x: %.0f, y: %.0f", m_camera->x, m_camera->y);
+	ImGui::Text("Zoom: %.3f", m_camera->zoom);
+	ImGui::Text("lastScrollPos: %.3f", m_camera->m_lastScrollPos);
 	ImGui::End();
 
 	//// Coord converter ////

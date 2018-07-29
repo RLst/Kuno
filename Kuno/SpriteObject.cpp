@@ -27,9 +27,12 @@ SpriteObject::~SpriteObject()
 
 void SpriteObject::draw(aie::Renderer2D * renderer)
 {
-	auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(this);
-	auto currentFrame = getCurrentAnimationFrame();
-	renderer->drawSprite(currentFrame, m_pos.x + m_offset.x, m_pos.y + m_offset.y, 0, 0, 0, depth, 0,0);
+	auto app = KunoApp::Instance();
+	auto depth = app->DepthSorter()->getSortDepth(this);
+	m_isoPos = app->CoordConverter()->CartesianToIsometric(m_pos);
+	renderer->drawSprite(m_tex, m_isoPos.x, m_isoPos.y, 0, 0, 0, depth);
+	//auto currentFrame = getCurrentAnimationFrame();
+	//renderer->drawSprite(currentFrame, m_pos.x + m_offset.x, m_pos.y + m_offset.y, 0, 0, 0, depth, 0,0);
 }
 
 }

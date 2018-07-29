@@ -8,6 +8,7 @@ namespace util {
 
 	class Camera;
 
+	//Converts between coordinate systems: Viewport, Cartesian, Isometric
 	class CoordConverter
 	{
 	private:

@@ -8,11 +8,11 @@ namespace ai {
 
 namespace util {
 
+//This auto sorts the z buffer depth based on a sprite's origin Y position
+//That way you don't have to draw stuff in correct order to depth sort it ie:
+//The map can be drawn seperately from other game objects and agents
 class DepthSorter
 {
-	//This class will auto sort the z buffer depth based on a sprite's origin Y position
-	//That way you don't have to draw stuff in order to depth sort it ie:
-	//The map can be drawn seperately from other game objects and agents
 
 private:
 	float		m_nearestYpos, m_furthestYpos;

@@ -14,8 +14,9 @@ namespace aie {
 }
 
 namespace util {
-//Other utilities
 	
+	//Texture manager stores textures and can be retrieved on request
+	//Saves memory by preventing duplicate texture having to be loaded
 	class TextureManager 
 	{
 	private:

@@ -9,6 +9,7 @@ namespace aie {
 
 namespace util {
 
+	//Camera controller
 	class Camera
 	{
 	private:

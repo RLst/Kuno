@@ -3,7 +3,7 @@
 int main() {
 	
 	//Create master singleton
-	auto kuno = KunoApp::getInstance();
+	auto kuno = KunoApp::Instance();
 
 	//// NOTICE!!! Change to fullscreen when doing release version ////
 	//// Window size parameters MUST match with native monitor resolution otherwise there will be
@@ -11,7 +11,7 @@ int main() {
 	//// Suggested resolutions: 1280, 720 | 1440, 900 | 1650, 1050
 
 	// initialise and loop
-	kuno->run("Kuno", 800, 600, false);		
+	kuno->run("Kuno", 1440, 900, false);		
 
 	//Destroy master singleton
 	KunoApp::resetInstance();

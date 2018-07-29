@@ -54,11 +54,6 @@ protected:
 	aie::Renderer2D*			m_2dRenderer;
 	aie::Font*					m_font;
 
-	//Utilities
-	util::Camera*				m_camera;
-	util::TextureManager*		m_textureManager;
-	util::DepthSorter*			m_depthSorter;
-	util::CoordConverter*		m_coordConverter;
 	
 	//Agents
 	ai::Agent*					m_player;
@@ -76,14 +71,25 @@ protected:
 	//Log systems
 
 public:
-	static KunoApp*				getInstance();		//MODERN SINGLETON PATTERN
+	//Utilities
+	//static util::Camera				Camera;
+	//static util::TextureManager		TextureManager;
+	//static util::DepthSorter		DepthSorter;
+	//static util::CoordConverter		CoordConverter;
+	util::Camera*			m_camera;
+	util::TextureManager*	m_textureManager;
+	util::DepthSorter*		m_depthSorter;
+	util::CoordConverter*	m_coordConverter;
+
+public:
+	static KunoApp*				Instance();		//MODERN SINGLETON PATTERN
 	static void					resetInstance();	//MODERN SINGLETON PATTERN; call this to delete singleton
 
 	//Setups
 	bool startup() override;
 	bool setupUtilities();
 	bool loadTextures();
-	bool setupPF();
+	bool setupMap();
 	bool setupAI();
 	bool setupPlayer();
 	bool setupEnemies();
@@ -96,8 +102,9 @@ public:
 	void draw() override;
 
 	//Access utilities
-	util::Camera*				getCamera() const { return m_camera; }
-	util::DepthSorter*			getDepthSorter() const { return m_depthSorter; }
-	util::CoordConverter*		getCoordConverter() const { return m_coordConverter; }
+	util::Camera*				Camera() const { return m_camera; }
+	util::TextureManager*		TextureManager() const { return m_textureManager; }
+	util::DepthSorter*			DepthSorter() const { return m_depthSorter; }
+	util::CoordConverter*		CoordConverter() const { return m_coordConverter; }
 
 };

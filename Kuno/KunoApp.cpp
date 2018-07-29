@@ -26,7 +26,7 @@
 #include "pkr\Vector3.h"
 
 //// MODERN SINGLETON PATTERN ////
-KunoApp* KunoApp::getInstance()
+KunoApp* KunoApp::Instance()
 {
 	//Modern, thread-safe
 	//C++ 11 mandates that the initializer for a local static variable is only run once, 
@@ -37,9 +37,9 @@ KunoApp* KunoApp::getInstance()
 
 void KunoApp::resetInstance()
 {
-	KunoApp* m_toDelete = getInstance();
-	delete m_toDelete;
-	m_toDelete = nullptr;		//CHECK WITH TEACHER!!!
+	KunoApp* m_toReset = Instance();
+	delete m_toReset;
+	m_toReset = nullptr;		//CHECK WITH TEACHER!!!
 }
 /////////////////////////////////
 
@@ -61,8 +61,9 @@ bool KunoApp::startup() {
 	if (loadTextures() == false) return false;
 
 	//Setup map and pathfinding
-	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
-	if (setupPF() == false) return false;
+	//setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
+	setBackgroundColour(1, 0.65f, 0);
+	if (setupMap() == false) return false;
 
 	//Setup AI systems
 	if (setupAI() == false) return false;
@@ -76,13 +77,16 @@ bool KunoApp::startup() {
 
 void KunoApp::shutdown() {
 
+	//Core
 	delete m_2dRenderer;
 	delete m_font;
 
+	//Agents
 	delete m_player;
 	for (auto enemy : m_enemyList)
 		delete enemy;
 
+	//Map
 	delete m_graph;
 	delete m_map;
 	for (int col = 0; col < WORLD_DEPTH; ++col) {
@@ -94,23 +98,31 @@ void KunoApp::shutdown() {
 	}
 	delete[] m_tiles;	//Delete the array of columns
 
+	//Utilities
 	delete m_camera;
+	delete m_textureManager;
+	delete m_depthSorter;
+	delete m_coordConverter;
 }
 
 //// SETUPS ////
 bool KunoApp::setupUtilities()
 {
 	//// Camera ////
-	m_camera = new util::Camera();
-	m_camera->x = -200;
-	m_camera->y = -200;
-	m_camera->scale = 2.0f;
+	//Camera = util::Camera(0, -200, 1.5f);
+	m_camera = new util::Camera(-200, -200, 3.5f);
+
+	//// Texture Manager ////
+	//TextureManager = util::TextureManager();
+	m_textureManager = new util::TextureManager();
 
 	//// Depth Sorter ////
+	//DepthSorter = util::DepthSorter(-2000.0f, 2000.0f);
 	m_depthSorter = new util::DepthSorter(-2000.0f, 2000.0f);
 				//note: Z buffer depth of between 0-1 is reserved for the GUI
 
 	//// Coord Converter ////
+	//CoordConverter = util::CoordConverter(&Camera);
 	m_coordConverter = new util::CoordConverter(m_camera);
 
 	return true;
@@ -118,63 +130,63 @@ bool KunoApp::setupUtilities()
 
 bool KunoApp::loadTextures()
 {
-	//Startup texture manager
-	m_textureManager = new util::TextureManager();
-
 	//Test: Load in some core textures
-	//MAKE THE FINAL PATH AS:
+	//MAKE THE FINAL PATH AS: "../assets/tiles/*.png"
+	//Ground
 	m_textureManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
 	m_textureManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
+	//Walls
+	m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
+	//Static objects
 	m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
 	m_textureManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
 	m_textureManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
 	m_textureManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
-	m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
 
 	return true;
 }
 
-bool KunoApp::setupPF()
+bool KunoApp::setupMap()
 {
 	//Just setup a raw graph
-	m_graph = new pf::Graph();
+	//m_graph = new pf::Graph();
 
-	pkr::Vector2 offset = { 100, 100 };
-	int maxCols = 10;
-	int maxRows = 10;
-	float nodeWidth = 100;
-	float nodeHeight = 100;
+	//pkr::Vector2 offset = { 100, 100 };
+	//int maxCols = 10;
+	//int maxRows = 10;
+	//float nodeWidth = 100;
+	//float nodeHeight = 100;
 
-	
-	/////////// NODE //////////////
-	//Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
-	for (int row = 0; row < maxRows; ++row) {
-		for (int col = 0; col < maxCols; ++col) {
-			//Add a node and position appropriately
-			m_graph->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
-		}
-	}
-	
-	//Connect up adjacent neighbouring nodes
-	for (auto nodeA : m_graph->getNodes()) 
-	{
-		for (auto nodeB : m_graph->getNodes())
-		{
-			//Skip if they're both the same node
-			if (nodeA == nodeB)
-				continue;
+	//
+	///////////// NODE //////////////
+	////Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
+	//for (int row = 0; row < maxRows; ++row) {
+	//	for (int col = 0; col < maxCols; ++col) {
+	//		//Add a node and position appropriately
+	//		m_graph->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
+	//	}
+	//}
+	//
+	////Connect up adjacent neighbouring nodes
+	//for (auto nodeA : m_graph->getNodes()) 
+	//{
+	//	for (auto nodeB : m_graph->getNodes())
+	//	{
+	//		//Skip if they're both the same node
+	//		if (nodeA == nodeB)
+	//			continue;
 
-			//Find the distance between the node
-			float distance = pkr::Vector2::distance(nodeA->pos_tmp, nodeB->pos_tmp);
+	//		//Find the distance between the node
+	//		float distance = pkr::Vector2::distance(nodeA->pos_tmp, nodeB->pos_tmp);
 
-			//If they're below a certain range then connect the nodes
-			if (distance < 60) {
-				m_graph->addConnection(nodeA, nodeB);
-				//This should also connect it both ways
-			}
+	//		//If they're below a certain range then connect the nodes
+	//		if (distance < 60) {
+	//			m_graph->addConnection(nodeA, nodeB);
+	//			//This should also connect it both ways
+	//		}
 
-		}
-	}
+	//	}
+	//}
 
 	//////////// MAP /////////////
 	//Should make this load a map from some data or file
@@ -232,13 +244,14 @@ bool KunoApp::setupAI()
 	//}
 
 	//Setup player
-	m_player = new ai::Agent();
+	m_player = new ai::Agent(50.0f, { 0,1,0 });
 	
 	//Setup enemies
 	int numOfEnemies = 10;
 	for (int i = 0; i < numOfEnemies; ++i) {
 		//Create an enemy and push into list
-		ai::Agent* newEnemy = new ai::Agent(100.0f, pkr::Vector2(800, 800));
+		ai::Agent* newEnemy = new ai::Agent(40.0f, { 1,0,0 }, { 800,800 });
+		//ai::Agent* newEnemy = new ai::Agent(40.0f, pkr::Vector2(800, 800));
 		m_enemyList.push_back(newEnemy);
 	}
 	return true;
@@ -307,7 +320,7 @@ void KunoApp::draw() {
 
 	//// SET THE CAMERA ////
 	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
-	m_2dRenderer->setCameraScale(m_camera->scale);
+	m_2dRenderer->setCameraScale(m_camera->zoom);
 	
 	//// DEBUG: Test screenToWorld() ////
 	ImGui::Begin("Camera Position");
@@ -321,14 +334,14 @@ void KunoApp::draw() {
 	m_2dRenderer->begin();
 
 	//// Draw the map ////
-	float mapDrawStartTime = KunoApp::getInstance()->getTime();
-	////////////
-	m_graph->draw(m_2dRenderer);
-	//// DEBUG: Check the time it takes to draw the map ////
-	float mapDrawEndTime = KunoApp::getInstance()->getTime();
-	ImGui::Begin("Graph Draw Duration");
-	ImGui::Text("%f", mapDrawEndTime - mapDrawStartTime);
-	ImGui::End();
+	//float mapDrawStartTime = KunoApp::Instance()->getTime();
+	//////////////
+	////m_graph->draw(m_2dRenderer);
+	////// DEBUG: Check the time it takes to draw the map ////
+	//float mapDrawEndTime = KunoApp::Instance()->getTime();
+	//ImGui::Begin("Graph Draw Duration");
+	//ImGui::Text("%f", mapDrawEndTime - mapDrawStartTime);
+	//ImGui::End();
 	////////////
 
 	m_map->draw(m_2dRenderer);
@@ -336,12 +349,12 @@ void KunoApp::draw() {
 	//Draw agents
 
 
-	//// DEBUG: Depth sorting ////
-	pkr::Vector2 cartmousepos = pkr::Vector2(input->getMouseX(), input->getMouseY());
-	pkr::Vector2 isomousepos = m_camera->ViewportToCanvas(cartmousepos.x, cartmousepos.y);
-	float depth = m_depthSorter->getSortDepth(isomousepos.y);
+	//// TEST: Depth Sorter ////
+	pkr::Vector2 cartMPos = pkr::Vector2(input->getMouseX(), input->getMouseY());
+	pkr::Vector2 isoMpos = m_coordConverter->ViewportToCartesian(cartMPos.x, cartMPos.y);
+	float depth = m_depthSorter->getSortDepth(isoMpos.y);
 	m_2dRenderer->setRenderColour(0.25f, 1, 0.25f);
-	m_2dRenderer->drawCircle(isomousepos.x, isomousepos.y, 50.0f, depth);
+	m_2dRenderer->drawCircle(isoMpos.x, isoMpos.y + 30.0f, 30.0f, depth);
 	////////
 
 	//// END DRAW ////

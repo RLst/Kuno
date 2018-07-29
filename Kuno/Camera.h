@@ -12,23 +12,27 @@ namespace util {
 	class Camera
 	{
 	private:
-		float			m_edgeScrlSize = 30.0f;	//px; Pixels from edge of screen where the mouse will move 
-		float			m_scrollSpeed = 20.0f;
-		float			m_zoomSpeed = 0.2f;
-		int				windowWidth;
-		int				windowHeight;
+		//Edge scroll and panning
+		float			m_borderZone = 20.0f;	//px; Pixels from edge of screen to trigger edge scroll
+		float			m_panSpeed = 20.0f;
+
+		//Zoom
+		float			m_zoomSpeedMultiplier = 0.2f;
+		float			m_lastScrollPos = 0;		//Holds the previous mouse wheel position (if you don't default this to zero then it'll start off fully zoomed in etc)
 
 	public:
-		//// PUBLIC VARS ////
 		float			x, y;			//px; position
-		float			scale;			//arb; scale/zoom
-		////////////////////
+		float			zoom;			//arb; scale/zoom; higher = far zoom, lower = close zoom
+
+	public:
+		Camera() {}
+		~Camera() {}
+		Camera(float x = 0, float y = 0, float zoom = 1.0f);
+
+		//Accessors
 		
-		Camera();
 
-
-		void	update(float deltaTime);		//App get's passed in to access window size
-
+		void			update(float deltaTime);		//App get's passed in to access window size
 	};
 
 }

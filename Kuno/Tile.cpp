@@ -11,7 +11,8 @@ namespace pf {
 	void Tile::draw(aie::Renderer2D * renderer)
 	{
 		//Calc z buffer depth
-		auto depth = KunoApp::getInstance()->getDepthSorter()->getSortDepth(m_pos.y);
+		//auto depth = KunoApp::DepthSorter.getSortDepth(m_pos.y);
+		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(m_pos.y);
 
 		//Draw
 		renderer->drawSprite(m_tex, m_pos.x, m_pos.y, 0, 0, 0, depth);

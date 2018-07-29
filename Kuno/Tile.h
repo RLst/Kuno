@@ -38,12 +38,6 @@ protected:
 	pkr::Vector2	m_pos;
 
 public:
-	///////////////////////
-	////PUBLIC VARS
-	////Array indices
-	//int				X, Y;
-	/////////////////////////////
-
 	Tile() = default;
 	virtual ~Tile() = default;	//Texture manager will delete the textures
 

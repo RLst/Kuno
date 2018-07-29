@@ -68,6 +68,7 @@
     <ClCompile Include="StaticObject.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PF.h">
@@ -113,6 +114,7 @@
     <ClInclude Include="StaticObject.h">
       <Filter>PF</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">

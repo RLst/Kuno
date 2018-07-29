@@ -121,3 +121,26 @@ namespace pkr {
 	//public:
 	//	eResult execute(Agent* agent, float deltaTime) override;
 	//};
+//
+//void Camera::testViewportToCanvas(aie::Renderer2D * renderer)
+//{
+//	aie::Input* input = aie::Input::getInstance();
+//
+//	//Get mouse position in window coords
+//	float windowX = input->getMouseX();
+//	float windowY = input->getMouseY();
+//
+//	//Transform from window coords to canvas coords
+//	pkr::Vector2 canvas = ViewportToCanvas(windowX, windowY);
+//
+//	renderer->setRenderColour(0.25f, 1, 0.25f);
+//	renderer->drawCircle(canvas.x, canvas.y, 50.0f);
+//
+//	//// DEBUG ////
+//	//ImGui::Begin("WindowToCanvas(test)");
+//	//ImGui::Text("Before > X: %f, Y: %f", windowX, windowY);
+//	//ImGui::Text("After > X: %f, Y: %f", canvas.x, canvas.y);
+//	//ImGui::End();
+//	////////////////
+//
+//}

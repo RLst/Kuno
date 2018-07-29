@@ -292,26 +292,12 @@ void KunoApp::update(float deltaTime) {
 	//Update the agents
 	//Update GUI
 
-	//Get control input
-
-	//// DEBUG ////
-	//Mouse position
-	ImGui::Begin("Mouse Position");
-	ImGui::Text("X: %d, Y: %d", input->getMouseX(), input->getMouseY());
-	ImGui::End();
-	////////////////////////////////////////////////
-
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
 
 void KunoApp::draw() {
-
-	//// FPS ////
-	ImGui::Begin("FPS");
-	ImGui::Text("%d", this->getFPS());
-	ImGui::End();
 
 	// wipe the screen to the background colour
 	clearScreen();
@@ -321,43 +307,83 @@ void KunoApp::draw() {
 	//// SET THE CAMERA ////
 	m_2dRenderer->setCameraPos(m_camera->x, m_camera->y);
 	m_2dRenderer->setCameraScale(m_camera->zoom);
-	
-	//// DEBUG: Test screenToWorld() ////
-	ImGui::Begin("Camera Position");
-	ImGui::Text("X: %f, Y: %f", m_camera->x, m_camera->y);
-	ImGui::End();
-
-	//m_camera->testViewportToCanvas(m_2dRenderer);		// SUCCESS! 27 July 2018, 10:45
-	/////////
 
 	//// START DRAW ////
 	m_2dRenderer->begin();
 
 	//// Draw the map ////
-	//float mapDrawStartTime = KunoApp::Instance()->getTime();
+	float mapDrawStartTime = KunoApp::Instance()->getTime();
+	m_map->draw(m_2dRenderer);
+	float mapDrawEndTime = KunoApp::Instance()->getTime();
+
+	//Draw agents
+	m_player->draw(m_2dRenderer);
+	for (auto enemy : m_enemyList) {
+		enemy->draw(m_2dRenderer);
+	}
+
+	//// DEBUGS ////
+	DEBUG(m_2dRenderer);
+	///////////////
+
+	//// END DRAW ////
+	m_2dRenderer->end();
+}
+
+void KunoApp::DEBUG(aie::Renderer2D* renderer)
+{
+	//Get input
+	aie::Input* input = aie::Input::getInstance();
+
+	//// FPS ////
+	char fps[10];
+	sprintf_s(fps, 10, "%i", getFPS());
+	pkr::Vector2 fpsPos = m_coordConverter->ViewportToCartesian(0, 0);		//Stick to the bottom left hand corner of screen
+	m_2dRenderer->drawText(m_font, fps, fpsPos.x, fpsPos.y);
+
+	//// Camera ////
+	ImGui::Begin("Camera");
+	ImGui::Text("x: %f, y: %f", m_camera->x, m_camera->y);
+	ImGui::Text("Zoom: %f", m_camera->zoom);
+	ImGui::Text("lastScrollPos: %f", m_camera->m_lastScrollPos);
+	ImGui::End();
+
+	//// Coord converter ////
+	float x = 0, y = 0;
+	x = input->getMouseX(); y = input->getMouseY();										//Get Viewport coords
+	pkr::Vector2 cart = m_coordConverter->ViewportToCartesian(pkr::Vector2(x, y));		//Convert from Viewport to Cartesian
+	pkr::Vector2 iso = m_coordConverter->CartesianToIsometric(cart);					//Convert from Cartesian to Isometric
+	ImGui::Begin("Coord Converter");
+
+	ImGui::Text("Viewport > x: %.0f, y: %.0f", x, y);
+	renderer->setRenderColour(1, 0, 0);
+	renderer->drawText(m_font, "VIEW", x, y);
+	//renderer->drawCircle(x, y, 2.5f);
+
+	ImGui::Text("Cartesian > x: %.2f, y: %.2f", cart.x, cart.y);
+	renderer->setRenderColour(0, 1, 0);
+	renderer->drawText(m_font, "CART", cart.x, cart.y);
+	//renderer->drawCircle(cart.y, cart.y, 2.5f);
+
+	ImGui::Text("Isometric > x: %.2f, y: %.2f", iso.x, iso.y);
+	renderer->setRenderColour(0, 0, 1);
+	renderer->drawText(m_font, "ISO", iso.x, iso.y, m_depthSorter->getSortDepth(iso.y));
+	ImGui::End();
+
+	//// Depth Sorter ////
+	// An orange circle will locate where the cursor is should be depth sorted by the sorter
+	pkr::Vector2 cartMPos = pkr::Vector2(input->getMouseX(), input->getMouseY());
+	pkr::Vector2 isoMpos = m_coordConverter->ViewportToCartesian(cartMPos.x, cartMPos.y);
+	float depth = m_depthSorter->getSortDepth(isoMpos.y);
+	m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
+	m_2dRenderer->drawCircle(isoMpos.x, isoMpos.y + 15.0f, 15.0f, depth);
+
 	//////////////
 	////m_graph->draw(m_2dRenderer);
 	////// DEBUG: Check the time it takes to draw the map ////
-	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 	//ImGui::Begin("Graph Draw Duration");
 	//ImGui::Text("%f", mapDrawEndTime - mapDrawStartTime);
 	//ImGui::End();
 	////////////
 
-	m_map->draw(m_2dRenderer);
-
-	//Draw agents
-
-
-	//// TEST: Depth Sorter ////
-	pkr::Vector2 cartMPos = pkr::Vector2(input->getMouseX(), input->getMouseY());
-	pkr::Vector2 isoMpos = m_coordConverter->ViewportToCartesian(cartMPos.x, cartMPos.y);
-	float depth = m_depthSorter->getSortDepth(isoMpos.y);
-	m_2dRenderer->setRenderColour(0.25f, 1, 0.25f);
-	m_2dRenderer->drawCircle(isoMpos.x, isoMpos.y + 30.0f, 30.0f, depth);
-	////////
-
-	//// END DRAW ////
-	m_2dRenderer->end();
 }
-///////////////////////////////////////////////////////////////////

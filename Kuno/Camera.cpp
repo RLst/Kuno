@@ -55,14 +55,14 @@ namespace util {
 		//Clamps
 		zoom = pkr::Clamp(zoom, 0.5f, 5.0f);
 
-		//// DEBUG ////
-		ImGui::Begin("Camera Zoom");
-		ImGui::Text("camera.scale: %f", zoom);
-		ImGui::Text("newScrollPos: %f", newScrollPos);
-		ImGui::Text("scrollDiff: %f", scrollDiff);
-		ImGui::Text("lastScrollPos: %f", m_lastScrollPos);
-		ImGui::End();
-		///////////////
+		////// DEBUG ////
+		//ImGui::Begin("Camera Zoom");
+		//ImGui::Text("camera.scale: %f", zoom);
+		//ImGui::Text("newScrollPos: %f", newScrollPos);
+		//ImGui::Text("scrollDiff: %f", scrollDiff);
+		//ImGui::Text("lastScrollPos: %f", m_lastScrollPos);
+		//ImGui::End();
+		/////////////////
 	}
 
 }

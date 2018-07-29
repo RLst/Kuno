@@ -107,4 +107,6 @@ public:
 	util::DepthSorter*			DepthSorter() const { return m_depthSorter; }
 	util::CoordConverter*		CoordConverter() const { return m_coordConverter; }
 
+	//DEBUGS
+	void DEBUG(aie::Renderer2D* renderer);			//Print important values and test stuff
 };

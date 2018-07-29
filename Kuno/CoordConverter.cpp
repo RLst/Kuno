@@ -10,6 +10,10 @@ namespace util {
 		m_cam(camera)
 	{}
 
+	CoordConverter::CoordConverter(Camera & camera) :
+		m_cam(&camera)
+	{}
+
 	pkr::Vector2 CoordConverter::ViewportToCartesian(pkr::Vector2 viewport) const
 	{
 		//Init vars for return

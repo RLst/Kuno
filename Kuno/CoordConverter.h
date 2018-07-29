@@ -26,6 +26,7 @@ namespace util {
 		CoordConverter() = default;
 		~CoordConverter() = default;
 		CoordConverter(Camera* camera);		//Auto get ptr to camera/// apparently camera can't be default to KunoApp::getInstance()->getCamera()....
+		CoordConverter(Camera& camera);		//If passing in an actual camera
 
 		//// MAIN CONVERSION FUNCTIONS ////
 		pkr::Vector2		ViewportToCartesian(pkr::Vector2 vpPos) const;					//Use by the mouse			

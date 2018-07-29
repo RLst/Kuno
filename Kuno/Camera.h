@@ -26,15 +26,9 @@ namespace util {
 		
 		Camera();
 
-		pkr::Vector2	ViewportToCanvas(float viewportX, float viewportY);		//Returns the equivalent canvas coords
-		//Viewport: The screen area you're looking through ie: input->getMouse() returns viewport coords
-		//Canvas: The actual working 2D area that's being rendered
 
 		void	update(float deltaTime);		//App get's passed in to access window size
 
-		//// DEBUG ////
-		void	testViewportToCanvas(aie::Renderer2D* renderer);
-		///////////////
 	};
 
 }

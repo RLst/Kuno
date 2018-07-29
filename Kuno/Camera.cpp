@@ -7,61 +7,6 @@
 
 namespace util {
 
-	//// Camera ////
-	Camera::Camera() :
-		x(0), y(0), scale(1.0f)
-	{
-	}
-
-	pkr::Vector2 Camera::ViewportToCanvas(float viewportX, float viewportY)
-	{
-		//Init vars for return
-		pkr::Vector2 canvas = { 0,0 };
-
-		auto windowWidth = KunoApp::getInstance()->getWindowWidth();
-		auto windowHeight = KunoApp::getInstance()->getWindowHeight();
-
-		//Account for scale
-		float xPcentage = viewportX / windowWidth;
-		float yPcentage = viewportY / windowHeight;
-
-		float scaledWidth = windowWidth * scale;
-		float scaledHeight = windowHeight * scale;
-
-		float midX = x + (windowWidth / 2.0f);
-		float midY = y + (windowHeight / 2.0f);
-
-		float left = midX - (scaledWidth / 2.0f);
-		float bottom = midY - (scaledHeight / 2.0f);
-
-		canvas.x = left + (xPcentage * scaledWidth);
-		canvas.y = bottom + (yPcentage * scaledHeight);
-
-		return canvas;
-	}
-
-	void Camera::testViewportToCanvas(aie::Renderer2D * renderer)
-	{
-		aie::Input* input = aie::Input::getInstance();
-
-		//Get mouse position in window coords
-		float windowX = input->getMouseX();
-		float windowY = input->getMouseY();
-
-		//Transform from window coords to canvas coords
-		pkr::Vector2 canvas = ViewportToCanvas(windowX, windowY);
-
-		renderer->setRenderColour(0.25f, 1, 0.25f);
-		renderer->drawCircle(canvas.x, canvas.y, 50.0f);
-
-		//// DEBUG ////
-		ImGui::Begin("WindowToCanvas(test)");
-		ImGui::Text("Before > X: %f, Y: %f", windowX, windowY);
-		ImGui::Text("After > X: %f, Y: %f", canvas.x, canvas.y);
-		ImGui::End();
-		//////////////
-	}
-
 	void Camera::update(float deltaTime)
 	{
 		aie::Input * input = aie::Input::getInstance();

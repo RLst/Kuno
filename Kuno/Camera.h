@@ -20,6 +20,8 @@ namespace util {
 		float			m_zoomSpeedMultiplier = 0.2f;
 		float			m_lastScrollPos = 0;		//Holds the previous mouse wheel position (if you don't default this to zero then it'll start off fully zoomed in etc)
 
+		friend class KunoApp;		//For debugging
+
 	public:
 		float			x, y;			//px; position
 		float			zoom;			//arb; scale/zoom; higher = far zoom, lower = close zoom
@@ -34,5 +36,4 @@ namespace util {
 
 		void			update(float deltaTime);		//App get's passed in to access window size
 	};
-
 }

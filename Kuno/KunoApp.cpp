@@ -110,7 +110,7 @@ bool KunoApp::setupUtilities()
 {
 	//// Camera ////
 	//Camera = util::Camera(0, -200, 1.5f);
-	m_camera = new util::Camera(-200, -200, 3.5f);
+	m_camera = new util::Camera(-200, -200, 1.0f);
 
 	//// Texture Manager ////
 	//TextureManager = util::TextureManager();
@@ -244,7 +244,7 @@ bool KunoApp::setupAI()
 	//}
 
 	//Setup player
-	m_player = new ai::Agent(50.0f, { 0,1,0 });
+	//m_player = new ai::Agent(50.0f, { 0,1,0 });
 	
 	//Setup enemies
 	int numOfEnemies = 10;

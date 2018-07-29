@@ -10,8 +10,7 @@ namespace aie {
 namespace pf {
 
 class Tile;
-class Layer;
-class PropertySet;
+class StaticObject;
 
 //typedef std::vector<Tile*> TileList;
 //typedef std::vector<pkr::Vector2*> PointList;		//More accurate list of waypoints
@@ -31,35 +30,35 @@ class Map : public Graph
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
-	pkr::Vector3	m_mapOffset;
+	pkr::Vector2	m_mapOffset;
 	int				m_width;			//Columns
 	int				m_depth;			//Rows
 	int				m_tileWidthpx;
 	int				m_tileHeightpx;
 
 	//Tile container
-	Tile***			m_tiles;		//Pointer to the 2D array of tiles
-	//std::vector<Tile*>	m_tiles;
+	Tile***			m_tile_array;		//Pointer to the 2D array of tiles
+	std::vector<Tile*>	m_tiles;
+
+	//Static object container
+	std::vector<StaticObject*> m_staticObjects;
 
 public:
-	pkr::Vector2	IsoToCart(const pkr::Vector2 &iso);
-	pkr::Vector2	CartToIso(const pkr::Vector2 &cart);
+	Map() = default;
+	~Map() = default;	//Tile array already being deleted in KunoApp.cpp
 
-	//Constructor
-	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector3 offset = pkr::Vector3());
+	//Constructor using pointer to array of tiles
+	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector2 offset = { 0,0 });
 	
-	//Destructor
-	~Map();
+	//Constructor using vector of Tile*; Add tiles afterwards
+	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
 
-	//void	loadMap();	//From file? Implement later
-	//void	addTile(int xIndex, int yIndex, Tile* tile);
+	void			addTile(Tile* tile);
+	void			buildMap();
+	//void			loadMap();	//From file? Implement later
 
-	void			draw(aie::Renderer2D* renderer);
-
-	//Need to separate these out?
-	void			drawTiles();
-	void			drawAgents();
-	void			drawObjects();
+	//Core
+	void			draw(aie::Renderer2D* renderer);			//Only draw tiles, walls and static objects
 
 private:
 	Map(const Map &map);	//Prevent copy constructor

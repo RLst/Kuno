@@ -15,10 +15,12 @@ namespace util {
 	private:
 		//Edge scroll and panning
 		float			m_borderZone = 20.0f;	//px; Pixels from edge of screen to trigger edge scroll
-		float			m_panSpeed = 20.0f;
+		float			m_panSpeed = 750.0f;
 
 		//Zoom
-		float			m_zoomSpeedMultiplier = 0.2f;
+		float			m_minZoom = 5.0f;
+		float			m_maxZoom = 0.5f;
+		float			m_zoomSpeedMultiplier = 3.0f;
 		float			m_lastScrollPos = 0;		//Holds the previous mouse wheel position (if you don't default this to zero then it'll start off fully zoomed in etc)
 
 		friend class KunoApp;		//For debugging
@@ -33,8 +35,8 @@ namespace util {
 		Camera(float x = 0, float y = 0, float zoom = 1.0f);
 
 		//Accessors
-		
 
-		void			update(float deltaTime);		//App get's passed in to access window size
+		void			update(float deltaTime);						//App get's passed in to access window size
+		void			translate(aie::Renderer2D* renderer);		//Actually translate the camera
 	};
 }

@@ -25,35 +25,35 @@ namespace util {
 		if (mX < 0 + m_borderZone ||
 			input->isKeyDown(aie::INPUT_KEY_LEFT))
 		{
-			x -= m_panSpeed;
+			x -= m_panSpeed * deltaTime;
 		}
 		//Right Pan
 		if (mX > windowWidth - m_borderZone ||
 			input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		{
-			x += m_panSpeed;
+			x += m_panSpeed * deltaTime;
 		}
 		//Backwards Pan
 		if (mY < 0 + m_borderZone ||
 			input->isKeyDown(aie::INPUT_KEY_DOWN))
 		{
-			y -= m_panSpeed;
+			y -= m_panSpeed * deltaTime;
 		}
 		//Forward Pan
 		if (mY > windowHeight - m_borderZone ||
 			input->isKeyDown(aie::INPUT_KEY_UP))
 		{
-			y += m_panSpeed;
+			y += m_panSpeed * deltaTime;
 		}
 
 		//// Camera Zoom/Scale ////
 		auto newScrollPos = input->getMouseScroll();
 		auto scrollDiff = newScrollPos - m_lastScrollPos;
-		zoom -= (float)scrollDiff * m_zoomSpeedMultiplier;
+		zoom -= (float)scrollDiff * m_zoomSpeedMultiplier * deltaTime;
 		m_lastScrollPos = newScrollPos;
 
 		//Clamps
-		zoom = pkr::Clamp(zoom, 0.5f, 5.0f);
+		zoom = pkr::Clamp(zoom, m_maxZoom, m_minZoom);
 
 		////// DEBUG ////
 		//ImGui::Begin("Camera Zoom");
@@ -63,6 +63,12 @@ namespace util {
 		//ImGui::Text("lastScrollPos: %f", m_lastScrollPos);
 		//ImGui::End();
 		/////////////////
+	}
+
+	void Camera::translate(aie::Renderer2D * renderer)
+	{
+		renderer->setCameraPos(x, y);
+		renderer->setCameraScale(zoom);
 	}
 
 }

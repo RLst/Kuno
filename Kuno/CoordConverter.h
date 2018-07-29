@@ -25,7 +25,7 @@ namespace util {
 	public:
 		CoordConverter() = default;
 		~CoordConverter() = default;
-		CoordConverter(Camera* camera);		//Auto get ptr to camera/// apparently camera can't be default to KunoApp::getInstance()->getCamera()....
+		CoordConverter(Camera* camera);		//ERROR: Apparently default param to = KunoApp::Instance()->Camera()
 		CoordConverter(Camera& camera);		//If passing in an actual camera
 
 		//// MAIN CONVERSION FUNCTIONS ////

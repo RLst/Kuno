@@ -176,6 +176,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="PF.cpp" />
+    <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
@@ -192,6 +193,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
+    <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

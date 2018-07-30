@@ -30,35 +30,29 @@ class Map : public Graph
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
-	pkr::Vector2	m_mapOffset;
-	int				m_width;			//Columns
-	int				m_depth;			//Rows
-	int				m_tileWidthpx;
-	int				m_tileHeightpx;
+	pkr::Vector2		m_mapOffset = { 0, 0 };
+	int					m_width = 0;			//Columns
+	int					m_depth = 0;			//Rows
 
-	//Tile container
-	Tile***			m_tile_array;		//Pointer to the 2D array of tiles
-	std::vector<Tile*>	m_tiles;
-
-	//Static object container
-	std::vector<StaticObject*> m_staticObjects;
+	//Map layers
+	std::vector<Tile*>	m_groundLayer;
+	std::vector<Tile*>	m_mainLayer;
+	std::vector<StaticObject*>	m_objectLayer;
 
 public:
 	Map() = default;
-	~Map() = default;	//Tile array already being deleted in KunoApp.cpp
+	~Map();			//Delete everything in the layers
 
-	//Constructor using pointer to array of tiles
-	Map(int mapWidth, int mapDepth, Tile*** tileArray, pkr::Vector2 offset = { 0,0 });
-	
 	//Constructor using vector of Tile*; Add tiles afterwards
 	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
 
-	void			addTile(Tile* tile);
-	void			buildMap();
-	//void			loadMap();	//From file? Implement later
-
-	//Core
-	void			draw(aie::Renderer2D* renderer);			//Only draw tiles, walls and static objects
+	//void				addTile(Tile* tile);
+	void				buildTestMap(int width, int depth);
+	void				buildKunoMap();				//Build game map raw
+	//void				loadMap();					//From file? Implement later
+	
+	//Core	
+	void				draw(aie::Renderer2D* renderer);	//Only draw tiles, walls and static objects
 
 private:
 	Map(const Map &map);	//Prevent copy constructor

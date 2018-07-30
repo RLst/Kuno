@@ -30,11 +30,11 @@ namespace util {
 		CoordConverter(Camera& camera);		//If passing in an actual camera
 
 		//// MAIN CONVERSION FUNCTIONS ////
-		pkr::Vector2		ViewportToCartesian(pkr::Vector2 vpPos) const;					//Use by the mouse			
-		pkr::Vector2		ViewportToCartesian(float vpX, float vpY) const;
+		pkr::Vector2		ViewportToCartesian(pkr::Vector2 viewportPos) const;					//Use by the mouse			
+		pkr::Vector2		ViewportToCartesian(float viewportX, float viewportY) const;
 
-		pkr::Vector2		CartesianToIsometric(pkr::Vector2 canvas) const;				//Use by the renderer
-		pkr::Vector2		CartesianToIsometric(float canvasX, float canvasY) const;
+		pkr::Vector2		CartesianToIsometric(pkr::Vector2 cartesianPos) const;				//Use by the renderer
+		pkr::Vector2		CartesianToIsometric(float cartesianX, float cartesianY) const;
 	};
 
 }

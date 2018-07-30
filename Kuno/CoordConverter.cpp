@@ -58,9 +58,9 @@ namespace util {
 		return iso;
 	}
 
-	pkr::Vector2 CoordConverter::CartesianToIsometric(float canvasX, float canvasY) const
+	pkr::Vector2 CoordConverter::CartesianToIsometric(float cartX, float cartY) const
 	{
-		return CartesianToIsometric(pkr::Vector2(canvasX, canvasY));		//Redirect
+		return CartesianToIsometric(pkr::Vector2(cartX, cartY));		//Redirect
 	}
 
 	pkr::Vector2 CoordConverter::IsometricToCartesian(pkr::Vector2 iso) const

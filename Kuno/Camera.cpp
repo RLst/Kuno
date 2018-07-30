@@ -14,11 +14,11 @@ namespace util {
 	{
 		aie::Input * input = aie::Input::getInstance();
 
-		float mX = input->getMouseX();
-		float mY = input->getMouseY();
-		float mScroll = input->getMouseScroll();
-		float windowWidth = KunoApp::Instance()->getWindowWidth();
-		float windowHeight = KunoApp::Instance()->getWindowHeight();
+		float mX = (float)input->getMouseX();
+		float mY = (float)input->getMouseY();
+		float mScroll = (float)input->getMouseScroll();
+		float windowWidth = (float)KunoApp::Instance()->getWindowWidth();
+		float windowHeight = (float)KunoApp::Instance()->getWindowHeight();
 
 		//// Camera Panning (edge scroll + arrow keys) ////
 		//Left Pan
@@ -50,7 +50,7 @@ namespace util {
 		auto newScrollPos = input->getMouseScroll();
 		auto scrollDiff = newScrollPos - m_lastScrollPos;
 		zoom -= (float)scrollDiff * m_zoomSpeedMultiplier * deltaTime;
-		m_lastScrollPos = newScrollPos;
+		m_lastScrollPos = (float)newScrollPos;
 
 		//Clamps
 		zoom = pkr::Clamp(zoom, m_maxZoom, m_minZoom);

@@ -25,7 +25,7 @@ namespace ai {
 		//pkr::Vector2			m_accel;
 		//pkr::Vector2			m_vel;
 		pkr::Vector2			m_pos;			//px; Cartesian
-		pkr::Vector2			m_isoPos;		//px
+		pkr::Vector2			m_isoPos;		//px; Isometric
 
 		//Circle agent
 		float					m_size;

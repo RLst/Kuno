@@ -54,19 +54,14 @@ protected:
 	aie::Renderer2D*			m_2dRenderer;
 	aie::Font*					m_font;
 
-	
 	//Agents
 	ai::Agent*					m_player;
 	std::vector<ai::Agent*>		m_enemyList;
 
 	//Map and pathfinding
-	pf::Graph*					m_graph;		//DELETE ME!
 	pf::Map*					m_map;
-	pf::Tile***					m_tiles;
 
 	//GUI
-	//GUI::Gui*					m_gui;
-
 	//Audio systems
 	//Log systems
 

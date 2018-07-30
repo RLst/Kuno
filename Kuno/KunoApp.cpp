@@ -87,16 +87,7 @@ void KunoApp::shutdown() {
 		delete enemy;
 
 	//Map
-	delete m_graph;
 	delete m_map;
-	for (int col = 0; col < WORLD_DEPTH; ++col) {
-		for (int row = 0; row < WORLD_WIDTH; ++row) {
-			if (m_tiles[col][row] != nullptr)
-				delete m_tiles[col][row];	//Delete the cells
-		}
-		delete[] m_tiles[col];	//Delete the array of rows
-	}
-	delete[] m_tiles;	//Delete the array of columns
 
 	//Utilities
 	delete m_camera;
@@ -109,21 +100,21 @@ void KunoApp::shutdown() {
 bool KunoApp::setupUtilities()
 {
 	//// Camera ////
+	m_camera = new util::Camera(-200, -200, 2.0f);
 	//Camera = util::Camera(0, -200, 1.5f);
-	m_camera = new util::Camera(-200, -200, 1.0f);
 
 	//// Texture Manager ////
-	//TextureManager = util::TextureManager();
 	m_textureManager = new util::TextureManager();
+	//TextureManager = util::TextureManager();
 
 	//// Depth Sorter ////
+	m_depthSorter = new util::DepthSorter(0.0f, 15000.0f);
 	//DepthSorter = util::DepthSorter(-2000.0f, 2000.0f);
-	m_depthSorter = new util::DepthSorter(-2000.0f, 2000.0f);
 				//note: Z buffer depth of between 0-1 is reserved for the GUI
 
 	//// Coord Converter ////
-	//CoordConverter = util::CoordConverter(&Camera);
 	m_coordConverter = new util::CoordConverter(m_camera);
+	//CoordConverter = util::CoordConverter(&Camera);
 
 	return true;
 }
@@ -157,7 +148,6 @@ bool KunoApp::setupMap()
 	//float nodeWidth = 100;
 	//float nodeHeight = 100;
 
-	//
 	///////////// NODE //////////////
 	////Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
 	//for (int row = 0; row < maxRows; ++row) {
@@ -175,50 +165,49 @@ bool KunoApp::setupMap()
 	//		//Skip if they're both the same node
 	//		if (nodeA == nodeB)
 	//			continue;
-
 	//		//Find the distance between the node
 	//		float distance = pkr::Vector2::distance(nodeA->pos_tmp, nodeB->pos_tmp);
-
 	//		//If they're below a certain range then connect the nodes
 	//		if (distance < 60) {
 	//			m_graph->addConnection(nodeA, nodeB);
 	//			//This should also connect it both ways
 	//		}
-
 	//	}
 	//}
 
 	//////////// MAP /////////////
 	//Should make this load a map from some data or file
 	
-	//Build tile array !!!
-	m_tiles = new pf::Tile**[WORLD_WIDTH];
-	for (int row = 0; row < WORLD_WIDTH; ++row)
-	{
-		m_tiles[row] = new pf::Tile*[WORLD_DEPTH];
-		for (int col = 0; col < WORLD_DEPTH; ++col)
-		{
-			aie::Texture* inputTex = nullptr;
-			switch (pkr::Random(1, 3)) {
-			case 1:	//Floor
-				inputTex = m_textureManager->getTexture("Floor");
-				break;
-			case 2:	//Slab
-				inputTex = m_textureManager->getTexture("Slab");
-				break;
-			case 3: //Huge block
-				inputTex = m_textureManager->getTexture("HugeBlock");
-				break;
-			case 4: //Column
-				inputTex = m_textureManager->getTexture("Column");
-				break;
-			}
-			m_tiles[row][col] = new pf::Tile({ 0,0 }, inputTex);
-		}
-	}
+	////Build tile array !!!
+	//m_tiles = new pf::Tile**[WORLD_WIDTH];
+	//for (int row = 0; row < WORLD_WIDTH; ++row)
+	//{
+	//	m_tiles[row] = new pf::Tile*[WORLD_DEPTH];
+	//	for (int col = 0; col < WORLD_DEPTH; ++col)
+	//	{
+	//		aie::Texture* inputTex = nullptr;
+	//		switch (pkr::Random(1, 3)) {
+	//		case 1:	//Floor
+	//			inputTex = m_textureManager->getTexture("Floor");
+	//			break;
+	//		case 2:	//Slab
+	//			inputTex = m_textureManager->getTexture("Slab");
+	//			break;
+	//		case 3: //Huge block
+	//			inputTex = m_textureManager->getTexture("HugeBlock");
+	//			break;
+	//		case 4: //Column
+	//			inputTex = m_textureManager->getTexture("Column");
+	//			break;
+	//		}
+	//		m_tiles[row][col] = new pf::Tile({ 0,0 }, inputTex);
+	//	}
+	//}
 
 	//Build the actual map!
-	m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, m_tiles);
+	m_map = new pf::Map();
+	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
+	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	return true;
 }
@@ -300,9 +289,9 @@ void KunoApp::draw() {
 	m_2dRenderer->begin();
 
 	//// Draw the map ////
-	float mapDrawStartTime = KunoApp::Instance()->getTime();
+	//float mapDrawStartTime = KunoApp::Instance()->getTime();
 	m_map->draw(m_2dRenderer);
-	float mapDrawEndTime = KunoApp::Instance()->getTime();
+	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 
 	//Draw agents
 	m_player->draw(m_2dRenderer);

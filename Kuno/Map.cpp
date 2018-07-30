@@ -43,14 +43,17 @@ namespace pf {
 		//Call texture manager
 		auto TM = KunoApp::Instance()->TextureManager();
 
-		//Ground layer
-		for (int row = 0; row < depth; ++row) {
-			for (int col = 0; col < width; ++col) {
+		//// Ground layer ////
+		for (int row = 0; row < depth; ++row) 
+		{
+			for (int col = 0; col < width; ++col) 
+			{
 				//Create and insert new tile into vector
 				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
 
 				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 4)) {
+				switch (pkr::Random(0, 1)) 
+				{
 				case 0:	//Floor
 					//newTile.m_texOffset = { 0,0 };		//Set this later
 					newTile->tex = TM->getTexture("Floor");
@@ -61,40 +64,77 @@ namespace pf {
 					newTile->tex = TM->getTexture("Slab");
 					newTile->type = eTileType::ACCESSIBLE;
 					break;
-				case 2: //HugeBlock
-					//newTile.m_texOffset = { 0,0 };		//Set this later
-					newTile->tex = TM->getTexture("HugeBlock");
-					newTile->type = eTileType::INACCESSIBLE;
-					break;
-				case 3: //Column
-					//newTile.m_texOffset = { 0,0 };		//Set this later
-					newTile->tex = TM->getTexture("Column");
-					newTile->type = eTileType::INACCESSIBLE;
-					break;
-				case 4:	//ColumnBlocks
-					//newTile.m_texOffset = { 0,0 };		//Set this later
-					newTile->tex = TM->getTexture("ColumnBlocks");
-					newTile->type = eTileType::INACCESSIBLE;
-					break;
-				case 5:	//SmallBlock
-					//newTile.m_texOffset = { 0,0 };		//Set this later
-					newTile->tex = TM->getTexture("SmallBlock");
-					newTile->type = eTileType::INACCESSIBLE;
-					break;
-				case 6:	//LargeBlock
-					//newTile.m_texOffset = { 0,0 };		//Set this later
-					newTile->tex = TM->getTexture("LargeBlock");
-					newTile->type = eTileType::INACCESSIBLE;
-					break;
 				default:
 					assert(false);		//Something went wrong!
 				}
 
 				//Determine position of new tile
-				newTile->posCart = m_mapOffset + pkr::Vector2(col * CART_TILE_HEIGHT, row * CART_TILE_WIDTH);
+				newTile->cPos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
 
 				//Insert tile into ground layer
 				m_groundLayer.push_back(newTile);
+			}
+		}
+
+		//// Main layer ////
+		for (int row = 0; row < depth; ++row) 
+		{
+			for (int col = 0; col < width; ++col) 
+			{
+				//Init temps
+				eTileType		Ttype;
+				aie::Texture*	Ttex = nullptr;
+				pkr::Vector2	TtexOffset;
+				pkr::Vector2	Tpos;
+
+				//Create and insert new tile into vector
+				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
+
+				//Determine position of new tile
+				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
+
+				//Randomize tiles + determine other parameters
+				switch (pkr::Random(0, 25))			//Some kept blank
+				{		
+				case 2: //HugeBlock
+					newTile = new Tile(Tpos,
+						TM->getTexture("HugeBlock"),
+						pkr::Vector2(10.0f, 10.0f),		//Raw
+						eTileType::INACCESSIBLE);
+					break;
+				case 3: //Column
+					newTile = new Tile(Tpos,
+						TM->getTexture("Column"),
+						pkr::Vector2(5.0f, 5.0f),		//Raw
+						eTileType::INACCESSIBLE);
+					break;
+				case 4:	//ColumnBlocks
+					newTile = new Tile(Tpos,
+						TM->getTexture("ColumnBlocks"),
+						pkr::Vector2(2.5f, 2.5f),		//Raw
+						eTileType::INACCESSIBLE);
+					break;
+				case 5:	//SmallBlock
+					newTile = new Tile(Tpos,
+						TM->getTexture("SmallBlock"),
+						pkr::Vector2(7.5f, 7.5f),		//Raw
+						eTileType::INACCESSIBLE);
+					break;
+				case 6:	//LargeBlock
+					newTile = new Tile(Tpos,
+						TM->getTexture("LargeBlock"),
+						pkr::Vector2(0.f, 0.0f),		//Raw
+						eTileType::INACCESSIBLE);
+					break;
+				//default:
+				//	//do nothing
+				}
+
+				//Insert tile into layer only if it is valid
+				if (newTile->tex != nullptr)
+					m_mainLayer.push_back(newTile);
+				else
+					delete newTile;		//FRAGMENTATION! BAD CODE!!!
 			}
 		}
 
@@ -108,63 +148,37 @@ namespace pf {
 		for (auto &t : m_groundLayer) 
 		{
 			//Convert cartesian to isometric
-			t->posIso = app->CoordConverter()->CartesianToIsometric(t->posCart);
+			t->iPos = app->CoordConverter()->CartesianToIsometric(t->cPos);
 
 			//Calculate render depth
-			auto depth = app->DepthSorter()->getSortDepth(t->posIso.y);
+			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
 			//Draw tile
-			if (t->onMouseOver())
-				renderer->setRenderColour(0.6f, 0.6f, 0.6f);
-			else
+			//if (t->onMouseOver())
+			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
+			//else
 				renderer->setRenderColour(1, 1, 1);
-			renderer->drawSprite(t->tex, t->posIso.x, t->posIso.y, 0, 0, 0, depth);
+			renderer->drawSprite(t->tex, t->iPos.x, t->iPos.y, 0, 0, 0, depth);
 		}
 
-		//for (auto t : m_mainLayer) {
+		for (auto t : m_mainLayer) {
+			//Convert cartesian to isometric
+			t->iPos = app->CoordConverter()->CartesianToIsometric(t->cPos);
 
-		//}
+			//Calculate render depth
+			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
-		////Draw static objects
-		//for (auto obj : m_objectLayer) {
+			//Draw tile
+			//if (t->onMouseOver())
+			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
+			//else
+				renderer->setRenderColour(1, 1, 1);
+			renderer->drawSprite(t->tex, t->iPos.x + t->texOffset.x, t->iPos.y + t->texOffset.y, 0, 0, 0, depth);
+		}
 
-		//}
+		//Draw static objects
+		for (auto obj : m_objectLayer) {
 
-		//for (int row = 0; row < m_width; ++row) {
-		//	for (int col = 0; col < m_depth; ++col) {
-		//		auto thisTile = m_tile_array[row][col];
-		//		pkr::Vector2 isoPos, cartPos;
-		//		//Get cartesian coords
-		//		cartPos.x = col * CART_TILE_WIDTH;
-		//		cartPos.y = row * CART_TILE_HEIGHT;
-		//		//Convert to isometric
-		//		//isoPos = KunoApp::CoordConverter.CartesianToIsometric(cartPos);
-		//		isoPos = KunoApp::Instance()->CoordConverter()->CartesianToIsometric(cartPos);
-		//		//// DRAW THE TILE ////
-		//		//Find final tile positions
-		//		pkr::Vector2 tilePos = isoPos + m_mapOffset;
-		//		//Calculate the depth
-		//		//float depth = KunoApp::DepthSorter.getSortDepth(tilePos.y);
-		//		float depth = KunoApp::Instance()->DepthSorter()->getSortDepth(tilePos.y);
-		//		renderer->setRenderColour(1, 1, 1);
-		//		renderer->drawSprite(
-		//			thisTile->getTexture(),				//Texture*
-		//			tilePos.x,							//X
-		//			tilePos.y,							//Y
-		//			0,									//Width
-		//			0,									//Height
-		//			0,									//Rotation
-		//			depth,								//Depth
-		//			0.5f,								//Xorigin
-		//			0.35f);								//Yorigin
-		//		//Xorigin: 0.5f, Yorigin: 0.325f, seems to work OK
-		//		//// DEBUG ////
-		//		//Draw a debug point
-		//		//renderer->setRenderColour(1, 0.75f, 0);
-		//		//renderer->drawCircle(isoPos.x, isoPos.y, 5);
-		//		///////////////
-		//	}
-		//}
-
+		}
 	}
 }

@@ -23,19 +23,17 @@ class Tile : public Node
 	//Image width: 100
 	//Image height: 200
 	//
+private:
+	bool			m_mouseOver = false;		//Tracks if the mouse is over it or not
 
-protected:	
-	//Texture properties
-	aie::Texture*	m_tex = nullptr;
-	pkr::Vector2	m_texOffset;
+public:	
+	//Texture
+	aie::Texture*	tex = nullptr;
+	pkr::Vector2	texOffset = { 0,0 };		//This should be added onto the isoPos
 
-	//Tile properties
-	eTileType		m_type;
-	//float			m_width;
-	//float			m_height;
-
-	//Cartesian World
-	pkr::Vector2	m_pos;
+	//pkr::Vector2	posCart;			//cartesian
+	//pkr::Vector2	posIso;				//isometric
+	eTileType		type;
 
 public:
 	Tile() = default;
@@ -44,9 +42,16 @@ public:
 	Tile(pkr::Vector2 position, aie::Texture* tex, pkr::Vector2 texOffset = { 0,0 }, eTileType type = ACCESSIBLE);
 
 	//Accessors
-	aie::Texture*	getTexture() const { return m_tex; }
-	pkr::Vector2	getTexOffset() const { return m_texOffset; }
-	pkr::Vector2	getPosition() const { return m_pos; }
+	//aie::Texture*	getTexture() const { return tex; }
+	//pkr::Vector2	getTexOffset() const { return texOffset; }
+	//pkr::Vector2	getPosition() const { return posCart; }
+	//eTileType		getType() const { return type; }
+	bool			onMouseOver() const { return m_mouseOver; }
+
+	//void			setTexture(aie::Texture* tex) { tex = tex; }
+	//void			setTexOffset(pkr::Vector2 &texOffset) { texOffset = texOffset; }
+	//void			setPosition(pkr::Vector2 &pos) { pos = pos; }
+	//void			setType(eTileType type) { type = type; }
 
 	//Cores
 	void			draw(aie::Renderer2D* renderer);

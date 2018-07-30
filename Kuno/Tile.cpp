@@ -4,18 +4,19 @@
 namespace pf {
 
 	Tile::Tile(pkr::Vector2 pos, aie::Texture * tex, pkr::Vector2 texOffset, eTileType type) :
-		m_pos(pos), m_tex(tex), m_texOffset(texOffset), m_type(type)
+		/*pos(pos), */tex(tex), texOffset(texOffset), type(type)
 	{
+		cPos = pos;
 	}
 
 	void Tile::draw(aie::Renderer2D * renderer)
 	{
-		//Calc z buffer depth
-		//auto depth = KunoApp::DepthSorter.getSortDepth(m_pos.y);
-		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(m_pos.y);
+		//Calc iso position and sort depth
+		iPos = KunoApp::Instance()->CoordConverter()->CartesianToIsometric(cPos);
+		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y);
 
 		//Draw
-		renderer->drawSprite(m_tex, m_pos.x, m_pos.y, 0, 0, 0, depth);
+		renderer->drawSprite(tex, iPos.x + texOffset.x, iPos.y + texOffset.y, 0, 0, 0, depth);
 	}
 
 }

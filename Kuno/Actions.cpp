@@ -17,19 +17,19 @@ namespace ai {
 		//Keyboard controls
 		if (m_input->isKeyDown(aie::INPUT_KEY_W || aie::INPUT_KEY_UP))
 		{
-			agent->addForce(pkr::Vector2(0.0f, m_maxForce));
+			agent->move(pkr::Vector2(0.0f, m_maxForce));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_S))
 		{
-			agent->addForce(pkr::Vector2(0.0f, -m_maxForce));
+			agent->move(pkr::Vector2(0.0f, -m_maxForce));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_A))
 		{
-			agent->addForce(pkr::Vector2(-m_maxForce, 0.0f));
+			agent->move(pkr::Vector2(-m_maxForce, 0.0f));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_D))
 		{
-			agent->addForce(pkr::Vector2(m_maxForce, 0.0f));
+			agent->move(pkr::Vector2(m_maxForce, 0.0f));
 		}
 		//agent->rotation = -mouseX * deltaTime;
 
@@ -46,7 +46,7 @@ namespace ai {
 		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
 
 		//Apply max force towards target
-		agent->addForce(nrmSeekVector * m_maxForce);
+		agent->move(nrmSeekVector * m_maxForce);
 
 		return eResult::SUCCESS;
 	}

@@ -46,11 +46,6 @@ namespace ai {
 		m_behaviours.push_back(behaviour);
 	}
 
-	//void Agent::addForce(const pkr::Vector2 & force)
-	//{
-	//	m_force += force;
-	//}
-
 	void Agent::move(const pkr::Vector2 & lMove)
 	{
 		m_cPos += lMove;

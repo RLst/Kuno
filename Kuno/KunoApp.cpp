@@ -171,6 +171,29 @@ bool KunoApp::setupMap()
 	return true;
 }
 
+bool KunoApp::setupPlayer()
+{
+	m_player = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.75f, 0));
+	m_mouseControlled = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.05f, 0.75f));
+
+	return true;
+}
+
+bool KunoApp::setupEnemies()
+{
+	static int numOfEnemies = 20;
+
+	//Load in a bunch of blue seekers
+	pkr::Vector3 seekerColour = pkr::Vector3(0.75f, 0.25f, 0);
+	for (int i = 0; i < numOfEnemies; ++i) {
+		//Seekers
+		ai::Agent* newEnemy = new ai::Agent(40.0f, seekerColour, pkr::Vector2(i * 100.0f, i * 100.0f));
+		m_enemyList.push_back(newEnemy);
+	}
+
+	return true;
+}
+
 bool KunoApp::setupAI()
 {
 	////Behaviour tree
@@ -193,34 +216,13 @@ bool KunoApp::setupAI()
 
 	//Setup player
 	aie::Input* input = aie::Input::getInstance();
-	m_player->addBehaviour(new ai::BasicController(aie::Input::getInstance(), 500.0f));
+	m_player->addBehaviour(new ai::BasicController(input, 500.0f));
+	m_mouseControlled->addBehaviour(new ai::MouseController(input));
 
 	//Setup enemies
 	for (auto e : m_enemyList)
 	{
 		e->addBehaviour(new ai::SeekAction(m_player, 400.0f));
-	}
-
-	return true;
-}
-
-bool KunoApp::setupPlayer()
-{
-	m_player = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.75f, 0));
-
-	return true;
-}
-
-bool KunoApp::setupEnemies()
-{
-	static int numOfEnemies = 20;
-
-	//Load in a bunch of blue seekers
-	pkr::Vector3 seekerColour = pkr::Vector3(0.75f, 0.25f, 0);
-	for (int i = 0; i < numOfEnemies; ++i) {
-		//Seekers
-		ai::Agent* newEnemy = new ai::Agent(40.0f, seekerColour, pkr::Vector2(i * 100.0f, i * 100.0f));
-		m_enemyList.push_back(newEnemy);
 	}
 
 	return true;
@@ -240,6 +242,7 @@ void KunoApp::update(float deltaTime) {
 	
 	//Update the agents
 	m_player->update(deltaTime);
+	m_mouseControlled->update(deltaTime);
 	for (auto enemy : m_enemyList)
 		enemy->update(deltaTime);
 
@@ -270,6 +273,7 @@ void KunoApp::draw() {
 
 	//Draw agents
 	m_player->draw(m_2dRenderer);
+	m_mouseControlled->draw(m_2dRenderer);
 	for (auto enemy : m_enemyList) {
 		enemy->draw(m_2dRenderer);
 	}
@@ -303,7 +307,7 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	//// Coord converter ////
 	float x = 0, y = 0;
-	x = input->getMouseX(); y = input->getMouseY();										//Get Viewport coords
+	x = (float)input->getMouseX(); y = (float)input->getMouseY();										//Get Viewport coords
 	pkr::Vector2 cart = m_coordConverter->ViewportToCartesian(pkr::Vector2(x, y));		//Convert from Viewport to Cartesian
 	pkr::Vector2 iso = m_coordConverter->CartesianToIsometric(cart);					//Convert from Cartesian to Isometric
 	ImGui::Begin("Coord Converter");
@@ -325,7 +329,7 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	//// Depth Sorter ////
 	// An orange circle will locate where the cursor is should be depth sorted by the sorter
-	pkr::Vector2 mouseCpos = pkr::Vector2(input->getMouseX(), input->getMouseY());
+	pkr::Vector2 mouseCpos = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
 	pkr::Vector2 mouseIpos = m_coordConverter->ViewportToCartesian(mouseCpos.x, mouseCpos.y);
 	float depth = m_depthSorter->getSortDepth(mouseIpos.y);
 	m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);

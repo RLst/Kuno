@@ -56,6 +56,7 @@ protected:
 
 	//Agents
 	ai::Agent*					m_player;
+	ai::Agent*					m_mouseControlled;
 	std::vector<ai::Agent*>		m_enemyList;
 
 	//Map and pathfinding
@@ -77,7 +78,7 @@ private:
 	util::CoordConverter*	m_coordConverter;
 
 public:
-	static KunoApp*				Instance();		//MODERN SINGLETON PATTERN
+	static KunoApp*				Instance();			//MODERN SINGLETON PATTERN
 	static void					resetInstance();	//MODERN SINGLETON PATTERN; call this to delete singleton
 
 	//Setups

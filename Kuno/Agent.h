@@ -44,9 +44,10 @@ namespace ai {
 			const pkr::Vector3 &colour = { 0.75f, 0.75f, 0.75f },
 			const pkr::Vector2 &startingPos = { 300, 300 });
 
-		//Add
+		//Behaviours
 		void				addBehaviour(iBehaviour* behaviour);
-		//void				addForce(const pkr::Vector2 &force);
+
+		//Translation
 		void				move(const pkr::Vector2 &lSpeed);			//Linear move (instant vel/accel)
 		void				moveIso(const pkr::Vector2 &lSpeed);		//Linear move in isometric
 
@@ -58,5 +59,14 @@ namespace ai {
 		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
 	};
 
+
+	class Character : public Agent
+	{
+	private:
+		pkr::Vector2		m_facing;		//normalised vec; where the character is facing
+
+	public:
+		pkr::Vector2		getFacing() const { return m_facing; }
+	};
 
 }

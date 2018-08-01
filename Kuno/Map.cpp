@@ -61,13 +61,13 @@ namespace pf {
 				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
 
 				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 0))		//0-9: Floor tiles, 10-20: Main tiles
+				switch (pkr::Random(0, 1))		//0-9: Floor tiles, 10-20: Main tiles
 				{
 					//Floor
 				case 0:
 					newTile = new Tile(Tpos,
 						TM->getTexture("Floor"),
-						pkr::Vector2(0.0f, -75.0f),
+						pkr::Vector2(0.0f, 75.0f),
 						eTileTerrain::SMOOTH_FLOOR);
 					break;
 
@@ -75,7 +75,7 @@ namespace pf {
 				case 1:
 					newTile = new Tile(Tpos,
 						TM->getTexture("Slab"),
-						pkr::Vector2(0.0f, -95.0f),
+						pkr::Vector2(0.0f, 95.0f),
 						eTileTerrain::SMOOTH_FLOOR);
 					break;
 				default:
@@ -113,36 +113,36 @@ namespace pf {
 				case 10: //HugeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("HugeBlock"),
-						pkr::Vector2(0.0f, -75.0f),
+						pkr::Vector2(0.0f, 75.0f),		//Far back corner
 						eTileTerrain::GRASS,	//cost = 1.0f
 						eTileAccess::INACCESSIBLE);
 					break;
 				case 11: //Column
 					newTile = new Tile(Tpos,
 						TM->getTexture("Column"),
-						pkr::Vector2(0.0f, -19.0f),
-						eTileTerrain::GRASS,	//cost = 1.0f
+						pkr::Vector2(0.0f, 19.0f),
+						eTileTerrain::GRASS,
 						eTileAccess::INACCESSIBLE);
 					break;
 				case 12:	//ColumnBlocks
 					newTile = new Tile(Tpos,
 						TM->getTexture("ColumnBlocks"),
-						pkr::Vector2(0.0f, -19.0f),
-						eTileTerrain::GRASS,	//cost = 1.0f
+						pkr::Vector2(0.0f, 19.0f),
+						eTileTerrain::GRASS,
 						eTileAccess::INACCESSIBLE);
 					break;
 				case 13:	//SmallBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("SmallBlock"),
-						pkr::Vector2(0.0f, -19.0f),
-						eTileTerrain::GRASS,	//cost = 1.0f
+						pkr::Vector2(0.0f, 19.0f),
+						eTileTerrain::GRASS,	
 						eTileAccess::INACCESSIBLE);
 					break;
 				case 14:	//LargeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("LargeBlock"),
-						pkr::Vector2(0.0f, -39.0f),
-						eTileTerrain::GRASS,	//cost = 1.0f
+						pkr::Vector2(0.0f, 39.0f),
+						eTileTerrain::GRASS,	
 						eTileAccess::INACCESSIBLE);
 					break;
 				}
@@ -227,7 +227,6 @@ namespace pf {
 			//renderer->setRenderColour(0, 0, 0);
 			//auto fPos = t->iPos;		//Final position
 			//renderer->drawBox(fPos.x, fPos.y, 3, 3, 0, 0);
-
 			////Draw the depth sort offset of the tile (!!! MIGHT NOT NEED THIS IF I BUILD AN ADVANCE DEPTH SORTING ALGORITHM)
 			//renderer->setRenderColour(0, 0, 1);
 			//renderer->drawBox(t->iPos.x + t->dsOffset.x, t->iPos.y + t->dsOffset.y, 3, 3, 0, 0);
@@ -250,16 +249,15 @@ namespace pf {
 			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0, 0);
 			t->draw(renderer);
 
-			//// DEBUG ////
-			//Draw the cPos of the tile (should be the tile's isometric centre)
-			renderer->setRenderColour(0, 0, 0);
-			auto fPos = t->iPos;		//Final position
-			renderer->drawBox(fPos.x, fPos.y, 3, 3, 0, 0);
-
-			//Draw the depth sort offset of the tile (!!! MIGHT NOT NEED THIS IF I BUILD AN ADVANCE DEPTH SORTING ALGORITHM)
-			renderer->setRenderColour(0, 0, 1);
-			renderer->drawBox(t->iPos.x + t->dsOffset.x, t->iPos.y + t->dsOffset.y, 3, 3, 0, 0);
-			///////////////
+			////// DEBUG ////
+			////Draw the cPos of the tile (should be the tile's isometric centre)
+			//renderer->setRenderColour(0, 0, 0);
+			//auto fPos = t->iPos;		//Final position
+			//renderer->drawBox(fPos.x, fPos.y, 5, 5, 0, 0);
+			////Draw the depth sort offset of the tile (!!! MIGHT NOT NEED THIS IF I BUILD AN ADVANCE DEPTH SORTING ALGORITHM)
+			//renderer->setRenderColour(0, 0, 1);
+			//renderer->drawBox(t->iPos.x + t->dsOffset.x, t->iPos.y + t->dsOffset.y, 5, 5, 0, 0);
+			/////////////////
 		}
 
 		//Draw static objects

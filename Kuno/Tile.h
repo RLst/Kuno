@@ -37,10 +37,14 @@ private:
 	bool			m_mouseOver = false;		//Tracks if the mouse is over it or not
 
 public:	
-	//Texture
+	//NOTE!!!
+	//depthSortOffset: The point offset from cPos (cartesian world coord) at which the 
+	//Depth Sorter uses to sort the depth of the tile/object
+	//This point should be the isometrically furthest point from the viewer where the object
+	//intersects or meets the ground ie. back corner of block
+	pkr::Vector2	dsOffset = { 0,0 };		
 	aie::Texture*	tex = nullptr;
-	pkr::Vector2	dsOffset = { 0,0 };		//Depth Sort Offset; it is a point offset from the position 
-											//where the depth sorter uses it to control the sprite's actual depth
+	//Texture
 
 	//Terrain and accessibility
 	eTileTerrain	terrain;
@@ -50,8 +54,7 @@ public:
 	Tile() = default;
 	virtual ~Tile() = default;	//Texture manager will delete the textures
 
-	Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 },  
-		eTileTerrain terrain = eTileTerrain::SMOOTH_FLOOR, eTileAccess access = ACCESSIBLE);
+	Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 }, eTileTerrain terrain = SMOOTH_FLOOR, eTileAccess access = ACCESSIBLE);
 
 	bool			onMouseOver() const { return m_mouseOver; }
 

@@ -13,7 +13,7 @@ namespace pf {
 	{
 		//Calc iso position and sort depth
 		iPos = KunoApp::Instance()->CoordConverter()->CartesianToIsometric(cPos);
-		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y - dsOffset.y);		//for some reason iPos MINUS dsOffset works
+		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y + dsOffset.y);		//for some reason iPos MINUS dsOffset works
 
 		//Draw
 		pkr::Vector2 originOffset = { 0.5f, 0.18f };

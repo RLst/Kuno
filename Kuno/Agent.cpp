@@ -55,6 +55,10 @@ namespace ai {
 	{
 		m_cPos += lMove;
 	}
+
+	void Agent::moveIso(const pkr::Vector2 & lMove)
+	{
+		m_cPos += KunoApp::Instance()->CoordConverter()->IsometricToCartesian(lMove);
 	}
 
 

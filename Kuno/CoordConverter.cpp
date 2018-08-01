@@ -71,4 +71,9 @@ namespace util {
 		return cart;
 	}
 
+	pkr::Vector2 CoordConverter::IsometricToCartesian(float isoX, float isoY) const
+	{
+		return IsometricToCartesian(pkr::Vector2(isoX, isoY));
+	}
+
 }

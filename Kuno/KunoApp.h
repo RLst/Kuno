@@ -65,7 +65,7 @@ protected:
 	//Audio systems
 	//Log systems
 
-public:
+private:
 	//Utilities
 	//static util::Camera				Camera;
 	//static util::TextureManager		TextureManager;

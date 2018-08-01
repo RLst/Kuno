@@ -110,7 +110,7 @@ bool KunoApp::setupUtilities()
 	//TextureManager = util::TextureManager();
 
 	//// Depth Sorter ////
-	m_depthSorter = new util::DepthSorter(0.0f, 15000.0f);
+	m_depthSorter = new util::DepthSorter(0.0f, 100.0f);
 	//DepthSorter = util::DepthSorter(-2000.0f, 2000.0f);
 				//note: Z buffer depth of between 0-1 is reserved for the GUI
 
@@ -331,10 +331,11 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
 	m_2dRenderer->drawCircle(mouseIpos.x, mouseIpos.y + 15.0f, 15.0f, depth);
 	ImGui::Begin("Depth Sorter");
-	ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_nearestYpos, m_depthSorter->m_furthestYpos);
+	ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
 	ImGui::Text("Cartesian > x: %.2f, y: %.2f", mouseCpos.x, mouseCpos.y);
 	ImGui::Text("Isometric > x: %.2f, y: %.2f", mouseIpos.x, mouseIpos.y);
-	ImGui::Text("Depth: %.2f", depth);
+	ImGui::Text("Depth (Cursor): %.2f", depth);
+	ImGui::Text("Depth Iterator: %f", m_depthSorter->m_depthIterator);
 	ImGui::End();
 
 	//////////////

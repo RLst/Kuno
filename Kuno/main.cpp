@@ -11,7 +11,7 @@ int main() {
 	//// Suggested resolutions: 1280, 720 | 1440, 900 | 1650, 1050
 
 	// initialise and loop
-	kuno->run("Kuno", 640, 480, false);		
+	kuno->run("Kuno", 1024, 640, false);		
 
 	//Destroy master singleton
 	KunoApp::resetInstance();

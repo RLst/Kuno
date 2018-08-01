@@ -27,7 +27,7 @@ public:
 	DepthSorter(float minYpos, float maxYpos, float minSortDepth = 1.0f, float maxSortDepth = 100.0f);
 	~DepthSorter() = default;
 
-	float		getSortDepth(float spriteYpos);		//Sorts the z-depth based on sprite Y position
+	float		getSortDepth(float spriteYpos);			//Sorts the z-depth based on sprite Y position 	ie. corresponds to the isometric BACK CORNER of a tile/block/column OR feet of a character
 	float		getSortDepth(ai::Agent *agent);			//Gets the agent Y position then pass through getSortDepth()
 
 	float		getSortDepthByMapDiagonal(float spriteYpos) const;		//Advance depth sorting algorithm 

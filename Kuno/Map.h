@@ -46,10 +46,13 @@ public:
 	//Constructor using vector of Tile*; Add tiles afterwards
 	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
 
-	//void				addTile(Tile* tile);
+	//Setups
 	void				buildTestMap(int width, int depth);
+	void				connectNodesByDistance(float connectRadius);	//Also take into account tile type and terrain
+
 	void				buildKunoMap();				//Build game map raw
 	//void				loadMap();					//From file? Implement later
+	//void				addTile(Tile* tile);
 	
 	//Core	
 	void				draw(aie::Renderer2D* renderer);	//Only draw tiles, walls and static objects

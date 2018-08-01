@@ -29,12 +29,9 @@ private:
 public:	
 	//Texture
 	aie::Texture*	tex = nullptr;
+	pkr::Vector2	dsOffset = { 0,0 };		//Depth Sort Offset; it is a point offset from the position 
+											//where the depth sorter uses it to control the sprite's actual depth
 
-	//// Notice!!! ////
-	pkr::Vector2	depthSortOffset = { 0,0 };		//This should be added onto the isoPos
-	//This should be changed to depthPoint or something like that; 
-	//it is a point offset fromt he position where the depth sorter uses it to control the sprite's actual depth
-	////////
 
 
 	//pkr::Vector2	posCart;			//cartesian
@@ -47,20 +44,19 @@ public:
 
 	Tile(pkr::Vector2 position, aie::Texture* tex, pkr::Vector2 texOffset = { 0,0 }, eTileType type = ACCESSIBLE);
 
-	//Accessors
-	//aie::Texture*	getTexture() const { return tex; }
-	//pkr::Vector2	getTexOffset() const { return texOffset; }
-	//pkr::Vector2	getPosition() const { return posCart; }
-	//eTileType		getType() const { return type; }
 	bool			onMouseOver() const { return m_mouseOver; }
-
-	//void			setTexture(aie::Texture* tex) { tex = tex; }
-	//void			setTexOffset(pkr::Vector2 &texOffset) { texOffset = texOffset; }
-	//void			setPosition(pkr::Vector2 &pos) { pos = pos; }
-	//void			setType(eTileType type) { type = type; }
 
 	//Cores
 	void			draw(aie::Renderer2D* renderer);
 };
 
+	//Accessors
+	//aie::Texture*	getTexture() const { return tex; }
+	//pkr::Vector2	getTexOffset() const { return texOffset; }
+	//pkr::Vector2	getPosition() const { return posCart; }
+	//eTileType		getType() const { return type; }
+	//void			setTexture(aie::Texture* tex) { tex = tex; }
+	//void			setTexOffset(pkr::Vector2 &texOffset) { texOffset = texOffset; }
+	//void			setPosition(pkr::Vector2 &pos) { pos = pos; }
+	//void			setType(eTileType type) { type = type; }
 }

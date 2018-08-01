@@ -56,13 +56,15 @@ namespace pf {
 				{
 				case 0:	//Floor
 					newTile->tex = TM->getTexture("Floor");
-					newTile->depthSortOffset = { -(newTile->tex->getWidth() / 2.0f), -130 };		//Set this later
 					newTile->type = eTileType::ACCESSIBLE;
+					newTile->dsOffset = { 0 , -75.f };
+					//newTile->dsOffset = { -(newTile->tex->getWidth() / 2.0f), -130 };		//Set this later
 					break;
 				case 1:	//Slab
 					newTile->tex = TM->getTexture("Slab");
-					newTile->depthSortOffset = { -(newTile->tex->getWidth()/2.0f), -190 };		//Set this later
 					newTile->type = eTileType::ACCESSIBLE;
+					newTile->dsOffset = { 0, -56.f };
+					//newTile->dsOffset = { -(newTile->tex->getWidth()/2.0f), -190 };		//Set this later
 					break;
 				default:
 					assert(false);		//Something went wrong!
@@ -99,31 +101,31 @@ namespace pf {
 				case 2: //HugeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("HugeBlock"),
-						pkr::Vector2(10.0f, 10.0f),		//Raw
+						pkr::Vector2(0.0f, -75.0f),		//Raw
 						eTileType::INACCESSIBLE);
 					break;
 				case 3: //Column
 					newTile = new Tile(Tpos,
 						TM->getTexture("Column"),
-						pkr::Vector2(5.0f, 5.0f),		//Raw
+						pkr::Vector2(0.0f, -19.0f),		//Raw
 						eTileType::INACCESSIBLE);
 					break;
 				case 4:	//ColumnBlocks
 					newTile = new Tile(Tpos,
 						TM->getTexture("ColumnBlocks"),
-						pkr::Vector2(2.5f, 2.5f),		//Raw
+						pkr::Vector2(0.0f, -19.0f),		//Raw
 						eTileType::INACCESSIBLE);
 					break;
 				case 5:	//SmallBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("SmallBlock"),
-						pkr::Vector2(7.5f, 7.5f),		//Raw
+						pkr::Vector2(0.0f, -19.0f),		//Raw
 						eTileType::INACCESSIBLE);
 					break;
 				case 6:	//LargeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("LargeBlock"),
-						pkr::Vector2(0.f, 0.0f),		//Raw
+						pkr::Vector2(0.0f, -39.0f),		//Raw
 						eTileType::INACCESSIBLE);
 					break;
 				//default:
@@ -159,15 +161,21 @@ namespace pf {
 			//else
 				renderer->setRenderColour(1, 1, 1);
 			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0,0);
-				t->draw(renderer);
+			t->draw(renderer);
 
 			//// DEBUG ////
-			renderer->setRenderColour(0, 0, 0);
-			auto fPos = t->iPos;		//Final position
-			renderer->drawBox(fPos.x, fPos.y, 5, 5, 0, 0);
-			///////////////
+			////Draw the cPos of the tile (should be the tile's isometric centre)
+			//renderer->setRenderColour(0, 0, 0);
+			//auto fPos = t->iPos;		//Final position
+			//renderer->drawBox(fPos.x, fPos.y, 3, 3, 0, 0);
+
+			////Draw the depth sort offset of the tile (!!! MIGHT NOT NEED THIS IF I BUILD AN ADVANCE DEPTH SORTING ALGORITHM)
+			//renderer->setRenderColour(0, 0, 1);
+			//renderer->drawBox(t->iPos.x + t->dsOffset.x, t->iPos.y + t->dsOffset.y, 3, 3, 0, 0);
+			/////////////////
 		}
 
+		//Draw the main tile layer
 		for (auto t : m_mainLayer) {
 			//Convert cartesian to isometric
 			t->iPos = app->CoordConverter()->CartesianToIsometric(t->cPos);
@@ -176,12 +184,23 @@ namespace pf {
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
 			//Draw tile
-			//if (t->onMouseOver())
-			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
-			//else
+			if (t->onMouseOver())
+				renderer->setRenderColour(0.6f, 0.6f, 0.6f);
+			else
 				renderer->setRenderColour(1, 1, 1);
 			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0, 0);
 			t->draw(renderer);
+
+			//// DEBUG ////
+			//Draw the cPos of the tile (should be the tile's isometric centre)
+			renderer->setRenderColour(0, 0, 0);
+			auto fPos = t->iPos;		//Final position
+			renderer->drawBox(fPos.x, fPos.y, 3, 3, 0, 0);
+
+			//Draw the depth sort offset of the tile (!!! MIGHT NOT NEED THIS IF I BUILD AN ADVANCE DEPTH SORTING ALGORITHM)
+			renderer->setRenderColour(0, 0, 1);
+			renderer->drawBox(t->iPos.x + t->dsOffset.x, t->iPos.y + t->dsOffset.y, 3, 3, 0, 0);
+			///////////////
 		}
 
 		//Draw static objects

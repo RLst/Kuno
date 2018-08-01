@@ -1,5 +1,6 @@
 #pragma once
 #include "AI.h"
+#include <pkr/Vector2.h>
 
 namespace aie {
 	class Input;
@@ -15,7 +16,7 @@ namespace ai {
 	{
 	private:
 		aie::Input*		m_input;
-		float m_lSpeedMax;
+		float			m_lSpeedMax;
 	public:
 		BasicController(aie::Input * input = aie::Input::getInstance(), float maxSpeed = 200.0f);
 		eResult execute(Agent* agent, float deltaTime) override;
@@ -25,8 +26,12 @@ namespace ai {
 	{
 	private:
 		aie::Input*		m_input;
+		float			m_lSpeedMax;
+		pkr::Vector2	m_destination;
+		float			m_arriveThreshold = 5.0f;			//Raw inits; adjust accordingly
+		//float			m_arriveSmoothZone = 20.0f;
 	public:
-		MouseController(aie::Input * input = aie::Input::getInstance());
+		MouseController(aie::Input * input = aie::Input::getInstance(), float maxSpeed = 500.0f);
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
@@ -36,9 +41,11 @@ namespace ai {
 	//This needs to take in a target agent
 	private:
 		Agent *			m_target;
-		float			m_lSpeedMax;
+		pkr::Vector2	m_destination;
+		float			m_maxLspeed;
 	public:
-		SeekAction(Agent* target, float maxSpeed = 200.0f);		//Point based if target agent not specified
+		SeekAction(Agent* target, float maxLspeed = 200.0f);		//Point based if target agent not specified
+		//SeekAction(pkr::Vector2 destination, float maxLspeed = 200.0f);
 		//~SeekAction() { delete m_target; }									//Destructor
 		eResult execute(Agent* agent, float deltaTime) override;
 	};

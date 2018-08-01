@@ -41,7 +41,7 @@ float DepthSorter::getSortDepth(float spriteYpos)
 	spriteYpos += abs(m_minYpos);
 
 	//Multiply spriteYpos by depthIterator to find the correct depth
-	float sortedDepth = spriteYpos * m_depthIterator;
+	float sortedDepth = m_minSortDepth + (spriteYpos * m_depthIterator);
 
 	return sortedDepth;
 }

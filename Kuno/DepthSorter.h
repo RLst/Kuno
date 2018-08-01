@@ -15,22 +15,23 @@ class DepthSorter
 {
 
 private:
-	float		m_nearestYpos, m_furthestYpos;
-	float		m_minDepth, m_maxDepth;
-	float		m_totalDepthSegments;
+	float		m_minYpos, m_maxYpos;
+	float		m_minSortDepth, m_maxSortDepth;
 	float		m_depthIterator;
 
 	friend class KunoApp;		//For debugging only
 
+	void		calcDepthIterator();
+
 public:
-	DepthSorter(float nearestYpos, float furthestYpos, float minDepth = 1.0f, float maxDepth = 100.0f);
+	DepthSorter(float minYpos, float maxYpos, float minSortDepth = 1.0f, float maxSortDepth = 100.0f);
 	~DepthSorter() = default;
 
-	float		getSortDepth(float spriteYpos) const;		//Sorts the z-depth based on sprite Y position
-	float		getSortDepth(ai::Agent *agent) const;			//Gets the agent Y position then pass through getSortDepth()
+	float		getSortDepth(float spriteYpos);		//Sorts the z-depth based on sprite Y position
+	float		getSortDepth(ai::Agent *agent);			//Gets the agent Y position then pass through getSortDepth()
 
-	float		getSortDepthByMapDiagonal(float spriteYpos) const;
-	float		getSortDepthByMapDiagonal(ai::Agent *agent) const;
+	float		getSortDepthByMapDiagonal(float spriteYpos) const;		//Advance depth sorting algorithm 
+	float		getSortDepthByMapDiagonal(ai::Agent *agent) const;		//for near perfect depth sorting
 };
 
 }

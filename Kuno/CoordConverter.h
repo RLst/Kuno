@@ -14,16 +14,6 @@ namespace util {
 	private:
 		Camera*		m_cam;
 
-		//// HELPER CONVERSION FUNCTIONS ////
-		//pkr::Vector2		IsometricToCartesian(pkr::Vector2 iso) const;					//Not really required
-		//pkr::Vector2		IsometricToCartestian(float isoX, float isoY) const;
-
-		//Viewport -> Canvas -> Isometric -> Cartesian
-		//pkr::Vector2		ViewportToCartesian(pkr::Vector2 vpPoint);			//Convert from viewport to cartesian world
-		//pkr::Vector2		ViewportToCartesian(float vpX, float vpY);			
-		//Cartesian -> Isometric
-		//pkr::Vector2		CartesianToIsometric(pkr::Vector2 cart);			//Convert from cartesian world coords to isometric world coords
-		//pkr::Vector2		CartesianToIsometric(float cartX, float cartY);
 	public:
 		CoordConverter() = default;
 		~CoordConverter() = default;

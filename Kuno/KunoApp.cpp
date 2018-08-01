@@ -141,24 +141,15 @@ bool KunoApp::loadTextures()
 
 bool KunoApp::setupMap()
 {
-	//Just setup a raw graph
-	//m_graph = new pf::Graph();
+	//// Build the map ////
+	m_map = new pf::Map();
+	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
+	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
-	//pkr::Vector2 offset = { 100, 100 };
-	//int maxCols = 10;
-	//int maxRows = 10;
-	//float nodeWidth = 100;
-	//float nodeHeight = 100;
+	//// Connect tile/nodes in map ////
+	float NodeConnectRadius = 100;
+	m_map->connectNodesByDistance(NodeConnectRadius);
 
-	///////////// NODE //////////////
-	////Make a grid of say 50 x 50, with all nodes connecting to each other in 8 directions
-	//for (int row = 0; row < maxRows; ++row) {
-	//	for (int col = 0; col < maxCols; ++col) {
-	//		//Add a node and position appropriately
-	//		m_graph->addNode(pkr::Vector2(offset.x + col * nodeWidth, offset.y + row * nodeHeight));
-	//	}
-	//}
-	//
 	////Connect up adjacent neighbouring nodes
 	//for (auto nodeA : m_graph->getNodes()) 
 	//{
@@ -176,38 +167,6 @@ bool KunoApp::setupMap()
 	//		}
 	//	}
 	//}
-
-	//////////// MAP /////////////
-	m_map = new pf::Map();
-	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
-	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
-
-	////Build tile array !!!
-	//m_tiles = new pf::Tile**[WORLD_WIDTH];
-	//for (int row = 0; row < WORLD_WIDTH; ++row)
-	//{
-	//	m_tiles[row] = new pf::Tile*[WORLD_DEPTH];
-	//	for (int col = 0; col < WORLD_DEPTH; ++col)
-	//	{
-	//		aie::Texture* inputTex = nullptr;
-	//		switch (pkr::Random(1, 3)) {
-	//		case 1:	//Floor
-	//			inputTex = m_textureManager->getTexture("Floor");
-	//			break;
-	//		case 2:	//Slab
-	//			inputTex = m_textureManager->getTexture("Slab");
-	//			break;
-	//		case 3: //Huge block
-	//			inputTex = m_textureManager->getTexture("HugeBlock");
-	//			break;
-	//		case 4: //Column
-	//			inputTex = m_textureManager->getTexture("Column");
-	//			break;
-	//		}
-	//		m_tiles[row][col] = new pf::Tile({ 0,0 }, inputTex);
-	//	}
-	//}
-
 
 	return true;
 }
@@ -366,11 +325,17 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	//// Depth Sorter ////
 	// An orange circle will locate where the cursor is should be depth sorted by the sorter
-	pkr::Vector2 cartMPos = pkr::Vector2(input->getMouseX(), input->getMouseY());
-	pkr::Vector2 isoMpos = m_coordConverter->ViewportToCartesian(cartMPos.x, cartMPos.y);
-	float depth = m_depthSorter->getSortDepth(isoMpos.y);
+	pkr::Vector2 mouseCpos = pkr::Vector2(input->getMouseX(), input->getMouseY());
+	pkr::Vector2 mouseIpos = m_coordConverter->ViewportToCartesian(mouseCpos.x, mouseCpos.y);
+	float depth = m_depthSorter->getSortDepth(mouseIpos.y);
 	m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
-	m_2dRenderer->drawCircle(isoMpos.x, isoMpos.y + 15.0f, 15.0f, depth);
+	m_2dRenderer->drawCircle(mouseIpos.x, mouseIpos.y + 15.0f, 15.0f, depth);
+	ImGui::Begin("Depth Sorter");
+	ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_nearestYpos, m_depthSorter->m_furthestYpos);
+	ImGui::Text("Cartesian > x: %.2f, y: %.2f", mouseCpos.x, mouseCpos.y);
+	ImGui::Text("Isometric > x: %.2f, y: %.2f", mouseIpos.x, mouseIpos.y);
+	ImGui::Text("Depth: %.2f", depth);
+	ImGui::End();
 
 	//////////////
 	////m_graph->draw(m_2dRenderer);

@@ -35,7 +35,7 @@ private:
 	int					m_depth = 0;			//Rows
 
 	//Map layers
-	std::vector<Tile*>	m_groundLayer;
+	std::vector<Tile*>	m_groundLayer;			//This must exist otherwise walls will just be floating on nothing
 	std::vector<Tile*>	m_mainLayer;
 	std::vector<StaticObject*>	m_objectLayer;
 
@@ -48,7 +48,7 @@ public:
 
 	//Setups
 	void				buildTestMap(int width, int depth);
-	void				connectNodesByDistance(float connectRadius);	//Also take into account tile type and terrain
+	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 
 	void				buildKunoMap();				//Build game map raw
 	//void				loadMap();					//From file? Implement later

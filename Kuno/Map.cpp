@@ -48,43 +48,8 @@ namespace pf {
 		{
 			for (int col = 0; col < width; ++col) 
 			{
-				//Create and insert new tile into vector
-				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
-
-				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 1)) 
-				{
-				case 0:	//Floor
-					newTile->tex = TM->getTexture("Floor");
-					newTile->type = eTileType::ACCESSIBLE;
-					newTile->dsOffset = { 0 , -75.f };
-					//newTile->dsOffset = { -(newTile->tex->getWidth() / 2.0f), -130 };		//Set this later
-					break;
-				case 1:	//Slab
-					newTile->tex = TM->getTexture("Slab");
-					newTile->type = eTileType::ACCESSIBLE;
-					newTile->dsOffset = { 0, -56.f };
-					//newTile->dsOffset = { -(newTile->tex->getWidth()/2.0f), -190 };		//Set this later
-					break;
-				default:
-					assert(false);		//Something went wrong!
-				}
-
-				//Determine position of new tile
-				newTile->cPos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
-
-				//Insert tile into ground layer
-				m_groundLayer.push_back(newTile);
-			}
-		}
-
-		//// Main layer ////
-		for (int row = 0; row < depth; ++row) 
-		{
-			for (int col = 0; col < width; ++col) 
-			{
 				//Init temps
-				eTileType		Ttype;
+				eTileAccess		Ttype;
 				aie::Texture*	Ttex = nullptr;
 				pkr::Vector2	TtexOffset;
 				pkr::Vector2	Tpos;
@@ -96,40 +61,90 @@ namespace pf {
 				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
 
 				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 25))			//Some kept blank
+				switch (pkr::Random(0, 0))		//0-9: Floor tiles, 10-20: Main tiles
+				{
+					//Floor
+				case 0:
+					newTile = new Tile(Tpos,
+						TM->getTexture("Floor"),
+						pkr::Vector2(0.0f, -75.0f),
+						eTileTerrain::SMOOTH_FLOOR);
+					break;
+
+					//Slab
+				case 1:
+					newTile = new Tile(Tpos,
+						TM->getTexture("Slab"),
+						pkr::Vector2(0.0f, -95.0f),
+						eTileTerrain::SMOOTH_FLOOR);
+					break;
+				default:
+					assert(false);		//Something went wrong!
+				}
+
+				//Insert tile into layer only if it is valid
+				if (newTile->tex != nullptr)
+					m_groundLayer.push_back(newTile);
+				else
+					delete newTile;		//FRAGMENTATION! BAD CODE!!!
+			}
+		}
+
+		//// Main layer ////
+		for (int row = 0; row < depth; ++row) 
+		{
+			for (int col = 0; col < width; ++col) 
+			{
+				//Init temps
+				eTileAccess		Ttype;
+				aie::Texture*	Ttex = nullptr;
+				pkr::Vector2	TtexOffset;
+				pkr::Vector2	Tpos;
+
+				//Create and insert new tile into vector
+				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
+
+				//Determine position of new tile
+				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
+
+				//Randomize tiles + determine other parameters
+				switch (pkr::Random(0, 14))		//0-9: Floor tiles, 10-20: Main tiles
 				{		
-				case 2: //HugeBlock
+				case 10: //HugeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("HugeBlock"),
-						pkr::Vector2(0.0f, -75.0f),		//Raw
-						eTileType::INACCESSIBLE);
+						pkr::Vector2(0.0f, -75.0f),
+						eTileTerrain::GRASS,	//cost = 1.0f
+						eTileAccess::INACCESSIBLE);
 					break;
-				case 3: //Column
+				case 11: //Column
 					newTile = new Tile(Tpos,
 						TM->getTexture("Column"),
-						pkr::Vector2(0.0f, -19.0f),		//Raw
-						eTileType::INACCESSIBLE);
+						pkr::Vector2(0.0f, -19.0f),
+						eTileTerrain::GRASS,	//cost = 1.0f
+						eTileAccess::INACCESSIBLE);
 					break;
-				case 4:	//ColumnBlocks
+				case 12:	//ColumnBlocks
 					newTile = new Tile(Tpos,
 						TM->getTexture("ColumnBlocks"),
-						pkr::Vector2(0.0f, -19.0f),		//Raw
-						eTileType::INACCESSIBLE);
+						pkr::Vector2(0.0f, -19.0f),
+						eTileTerrain::GRASS,	//cost = 1.0f
+						eTileAccess::INACCESSIBLE);
 					break;
-				case 5:	//SmallBlock
+				case 13:	//SmallBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("SmallBlock"),
-						pkr::Vector2(0.0f, -19.0f),		//Raw
-						eTileType::INACCESSIBLE);
+						pkr::Vector2(0.0f, -19.0f),
+						eTileTerrain::GRASS,	//cost = 1.0f
+						eTileAccess::INACCESSIBLE);
 					break;
-				case 6:	//LargeBlock
+				case 14:	//LargeBlock
 					newTile = new Tile(Tpos,
 						TM->getTexture("LargeBlock"),
-						pkr::Vector2(0.0f, -39.0f),		//Raw
-						eTileType::INACCESSIBLE);
+						pkr::Vector2(0.0f, -39.0f),
+						eTileTerrain::GRASS,	//cost = 1.0f
+						eTileAccess::INACCESSIBLE);
 					break;
-				//default:
-				//	//do nothing
 				}
 
 				//Insert tile into layer only if it is valid
@@ -142,12 +157,56 @@ namespace pf {
 
 	}
 
+	void Map::connectNodesByDistance(float connectRadius)
+	{
+		for (auto tileA : m_groundLayer) {
+			for (auto tileB : m_groundLayer) {
+				//Skip if they're both the same node
+				if (tileA == tileB) continue;
+
+				//Skip if tileB is not ACCESSIBLE
+				if (tileB->access == eTileAccess::INACCESSIBLE) continue;
+
+				//Find the distance between the two tiles
+				float distance = tileA->cPos.distance(tileB->cPos);
+
+				//If they're within range then connect
+				if (distance < connectRadius) {
+					//Set the traversal cost based on the terrain
+					//auto terrainCost = tileB->terrain;
+					float cost = 1.0f;
+					switch (tileB->terrain) {
+					case SMOOTH_FLOOR:
+						cost = 0.5f;
+						break;
+					case GRASS:
+						cost = 1.0f;
+						break;
+					case DIRT:
+						cost = 1.3f;
+						break;
+					case GRAVEL:
+						cost = 2.0f;
+						break;
+					case WATER:
+						cost = 5.0f;
+						break;
+					default:
+						assert(false);		//Invalid
+					}
+					pf::Node::connect(tileA, tileB, cost);	//This should also connect tiles both ways
+				}
+			}
+		}
+
+	}
+
 	void Map::draw(aie::Renderer2D * renderer)
 	{
 		auto app = KunoApp::Instance();
 
-		//Draw the bottom ground layerr
-		for (auto &t : m_groundLayer) 
+		//Draw the ground tile layerr
+		for (auto t : m_groundLayer) 
 		{
 			//Convert cartesian to isometric
 			t->iPos = app->CoordConverter()->CartesianToIsometric(t->cPos);
@@ -156,9 +215,9 @@ namespace pf {
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
 			//Draw tile
-			//if (t->onMouseOver())
-			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
-			//else
+			if (t->onMouseOver())
+				renderer->setRenderColour(0.6f, 0.6f, 0.6f);
+			else
 				renderer->setRenderColour(1, 1, 1);
 			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0,0);
 			t->draw(renderer);

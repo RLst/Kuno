@@ -7,12 +7,22 @@ namespace aie {
 
 namespace pf {
 
-enum eTileType
+enum eTileAccess
 {
 	INACCESSIBLE = 0,
 	ACCESSIBLE,
-	CLIMBABLE,
+	//CLIMBABLE,
 	TILETYPE_COUNT		//The total number of tile types
+};
+
+enum eTileTerrain
+{
+	SMOOTH_FLOOR = 0,		//0.5f; Easy to traverse
+	GRASS,				//1.0f; Normal
+	DIRT,				//1.3f
+	GRAVEL,				//2.5f
+	WATER,				//5.0f
+	TILE_TERRAIN_COUNT
 };
 
 class Tile : public Node
@@ -32,17 +42,16 @@ public:
 	pkr::Vector2	dsOffset = { 0,0 };		//Depth Sort Offset; it is a point offset from the position 
 											//where the depth sorter uses it to control the sprite's actual depth
 
-
-
-	//pkr::Vector2	posCart;			//cartesian
-	//pkr::Vector2	posIso;				//isometric
-	eTileType		type;
+	//Terrain and accessibility
+	eTileTerrain	terrain;
+	eTileAccess		access;	
 
 public:
 	Tile() = default;
 	virtual ~Tile() = default;	//Texture manager will delete the textures
 
-	Tile(pkr::Vector2 position, aie::Texture* tex, pkr::Vector2 texOffset = { 0,0 }, eTileType type = ACCESSIBLE);
+	Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 },  
+		eTileTerrain terrain = eTileTerrain::SMOOTH_FLOOR, eTileAccess access = ACCESSIBLE);
 
 	bool			onMouseOver() const { return m_mouseOver; }
 

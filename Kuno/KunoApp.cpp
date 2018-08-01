@@ -16,6 +16,8 @@
 //AI
 #include "AI.h"
 #include "Agent.h"
+#include "Actions.h"
+#include "Condition.h"
 
 //PF
 #include "PF.h"
@@ -65,12 +67,12 @@ bool KunoApp::startup() {
 	setBackgroundColour(1, 0.65f, 0);
 	if (setupMap() == false) return false;
 
-	//Setup AI systems
-	if (setupAI() == false) return false;
-
 	//Setup Agents
 	if (setupPlayer() == false) return false;
 	if (setupEnemies() == false) return false;
+
+	//Setup AI systems
+	if (setupAI() == false) return false;
 
 	return true;
 }
@@ -176,8 +178,10 @@ bool KunoApp::setupMap()
 	//}
 
 	//////////// MAP /////////////
-	//Should make this load a map from some data or file
-	
+	m_map = new pf::Map();
+	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
+	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
+
 	////Build tile array !!!
 	//m_tiles = new pf::Tile**[WORLD_WIDTH];
 	//for (int row = 0; row < WORLD_WIDTH; ++row)
@@ -204,10 +208,6 @@ bool KunoApp::setupMap()
 	//	}
 	//}
 
-	//Build the actual map!
-	m_map = new pf::Map();
-	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
-	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	return true;
 }
@@ -232,24 +232,35 @@ bool KunoApp::setupAI()
 	//
 	//}
 
+	//Setup player
+	aie::Input* input = aie::Input::getInstance();
+	m_player->addBehaviour(new ai::BasicController(aie::Input::getInstance(), 500.0f));
+
+	//Setup enemies
+	for (auto e : m_enemyList)
+	{
+		e->addBehaviour(new ai::SeekAction(m_player, 400.0f));
+	}
+
 	return true;
 }
 
 bool KunoApp::setupPlayer()
 {
-	m_player = new ai::Agent(50, pkr::Vector3(0, 0.75f, 0));
+	m_player = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.75f, 0));
+
 	return true;
 }
 
 bool KunoApp::setupEnemies()
 {
-	static int numOfEnemies = 10;
+	static int numOfEnemies = 20;
 
 	//Load in a bunch of blue seekers
-	pkr::Vector3 seekerColour = pkr::Vector3(0.35f, 0.35f, 0.35f);
+	pkr::Vector3 seekerColour = pkr::Vector3(0.75f, 0.25f, 0);
 	for (int i = 0; i < numOfEnemies; ++i) {
 		//Seekers
-		ai::Agent* newEnemy = new ai::Agent(30.0f, seekerColour, pkr::Vector2(i * 100.0f, i * 100.0f));
+		ai::Agent* newEnemy = new ai::Agent(40.0f, seekerColour, pkr::Vector2(i * 100.0f, i * 100.0f));
 		m_enemyList.push_back(newEnemy);
 	}
 
@@ -269,6 +280,10 @@ void KunoApp::update(float deltaTime) {
 	//Update the map
 	
 	//Update the agents
+	m_player->update(deltaTime);
+	for (auto enemy : m_enemyList)
+		enemy->update(deltaTime);
+
 	//Update GUI
 
 	// exit the application

@@ -4,8 +4,8 @@
 #include "pkr/Vector2.h"
 
 namespace ai {
-	BasicController::BasicController(aie::Input * input, float maxSpeed) :
-		m_input(input), m_maxForce(maxSpeed)
+	BasicController::BasicController(aie::Input * input, float lSpeedMax) :
+		m_input(input), m_lSpeedMax(lSpeedMax)
 	{}
 
 	eResult BasicController::execute(Agent * agent, float deltaTime)
@@ -15,21 +15,21 @@ namespace ai {
 		//int mouseY = input->getMouseY();
 
 		//Keyboard controls
-		if (m_input->isKeyDown(aie::INPUT_KEY_W || aie::INPUT_KEY_UP))
+		if (m_input->isKeyDown(aie::INPUT_KEY_W))
 		{
-			agent->move(pkr::Vector2(0.0f, m_maxForce));
+			agent->moveIso(pkr::Vector2(0.0f, m_lSpeedMax * deltaTime));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_S))
 		{
-			agent->move(pkr::Vector2(0.0f, -m_maxForce));
+			agent->moveIso(pkr::Vector2(0.0f, -m_lSpeedMax * deltaTime));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_A))
 		{
-			agent->move(pkr::Vector2(-m_maxForce, 0.0f));
+			agent->moveIso(pkr::Vector2(-m_lSpeedMax * deltaTime, 0.0f));
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_D))
 		{
-			agent->move(pkr::Vector2(m_maxForce, 0.0f));
+			agent->moveIso(pkr::Vector2(m_lSpeedMax * deltaTime, 0.0f));
 		}
 		//agent->rotation = -mouseX * deltaTime;
 
@@ -37,8 +37,8 @@ namespace ai {
 	}
 
 	//// SEEK ////
-	SeekAction::SeekAction(Agent * target, float maxSpeed) :
-		m_target(target), m_maxForce(maxSpeed) {}
+	SeekAction::SeekAction(Agent * target, float lSpeedMax) :
+		m_target(target), m_lSpeedMax(lSpeedMax) {}
 
 	eResult SeekAction::execute(Agent * agent, float deltaTime)
 	{	//Seek vector = Target position - Agent position
@@ -46,7 +46,7 @@ namespace ai {
 		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
 
 		//Apply max force towards target
-		agent->move(nrmSeekVector * m_maxForce);
+		agent->move(nrmSeekVector * m_lSpeedMax * deltaTime);
 
 		return eResult::SUCCESS;
 	}

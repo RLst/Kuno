@@ -267,6 +267,7 @@ void KunoApp::update(float deltaTime) {
 	m_camera->update(deltaTime);
 
 	//Update the map
+	
 	//Update the agents
 	//Update GUI
 

@@ -29,7 +29,13 @@ private:
 public:	
 	//Texture
 	aie::Texture*	tex = nullptr;
-	pkr::Vector2	texOffset = { 0,0 };		//This should be added onto the isoPos
+
+	//// Notice!!! ////
+	pkr::Vector2	depthSortOffset = { 0,0 };		//This should be added onto the isoPos
+	//This should be changed to depthPoint or something like that; 
+	//it is a point offset fromt he position where the depth sorter uses it to control the sprite's actual depth
+	////////
+
 
 	//pkr::Vector2	posCart;			//cartesian
 	//pkr::Vector2	posIso;				//isometric

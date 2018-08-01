@@ -15,7 +15,7 @@ namespace ai {
 	{
 	private:
 		aie::Input*		m_input;
-		float m_maxForce;
+		float m_lSpeedMax;
 	public:
 		BasicController(aie::Input * input = aie::Input::getInstance(), float maxSpeed = 200.0f);
 		eResult execute(Agent* agent, float deltaTime) override;
@@ -36,7 +36,7 @@ namespace ai {
 	//This needs to take in a target agent
 	private:
 		Agent *			m_target;
-		float			m_maxForce;
+		float			m_lSpeedMax;
 	public:
 		SeekAction(Agent* target, float maxSpeed = 200.0f);		//Point based if target agent not specified
 		//~SeekAction() { delete m_target; }									//Destructor

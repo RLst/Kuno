@@ -55,13 +55,13 @@ namespace pf {
 				switch (pkr::Random(0, 1)) 
 				{
 				case 0:	//Floor
-					//newTile.m_texOffset = { 0,0 };		//Set this later
 					newTile->tex = TM->getTexture("Floor");
+					newTile->depthSortOffset = { -(newTile->tex->getWidth() / 2.0f), -130 };		//Set this later
 					newTile->type = eTileType::ACCESSIBLE;
 					break;
 				case 1:	//Slab
-					//newTile.m_texOffset = { 0,0 };		//Set this later
 					newTile->tex = TM->getTexture("Slab");
+					newTile->depthSortOffset = { -(newTile->tex->getWidth()/2.0f), -190 };		//Set this later
 					newTile->type = eTileType::ACCESSIBLE;
 					break;
 				default:
@@ -144,7 +144,7 @@ namespace pf {
 	{
 		auto app = KunoApp::Instance();
 
-		//Draw tiles and walls
+		//Draw the bottom ground layerr
 		for (auto &t : m_groundLayer) 
 		{
 			//Convert cartesian to isometric
@@ -158,7 +158,14 @@ namespace pf {
 			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
 			//else
 				renderer->setRenderColour(1, 1, 1);
-			renderer->drawSprite(t->tex, t->iPos.x, t->iPos.y, 0, 0, 0, depth);
+			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0,0);
+				t->draw(renderer);
+
+			//// DEBUG ////
+			renderer->setRenderColour(0, 0, 0);
+			auto fPos = t->iPos;		//Final position
+			renderer->drawBox(fPos.x, fPos.y, 5, 5, 0, 0);
+			///////////////
 		}
 
 		for (auto t : m_mainLayer) {
@@ -173,7 +180,8 @@ namespace pf {
 			//	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
 			//else
 				renderer->setRenderColour(1, 1, 1);
-			renderer->drawSprite(t->tex, t->iPos.x + t->texOffset.x, t->iPos.y + t->texOffset.y, 0, 0, 0, depth);
+			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0, 0);
+			t->draw(renderer);
 		}
 
 		//Draw static objects

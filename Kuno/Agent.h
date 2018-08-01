@@ -24,8 +24,8 @@ namespace ai {
 		//pkr::Vector2			m_force;
 		//pkr::Vector2			m_accel;
 		//pkr::Vector2			m_vel;
-		pkr::Vector2			m_pos;			//px; Cartesian
-		pkr::Vector2			m_isoPos;		//px; Isometric
+		pkr::Vector2			m_cPos;			//px; Cartesian
+		pkr::Vector2			m_iPos;			//px; Isometric
 
 		//Circle agent
 		float					m_size;
@@ -48,9 +48,10 @@ namespace ai {
 		void				addBehaviour(iBehaviour* behaviour);
 		//void				addForce(const pkr::Vector2 &force);
 		void				move(const pkr::Vector2 &lSpeed);			//Linear move (instant vel/accel)
+		void				moveIso(const pkr::Vector2 &lSpeed);		//Linear move in isometric
 
 		//State accessors
-		pkr::Vector2		getPos() const { return m_isoPos; }
+		pkr::Vector2		getPos() const { return m_iPos; }
 
 		//Core
 		void				update(float deltaTime);

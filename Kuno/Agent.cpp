@@ -23,7 +23,7 @@ namespace ai {
 	Agent::Agent(float circleSize, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
 		m_size(circleSize),
 		m_colour(colour),
-		m_pos(startingPos) {}
+		m_cPos(startingPos) {}
 
 	Agent::~Agent()
 	{
@@ -53,7 +53,8 @@ namespace ai {
 
 	void Agent::move(const pkr::Vector2 & lMove)
 	{
-		m_pos += lMove;
+		m_cPos += lMove;
+	}
 	}
 
 
@@ -94,11 +95,11 @@ namespace ai {
 	void Agent::draw(aie::Renderer2D * renderer)
 	{
 		auto app = KunoApp::Instance();
-		auto depth = app->DepthSorter()->getSortDepth(m_pos.y);					//Sort drawing depth of agent
-		m_isoPos = app->CoordConverter()->CartesianToIsometric(m_pos);			//Convert agents coords to isometric
+		m_iPos = app->CoordConverter()->CartesianToIsometric(m_cPos);			//Convert agents coords to isometric
+		auto depth = app->DepthSorter()->getSortDepth(m_iPos.y);					//Sort drawing depth of agent
 
 		renderer->setRenderColour(m_colour.r, m_colour.g, m_colour.b);
-		renderer->drawCircle(m_isoPos.x, m_isoPos.y + m_size, m_size, depth);	//By default draw agent as a coloured circle
+		renderer->drawCircle(m_iPos.x, m_iPos.y + m_size, m_size, depth);	//By default draw agent as a coloured circle
 	}
 
 }

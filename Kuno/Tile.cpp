@@ -4,7 +4,7 @@
 namespace pf {
 
 	Tile::Tile(pkr::Vector2 pos, aie::Texture * tex, pkr::Vector2 texOffset, eTileType type) :
-		/*pos(pos), */tex(tex), texOffset(texOffset), type(type)
+		/*pos(pos), */tex(tex), depthSortOffset(texOffset), type(type)
 	{
 		cPos = pos;
 	}
@@ -13,10 +13,13 @@ namespace pf {
 	{
 		//Calc iso position and sort depth
 		iPos = KunoApp::Instance()->CoordConverter()->CartesianToIsometric(cPos);
-		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y);
+		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y + depthSortOffset.y);
 
 		//Draw
-		renderer->drawSprite(tex, iPos.x + texOffset.x, iPos.y + texOffset.y, 0, 0, 0, depth);
+		renderer->drawSprite(tex, iPos.x, iPos.y, 0, 0, 0, depth, 0.0f, 0.5f);
+		//renderer->drawSprite(tex, iPos.x + depthSortOffset.x, iPos.y + depthSortOffset.y, 0, 0, 0, depth);
+	
+	
 	}
 
 }

@@ -5,9 +5,6 @@
 
 #include "PF.h"
 
-//#include <list>
-//#include <stack>
-
 namespace pf {
 
 	bool Graph::sortAscendingGscore(Node * a, Node * b)
@@ -125,7 +122,7 @@ namespace pf {
 	{
 		//Inits
 		Node* currentNode;
-		int currentStep = 0;
+		//int currentStep = 0;
 		NodeList	openList;
 		NodeList	closedList;
 
@@ -133,11 +130,8 @@ namespace pf {
 		for (auto node : m_nodes) {
 			node->parent = nullptr;
 			node->G = INFINITY;
-			node->F = INFINITY;
+			//node->F = INFINITY;
 		}
-
-		//Set initial end node
-		//Node* endNode = nullptr;
 		
 		//Clear and push start node onto open list
 		startNode->parent = nullptr;		//This will act as the root; will be used when tracing back
@@ -146,12 +140,12 @@ namespace pf {
 
 		//Slight optimization; Stop once you get to the node you're looking for
 		//Downside: Might not always find the shortest parth
-		for (auto it = openList.begin(); it != openList.end(); it++) {
-			if (currentNode == *it) {
-				endNode = node;
-				break;
-			}
-		}
+		//for (auto it = openList.begin(); it != openList.end(); it++) {
+		//	if (currentNode == *it) {
+		//		endNode = node;
+		//		break;
+		//	}
+		//}
 
 		//While queue is not empty
 		while (!openList.empty())
@@ -163,45 +157,32 @@ namespace pf {
 			openList.pop_front();						//Remove node from the queue
 			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
 
-			if (currentNode == endNode) return;			//Goal node found so break out
+			if (currentNode == endNode) break;			//Goal node found so break out
 
-			for (auto c : startNode->connections) {		//[Loop through it's edges]
-				//Check if end node is traversed
+			for (auto c : currentNode->connections) {		//[Loop through it's edges]
 
-				auto targetNode							//If end node not traversed
+				//Add c.target to openList if not in closedList
+				for (auto traversed : closedList) {
+					if (c->target == traversed) {
+						openList.push_back(c->target);
+					}
+				}
 
+				//c.target.gScore = currentNode.gScore + c.cost
+				c->target->G = currentNode->G + c->cost;
 
+				//// A* modifications ////
+				//n.hscore = distance from n to endnode
+				c->target->H = pkr::Vector2::distance(c->target->cPos, endNode->cPos);
+				//n.fscore = n.gscore + h.hscore
+				//c->target->F();		//Might not be required as F() automatically sums G + H
+				//////////////////////////
 
-				openList.push_back(c->target);			//Add all connected nodes onto openList
+				//[DONE! SEE BELOW] n.previous = currentnode
+				//c.target.parent = currentNode
 				c->target->parent = currentNode;
 			}
-
 		}
-
-
-
-		////Set all parents nodes to
-		////Set all nodes to null..
-		////Set all gScores to infinity...
-
-		//int currentStep = 0;
-		//std::list<Node*> openList;				//Priority queue
-		//std::list<Node*> closedList;			//Traversed queue
-
-
-		////Set G score and parent
-		//startNode->gScore = 0;
-		//startNode->parent = nullptr;
-
-		////Push start node onto priority queue
-		//openList.push_back(startNode);
-
-		////While queue (priority) not empty
-		//while (!openList.empty()) {
-
-		//	//Get the current node off the end of the queue and remove it
-		//	//openList.
-		//}
 
 		Path AstarSolution;
 		auto workNode = endNode;

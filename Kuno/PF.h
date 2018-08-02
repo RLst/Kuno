@@ -45,7 +45,7 @@ namespace pf {
 		Node(pkr::Vector2 pos, Node* parent) : G(INFINITY), cPos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
 
 		//Connect
-		void static connect(Node *nodeFrom, Node *nodeTo, float cost = 1.0f) {		//Set connection (helper function?)
+		static void connect(Node *nodeFrom, Node *nodeTo, float cost = 1.0f) {		//Set connection (helper function?)
 			Edge* edge = new Edge(nodeTo, cost);			//Create new edge and connect to TARGET node and set costs
 			nodeFrom->connections.push_back(edge);			//Connect edge to RECEIVING node
 		}

@@ -16,8 +16,7 @@ namespace pf {
 		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y + dsOffset.y);		//for some reason iPos MINUS dsOffset works
 
 		//Draw
-		pkr::Vector2 originOffset = { 0.5f, 0.18f };
-		renderer->drawSprite(tex, iPos.x, iPos.y, 0, 0, 0, depth, originOffset.x, originOffset.y);		//Centred on the isometric middle of the tile
+		renderer->drawSprite(tex, iPos.x, iPos.y, 0, 0, 0, depth, m_originOffset.x, m_originOffset.y);		//Centred on the isometric middle of the tile
 		//renderer->drawSprite(tex, iPos.x + depthSortOffset.x, iPos.y + depthSortOffset.y, 0, 0, 0, depth);
 	}
 

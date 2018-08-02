@@ -22,23 +22,22 @@ namespace ai {
 		//int mouseY = input->getMouseY();
 
 		//Keyboard controls
-		if (m_input->isKeyDown(aie::INPUT_KEY_W))
+		if (m_input->isKeyDown(aie::INPUT_KEY_UP))
 		{
 			agent->moveIso(pkr::Vector2(0.0f, m_lSpeedMax * deltaTime));
 		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_S))
+		if (m_input->isKeyDown(aie::INPUT_KEY_DOWN))
 		{
 			agent->moveIso(pkr::Vector2(0.0f, -m_lSpeedMax * deltaTime));
 		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_A))
+		if (m_input->isKeyDown(aie::INPUT_KEY_LEFT))
 		{
 			agent->moveIso(pkr::Vector2(-m_lSpeedMax * deltaTime, 0.0f));
 		}
-		if (m_input->isKeyDown(aie::INPUT_KEY_D))
+		if (m_input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		{
 			agent->moveIso(pkr::Vector2(m_lSpeedMax * deltaTime, 0.0f));
 		}
-		//agent->rotation = -mouseX * deltaTime;
 
 		return eResult::SUCCESS;
 	}

@@ -31,23 +31,28 @@ namespace pf {
 
 	struct Node
 	{
-		Node*				parent;
-		float				gScore;
-		float				hScore;
-		float				fScore() const { return gScore + hScore; }
-		pkr::Vector2		cPos;				//CARTESIAN WORLD COORDINATES
-		pkr::Vector2		iPos;				//ISOMETROC WORLD COORDINATES
+		Node*				parent = nullptr;
+		float				G = INFINITY;					//G score should default to infinity?
+		float				H;								//Heuristic score
+		float				F() const { return G + H; }		//Final score
+		pkr::Vector2		cPos;							//CARTESIAN WORLD COORDINATES
+		pkr::Vector2		iPos;							//ISOMETRIC WORLD COORDINATES
 		std::vector<Edge*>	connections;
 
 		~Node() { for (auto c : connections) { delete c; } }
-		Node() : gScore(0), cPos(0, 0), parent(nullptr) {}									//Default
-		Node(pkr::Vector2 pos) : gScore(0), cPos(pos), parent(nullptr) {}					//Overload (nullptr parent)
-		Node(pkr::Vector2 pos, Node* parent) : gScore(0), cPos(pos), parent(parent) {}		//Overload
+		Node() : G(INFINITY), cPos(0, 0), parent(nullptr) {}								//Default
+		Node(pkr::Vector2 pos) : G(INFINITY), cPos(pos), parent(nullptr) {}					//Overload (nullptr parent)
+		Node(pkr::Vector2 pos, Node* parent) : G(INFINITY), cPos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
 
+		//Connect
 		void static connect(Node *nodeFrom, Node *nodeTo, float cost = 1.0f) {		//Set connection (helper function?)
 			Edge* edge = new Edge(nodeTo, cost);			//Create new edge and connect to TARGET node and set costs
 			nodeFrom->connections.push_back(edge);			//Connect edge to RECEIVING node
 		}
+
+		//Compare function objects for list::sort()
+		bool static compareFscore(const Node &a, const Node &b) { return a.F() < b.F(); }
+		bool static compareFscore(const Node &a, const Node &b) { return a.F() < b.F(); }
 	};
 
 	typedef std::vector<pkr::Vector2> Path;
@@ -56,7 +61,9 @@ namespace pf {
 	class Graph
 	{
 	private:
-		bool	sortAscending(Node* a, Node* b) const;		//Helper function for priority queue sorting
+		static bool	sortAscendingGscore(Node* a, Node* b);		//Helper function for priority queue sorting
+
+		static bool	sortAscendingFscore(Node *a, Node *b);
 
 	protected:
 		NodeList	m_nodes;		//***The graph's container of nodes; should I use list or vectors?

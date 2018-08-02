@@ -96,7 +96,7 @@ namespace ai {
 		if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
 			//Seek towards target
 			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos());
-			agent->move(seek * deltaTime);
+			agent->move(seek * m_lSpeedMax * deltaTime);
 			return RUNNING;
 		}
 		//Else; Agent has arrived, stop moving. Success

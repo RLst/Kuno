@@ -62,6 +62,9 @@ namespace ai {
 		//Core
 		void				update(float deltaTime);
 		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
+	
+		//Allow access to parent methods
+
 	};
 
 

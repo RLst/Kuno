@@ -10,9 +10,14 @@
 
 namespace pf {
 
-	bool Graph::sortAscending(Node * a, Node * b) const
+	bool Graph::sortAscendingGscore(Node * a, Node * b)
 	{
-		return a->gScore < b->gScore;
+		return a->G < b->G;
+	}
+
+	bool Graph::sortAscendingFscore(Node *a, Node *b)
+	{
+		return a->F() < b->F();
 	}
 
 	Graph::~Graph()
@@ -61,53 +66,56 @@ namespace pf {
 
 	Path Graph::getDjikstraPath(Node * startNode, Node * endNode) const
 	{
-	//	//Inits
-	//	Node*	currentNode = nullptr;
+		/*
+		//Inits
+		Node*	currentNode = nullptr;
 
-	//	NodeList	openList;	//Let openList be a list of nodes
-	//	NodeList	closedList;	//Let closedList be a list of nodes
+		NodeList	openList;	//Let openList be a list of nodes
+		NodeList	closedList;	//Let closedList be a list of nodes
 
-	//	startNode->parent = nullptr;	//Set startnode to null
-	//	openList.push_back(startNode);	//Add startnode to openList
+		startNode->parent = nullptr;	//Set startnode to null
+		openList.push_back(startNode);	//Add startnode to openList
 
-	//	while (!openList.empty()) {
+		while (!openList.empty()) {
 
-	//		openList.sort(sortAscending(startNode, endNode));		//Sort openList by node's.gscore //(startNode, endNode)
+			openList.sort(sortAscendingGscore);		//Sort openList by node's.gscore //(startNode, endNode)
 
-	//		//Remove current node from openlist
-	//		currentNode = openList.front();	
-	//		openList.pop_front();		
+			//Remove current node from openlist
+			currentNode = openList.front();	
+			openList.pop_front();		
 
-	//		//End path found, break out of loop
-	//		if (currentNode == endNode)
-	//			break;
+			//End path found, break out of loop
+			if (currentNode == endNode)
+				break;
 
-	//		//Add currentNode to closedList (marking it as traversed)
-	//		closedList.push_back(currentNode);
+			//Add currentNode to closedList (marking it as traversed)
+			closedList.push_back(currentNode);
 
-	//		//For all connection c in current node
-	//		for (auto edge : currentNode->connections) {
-	//			//Add c.target to openList if not in closedList
-	//			for (auto d : closedList) {
-	//				if (d == edge->target) {
-	//					//In closedList, do nothing?
-	//				}
-	//				else {
-	//					//Not in closedList so add to openList ?
-	//					openList.push_back(edge->target);
-	//				}
-	//			}
-	//			edge->target->gScore = currentNode->gScore + edge->cost;
-	//			edge->target->parent = currentNode;
-	//		}
-	//	}
+			//For all connection c in current node
+			for (auto edge : currentNode->connections) {
+				//Add c.target to openList if not in closedList
+				for (auto d : closedList) {
+					if (d == edge->target) {
+						//In closedList, do nothing?
+					}
+					else {
+						//Not in closedList so add to openList ?
+						openList.push_back(edge->target);
+					}
+				}
+				edge->target->gScore = currentNode->gScore + edge->cost;
+				edge->target->parent = currentNode;
+			}
+		}
+
+		*/
 
 		//Calculate path, in this example as positions
 		//typedef std::stack<pkr::Vector2> Path;
 		Path path;
-		//auto currentNode = endNode;
+		//currentNode = endNode;
 		//while (currentNode != nullptr) {
-		//	path.push(currentNode->pos_tmp);
+		//	path.push_back(currentNode->cPos);
 		//	currentNode = currentNode->parent;
 		//}
 		return path;
@@ -115,8 +123,64 @@ namespace pf {
 
 	Path Graph::getAStarPath(Node * startNode, Node * endNode) const
 	{
-		////Set all parents nodes to
+		//Inits
+		Node* currentNode;
+		int currentStep = 0;
+		NodeList	openList;
+		NodeList	closedList;
 
+		//Set all parents to null and G scores to infinity
+		for (auto node : m_nodes) {
+			node->parent = nullptr;
+			node->G = INFINITY;
+			node->F = INFINITY;
+		}
+
+		//Set initial end node
+		//Node* endNode = nullptr;
+		
+		//Clear and push start node onto open list
+		startNode->parent = nullptr;		//This will act as the root; will be used when tracing back
+		startNode->G = 0;				//0 because there's no traversal yet
+		openList.push_back(startNode);
+
+		//Slight optimization; Stop once you get to the node you're looking for
+		//Downside: Might not always find the shortest parth
+		for (auto it = openList.begin(); it != openList.end(); it++) {
+			if (currentNode == *it) {
+				endNode = node;
+				break;
+			}
+		}
+
+		//While queue is not empty
+		while (!openList.empty())
+		{
+			//Sort open list based on the F score
+			openList.sort(pf::Node::compareFscore);		//Sort takes in a function object
+
+			currentNode = openList.front();				//Get current work node of the end of the queue
+			openList.pop_front();						//Remove node from the queue
+			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
+
+			if (currentNode == endNode) return;			//Goal node found so break out
+
+			for (auto c : startNode->connections) {		//[Loop through it's edges]
+				//Check if end node is traversed
+
+				auto targetNode							//If end node not traversed
+
+
+
+				openList.push_back(c->target);			//Add all connected nodes onto openList
+				c->target->parent = currentNode;
+			}
+
+		}
+
+
+
+		////Set all parents nodes to
 		////Set all nodes to null..
 		////Set all gScores to infinity...
 
@@ -124,8 +188,6 @@ namespace pf {
 		//std::list<Node*> openList;				//Priority queue
 		//std::list<Node*> closedList;			//Traversed queue
 
-		////Set initial end node
-		//Node* endNode = nullptr;
 
 		////Set G score and parent
 		//startNode->gScore = 0;
@@ -141,7 +203,13 @@ namespace pf {
 		//	//openList.
 		//}
 
-		return Path();
+		Path AstarSolution;
+		auto workNode = endNode;
+		while (workNode != nullptr) {
+			AstarSolution.push_back(workNode->cPos);
+			workNode = workNode->parent;
+		}
+		return AstarSolution;
 	}
 
 	void Graph::draw(aie::Renderer2D * renderer)

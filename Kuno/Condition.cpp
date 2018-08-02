@@ -22,16 +22,17 @@ namespace ai {
 		m_target(target), m_map(map) {}
 	eResult InViewCondition::execute(Agent * agent, float deltaTime)
 	{
-		//If target agent is within line of sight, within view and within range...
-		if (pkr::Vector2::angleBetween(agent->getFacing()
-			//// ???????????
-			// How do I access Character::getFacing() without having to rewrite the whole execute()???
+		//Character* ch = agent;
+		////If target agent is within line of sight, within view and within range...
+		//if (pkr::Vector2::angleBetween(agent->getFacing()
+		//	//// ???????????
+		//	// How do I access Character::getFacing() without having to rewrite the whole execute()???
 
-			return SUCCESS;		//Target agent is IN VIEW
-		}
-		else
-			return FAILURE;
-		
+		//	return SUCCESS;		//Target agent is IN VIEW
+		//}
+		//else
+		//	return FAILURE;
+		return eResult();
 	}
 	
 }

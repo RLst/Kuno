@@ -30,20 +30,16 @@ class Map : public Graph
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
-	pkr::Vector2		m_mapOffset = { 0, 0 };
+	pkr::Vector2		m_mapOffset = { 0, 0 };	//Default starts at 0,0
 	int					m_width = 0;			//Columns
 	int					m_depth = 0;			//Rows
 
-	//Map layers
-	std::vector<Tile*>	m_groundLayer;			//LAYER USED FOR CONNECTING NODES UP! This must exist otherwise walls will just be floating on nothing
-	std::vector<Tile*>	m_mainLayer;
-	std::vector<StaticObject*>	m_objectLayer;
+	std::vector<Tile*>	m_tiles;				//Container of tiles
 
 public:
 	Map() = default;
 	~Map();			//Delete everything in the layers
 
-	//Constructor using vector of Tile*; Add tiles afterwards
 	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
 
 	//Setups
@@ -51,6 +47,7 @@ public:
 	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 
 	void				buildKunoMap();				//Build game map raw
+
 	//void				loadMap();					//From file? Implement later
 	//void				addTile(Tile* tile);
 	

@@ -44,39 +44,42 @@ namespace pf {
 		auto TM = KunoApp::Instance()->TextureManager();
 
 		//// Ground layer ////
+		int ID = 0;		//Tile ID
 		for (int row = 0; row < depth; ++row) 
 		{
 			for (int col = 0; col < width; ++col) 
 			{
-				//Init temps
-				eTileAccess		Ttype;
-				aie::Texture*	Ttex = nullptr;
-				pkr::Vector2	TtexOffset;
-				pkr::Vector2	Tpos;
+				++ID;
+				ID = m_groundLayer.size() + 1;
 
-				//Create and insert new tile into vector
+				//Create new tile
 				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
 
-				//Determine position of new tile
-				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
+				//Sets
+				newTile->ID = ID;
+				newTile->cPos = m_mapOffset + pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
-				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 1))		//0-9: Floor tiles, 10-20: Main tiles
+				//Randomize tiles and set other tile properties
+				switch (pkr::Random(0, 1))
 				{
 					//Floor
 				case 0:
-					newTile = new Tile(Tpos,
-						TM->getTexture("Floor"),
-						pkr::Vector2(0.0f, 75.0f),
-						eTileTerrain::SMOOTH_FLOOR);
+					newTile->tex = TM->getTexture("Floor");
+					newTile->dsOffset = pkr::Vector2(0, 75.0f);
+					newTile->terrain = SMOOTH_FLOOR;
+					newTile->access = ACCESSIBLE;
+					//newTile = new Tile(Tpos,
+					//	TM->getTexture("Floor"),
+					//	pkr::Vector2(0.0f, 75.0f),
+					//	eTileTerrain::SMOOTH_FLOOR);
 					break;
 
 					//Slab
 				case 1:
-					newTile = new Tile(Tpos,
-						TM->getTexture("Slab"),
-						pkr::Vector2(0.0f, 95.0f),
-						eTileTerrain::SMOOTH_FLOOR);
+					newTile->tex = TM->getTexture("Slab");
+					newTile->dsOffset = pkr::Vector2(0, 75.0f);
+					newTile->terrain = SMOOTH_FLOOR;
+					newTile->access = ACCESSIBLE;
 					break;
 				default:
 					assert(false);		//Something went wrong!
@@ -85,73 +88,63 @@ namespace pf {
 				//Insert tile into layer only if it is valid
 				if (newTile->tex != nullptr)
 					m_groundLayer.push_back(newTile);
-				else
-					delete newTile;		//FRAGMENTATION! BAD CODE!!!
 			}
 		}
 
 		//// Main layer ////
+		ID = 0;
 		for (int row = 0; row < depth; ++row) 
 		{
 			for (int col = 0; col < width; ++col) 
 			{
-				//Init temps
-				eTileAccess		Ttype;
-				aie::Texture*	Ttex = nullptr;
-				pkr::Vector2	TtexOffset;
-				pkr::Vector2	Tpos;
+				ID = m_mainLayer.size() + 1;
 
-				//Create and insert new tile into vector
-				Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
+				auto randomize = pkr::Random(0, 15);	//Not all tiles will get filled
+				if (randomize < 5) {	//Only create a tile where necessary to avoid fragmentation
 
-				//Determine position of new tile
-				Tpos = m_mapOffset + pkr::Vector2(float(col * CART_TILE_HEIGHT), float(row * CART_TILE_WIDTH));
+					//Create new tile
+					Tile* newTile = new Tile();		//IMPORTANT!!! This must be created on the heap, NOT the stack!!!
 
-				//Randomize tiles + determine other parameters
-				switch (pkr::Random(0, 14))		//0-9: Floor tiles, 10-20: Main tiles
-				{		
-				case 10: //HugeBlock
-					newTile = new Tile(Tpos,
-						TM->getTexture("HugeBlock"),
-						pkr::Vector2(0.0f, 75.0f),		//Far back corner
-						eTileTerrain::GRASS,	//cost = 1.0f
-						eTileAccess::INACCESSIBLE);
-					break;
-				case 11: //Column
-					newTile = new Tile(Tpos,
-						TM->getTexture("Column"),
-						pkr::Vector2(0.0f, 19.0f),
-						eTileTerrain::GRASS,
-						eTileAccess::INACCESSIBLE);
-					break;
-				case 12:	//ColumnBlocks
-					newTile = new Tile(Tpos,
-						TM->getTexture("ColumnBlocks"),
-						pkr::Vector2(0.0f, 19.0f),
-						eTileTerrain::GRASS,
-						eTileAccess::INACCESSIBLE);
-					break;
-				case 13:	//SmallBlock
-					newTile = new Tile(Tpos,
-						TM->getTexture("SmallBlock"),
-						pkr::Vector2(0.0f, 19.0f),
-						eTileTerrain::GRASS,	
-						eTileAccess::INACCESSIBLE);
-					break;
-				case 14:	//LargeBlock
-					newTile = new Tile(Tpos,
-						TM->getTexture("LargeBlock"),
-						pkr::Vector2(0.0f, 39.0f),
-						eTileTerrain::GRASS,	
-						eTileAccess::INACCESSIBLE);
-					break;
-				}
+					//Sets
+					newTile->ID = ID;
+					newTile->cPos = m_mapOffset + pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
-				//Insert tile into layer only if it is valid
-				if (newTile->tex != nullptr)
+					switch (randomize) {
+					case 0: //HugeBlock
+						newTile->tex = TM->getTexture("HugeBlock");
+						newTile->dsOffset = pkr::Vector2(0, 75.0f);		//Isometric back bottom corner
+						newTile->terrain = GRASS;						//Cost = 1.0f
+						newTile->access = INACCESSIBLE;
+						break;
+					//case 1: //Column
+					//	newTile->tex = TM->getTexture("Column");
+					//	newTile->dsOffset = pkr::Vector2(0, 19.f);		//Isometric back bottom corner
+					//	newTile->terrain = GRASS;						//Cost = 1.0f
+					//	newTile->access = INACCESSIBLE;
+					//	break;
+					//case 2:	//ColumnBlocks
+					//	newTile->tex = TM->getTexture("ColumnBlocks");
+					//	newTile->dsOffset = pkr::Vector2(0, 19.f);		//Isometric back bottom corner
+					//	newTile->terrain = GRASS;						//Cost = 1.0f
+					//	newTile->access = INACCESSIBLE;
+					//	break;
+					//case 3:	//SmallBlock
+					//	newTile->tex = TM->getTexture("SmallBlock");
+					//	newTile->dsOffset = pkr::Vector2(0, 19.f);		//Isometric back bottom corner
+					//	newTile->terrain = GRASS;						//Cost = 1.0f
+					//	newTile->access = INACCESSIBLE;
+					//	break;
+					//case 4:	//LargeBlock
+					//	newTile->tex = TM->getTexture("LargeBlock");
+					//	newTile->dsOffset = pkr::Vector2(0, 39.f);		//Isometric back bottom corner
+					//	newTile->terrain = GRASS;						//Cost = 1.0f
+					//	newTile->access = INACCESSIBLE;
+					//	break;
+					}
+
+					//Insert tile into main layer
 					m_mainLayer.push_back(newTile);
-				else
-					delete newTile;		//FRAGMENTATION! BAD CODE!!!
+				}
 			}
 		}
 
@@ -161,21 +154,55 @@ namespace pf {
 	{
 		for (auto tileA : m_groundLayer) {
 			for (auto tileB : m_groundLayer) {
+				
+				//Get working ID to access 
+				//int workingID = tileA->ID;
+
+				//Find equivalent tile in main layer if it exists
+				Tile* ParallelMainTile;
+				StaticObject* ParallelObject;
+
+
 				//Skip if they're both the same node
 				if (tileA == tileB) continue;
 
-				//Skip if tileB is not ACCESSIBLE
-				if (tileB->access == eTileAccess::INACCESSIBLE) continue;
+				//Skip if ground tile OR main layer tile not ACCESSIBLE
+				if (tileB->access == INACCESSIBLE) continue;
+				//if (tileB->access == INACCESSIBLE) ||					//Ground layer
+				//	m_mainLayer[tileB->ID]->access == INACCESSIBLE)		//Main layer tile/object
+
+				//Find the tile (REALLY DUMB; should use binary tree or something)
+				int EquivMainTileID = 0;
+				for (auto mainTile : m_mainLayer) {
+					if (mainTile->ID == tileB->ID) {	//Found the tile
+						EquivMainTileID = mainTile->ID;
+
+							//EquivMainTileID = m_mainLayer.size()-1;
+						break;
+					}
+				}
+				if (EquivMainTileID < m_mainLayer.size())
+				{
+					if (m_mainLayer[EquivMainTileID]->access == INACCESSIBLE)
+						continue;
+				}
 
 				//Find the distance between the two tiles
-				float distance = tileA->cPos.distance(tileB->cPos);
+				float distanceBetween = tileA->cPos.distance(tileB->cPos);
 
 				//If they're within range then connect
-				if (distance < connectRadius) {
-					//Set the traversal cost based on the terrain
+				if (distanceBetween < connectRadius) {
+					//// Take into account tile's accessibility and terrain ////
+					//Set the edge cost based on the terrain
 					//auto terrainCost = tileB->terrain;
-					float cost = 1.0f;
+
+					float cost = 1.0f;	//Default cost to 1
+
+					//ground layer
 					switch (tileB->terrain) {
+					case NA:
+						cost = INFINITY;
+						break;
 					case SMOOTH_FLOOR:
 						cost = 0.5f;
 						break;
@@ -194,6 +221,7 @@ namespace pf {
 					default:
 						assert(false);		//Invalid
 					}
+
 					pf::Node::connect(tileA, tileB, cost);	//This should also connect tiles both ways
 				}
 			}
@@ -214,15 +242,29 @@ namespace pf {
 			//Calculate render depth
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
+			//Set colour
+			if (t->onMouseOver())	renderer->setRenderColour(0.3f, 0.3f, 0.3f);
+			else	renderer->setRenderColour(1, 1, 1);
+			
 			//Draw tile
-			if (t->onMouseOver())
-				renderer->setRenderColour(0.6f, 0.6f, 0.6f);
-			else
-				renderer->setRenderColour(1, 1, 1);
-			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0,0);
 			t->draw(renderer);
 
 			//// DEBUG ////
+			//Draw all the node/tile connections
+			static int temp = 0;
+			ImGui::Begin("Draw edge");
+			for (auto c : t->connections) {
+				pkr::Vector2 start = t->iPos;
+				pkr::Vector2 end = c->target->iPos;
+				renderer->setRenderColour(0, 0, 0);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 1.5f, 0.01f);
+				ImGui::Text("Start > x: %.1f, y: %.1f", start.x, start.y);
+				ImGui::Text("End > x: %.1f, y: %.1f", end.x, end.y);
+				//temp++;
+				//if (temp++)
+			}
+			ImGui::End();
+
 			////Draw the cPos of the tile (should be the tile's isometric centre)
 			//renderer->setRenderColour(0, 0, 0);
 			//auto fPos = t->iPos;		//Final position
@@ -241,12 +283,11 @@ namespace pf {
 			//Calculate render depth
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
+			//Set render colours
+			if (t->onMouseOver())	renderer->setRenderColour(0.6f, 0.6f, 0.6f);
+			else	renderer->setRenderColour(1, 1, 1);
+
 			//Draw tile
-			if (t->onMouseOver())
-				renderer->setRenderColour(0.6f, 0.6f, 0.6f);
-			else
-				renderer->setRenderColour(1, 1, 1);
-			//renderer->drawSprite(t->tex, t->iPos.x + t->depthSortOffset.x, t->iPos.y + t->depthSortOffset.y, 0, 0, 0, depth, 0, 0);
 			t->draw(renderer);
 
 			////// DEBUG ////

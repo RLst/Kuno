@@ -35,7 +35,7 @@ private:
 	int					m_depth = 0;			//Rows
 
 	//Map layers
-	std::vector<Tile*>	m_groundLayer;			//This must exist otherwise walls will just be floating on nothing
+	std::vector<Tile*>	m_groundLayer;			//LAYER USED FOR CONNECTING NODES UP! This must exist otherwise walls will just be floating on nothing
 	std::vector<Tile*>	m_mainLayer;
 	std::vector<StaticObject*>	m_objectLayer;
 

@@ -50,9 +50,9 @@ namespace pf {
 			nodeFrom->connections.push_back(edge);			//Connect edge to RECEIVING node
 		}
 
-		//Compare function objects for list::sort()
-		bool static compareFscore(const Node &a, const Node &b) { return a.F() < b.F(); }
-		bool static compareFscore(const Node &a, const Node &b) { return a.F() < b.F(); }
+		//Compare function objects for use with std::list::sort()
+		static bool compareGscore(Node *a, Node *b) { return a->F() < b->F(); }
+		static bool compareFscore(Node *a, Node *b) { return a->F() < b->F(); }
 	};
 
 	typedef std::vector<pkr::Vector2> Path;
@@ -61,8 +61,8 @@ namespace pf {
 	class Graph
 	{
 	private:
+		//Compare function objects for use with std::list::sort()
 		static bool	sortAscendingGscore(Node* a, Node* b);		//Helper function for priority queue sorting
-
 		static bool	sortAscendingFscore(Node *a, Node *b);
 
 	protected:

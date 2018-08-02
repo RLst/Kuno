@@ -1,3 +1,8 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
 #include "Agent.h"
 #include <Vector2.h>
 #include "AI.h"

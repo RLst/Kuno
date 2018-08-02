@@ -1,3 +1,8 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
 #pragma once
 #include <cassert>
 

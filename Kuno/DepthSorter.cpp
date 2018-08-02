@@ -1,3 +1,9 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
+
 #include "DepthSorter.h"
 #include "GameDefines.h"
 #include <Texture.h>

@@ -1,3 +1,9 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
+
 #include "AI.h"
 #include "Agent.h"
 #include <pkr\Vector2.h>

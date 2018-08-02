@@ -1,3 +1,8 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
 #include "Camera.h"
 #include <iostream>
 #include "imgui\imgui.h"

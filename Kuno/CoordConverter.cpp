@@ -1,3 +1,9 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
+
 #include "CoordConverter.h"
 #include "GameDefines.h"
 #include <Vector2.h>

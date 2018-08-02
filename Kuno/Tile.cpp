@@ -1,3 +1,9 @@
+//////////////////
+//// Tony Le ////
+// 2 Aug 2018 //
+///////////////
+
+
 #include "Tile.h"
 #include "KunoApp.h"
 #include "StaticObject.h"

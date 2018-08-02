@@ -33,6 +33,7 @@ namespace pf {
 		pkr::Vector2		iPos;				//ISOMETROC WORLD COORDINATES
 		std::vector<Edge*>	connections;
 
+		~Node() { for (auto c : connections) { delete c; } }
 		Node() : gScore(0), cPos(0, 0), parent(nullptr) {}									//Default
 		Node(pkr::Vector2 pos) : gScore(0), cPos(pos), parent(nullptr) {}					//Overload (nullptr parent)
 		Node(pkr::Vector2 pos, Node* parent) : gScore(0), cPos(pos), parent(parent) {}		//Overload

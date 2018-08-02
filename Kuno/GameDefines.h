@@ -9,8 +9,8 @@
 //#define SCREEN_WIDTH 1280
 //#define SCREEN_HEIGHT 720
 
-#define WORLD_WIDTH			10		//Tiles along X axis
-#define WORLD_DEPTH			10		//Tiles along Y axis
+#define WORLD_WIDTH			15		//Tiles along X axis
+#define WORLD_DEPTH			15		//Tiles along Y axis
 
 #define CART_TILE_WIDTH		128		//In this case, the tiles in this world (orthogonal)
 #define CART_TILE_HEIGHT	128		//is 128x128

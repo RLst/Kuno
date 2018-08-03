@@ -90,7 +90,7 @@ public:
 	static float	magnitude(const Vector3 &vec);							//Magnitude of input vector
 	float			magnitude();											//Magnitude of vector
 	float			magnitudeSqr() const;									//Magnitude squared for efficient comparison
-	void			setMagnitude(float mag);							//Sets magnitude of vector
+	void			setMagnitude(float mag);								//Sets magnitude of vector (might also be called truncate)
 	
 	//Distance
 	static float	distance(const Vector3 &a, const Vector3 &b);			//Distance between two input vectors

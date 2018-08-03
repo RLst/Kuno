@@ -8,6 +8,7 @@
 #include "Agent.h"
 #include <pkr\Vector2.h>
 #include <Renderer2D.h>
+#include "GameDefines.h"
 
 namespace ai {
 
@@ -31,6 +32,23 @@ namespace ai {
 			if (child->execute(agent, deltaTime) == eResult::SUCCESS)
 				return eResult::SUCCESS;
 		}
+		return eResult::FAILURE;
+	}
+
+	eResult SelectorRandom::execute(Agent * agent, float deltaTime)
+	{
+		//OR node with random; Returns SUCCESS if any of the randomly select children return SUCESS
+		int children = m_childBehaviours.size();
+		std::vector<ai::iBehaviour*> openList;
+		std::vector<ai::iBehaviour*> closedList;
+		
+		for (auto child : m_childBehaviours) {
+			//Has child been check already?
+
+			//FINISH THIS OFF LATER
+
+		}
+
 		return eResult::FAILURE;
 	}
 
@@ -70,5 +88,7 @@ namespace ai {
 		//Returns result of child unless it times out
 		return m_child->execute(agent, deltaTime);
 	}
+
+
 
 }

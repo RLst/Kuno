@@ -67,6 +67,12 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	class SelectorRandom : public aComposite
+	{
+	public:
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
 	class Sequence : public aComposite
 	{
 	public:

@@ -69,6 +69,17 @@ namespace ai {
 	//		//Seek towards next path step/node
 	//};
 
+
+	class Idle : public iBehaviour
+	{
+	private:
+		Agent * m_agent;
+	public:
+		Idle() = default;
+		~Idle() = default;
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
 	class Patrol : public iBehaviour		//MAYBE THIS NEEDS TO BE A COMPOSITE???
 	{
 	private:

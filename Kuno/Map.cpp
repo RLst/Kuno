@@ -6,7 +6,7 @@
 
 #include "Map.h"
 #include <Texture.h>
-#include "imgui/imgui.h"
+#include <imgui.h>
 #include "GameDefines.h"
 #include "Tile.h"
 #include <pkr/Vector2.h>
@@ -18,6 +18,7 @@
 #include <iostream>
 
 namespace pf {
+
 	Map::~Map()
 	{
 		//Tiles
@@ -208,6 +209,160 @@ namespace pf {
 	}
 
 
+	Tile * Map::findTileFromCpos(pkr::Vector2 & cPos, float searchRadius)
+	{
+		for (auto t : m_tiles) {
+			//Return tile that is within range of search position
+			if (pkr::Vector2::distance(t->cPos, cPos) < searchRadius)
+				return t;
+		}
+		return nullptr;		//Tile not found; return null
+	}
+
+	Tile * Map::findTileFromIpos(pkr::Vector2 & iPos, float searchRadius)
+	{
+		for (auto t : m_tiles) {
+			//Return tile that is within range of search position
+			if (pkr::Vector2::distance(t->iPos, iPos) < searchRadius)
+				return t;
+		}
+		return nullptr;		//Tile not found; return null
+	}
+
+	Path Map::getAStarPath(Tile * startTile, Tile * endTile) const
+	{
+		//Inits
+		//Tile*		currentTile;
+		//TileList	openList;
+		//TileList	closedList;
+		Node*		currentTile;
+		NodeList	openList;
+		NodeList	closedList;
+
+		//Set all parents to null and G scores to infinity
+		for (auto t : m_tiles ) {
+			t->parent = nullptr;
+			t->G = INFINITY;
+			//H as well?
+		}
+
+		//Clear and push start node onto open list
+		startTile->parent = nullptr;		//This will act as the root; will be used when tracing back
+		startTile->G = 0;				//0 because there's no traversal yet
+		openList.push_back(startTile);
+
+		//Slight optimization; Stop once you get to the node you're looking for
+		//Downside: Might not always find the shortest parth
+		//for (auto it = openList.begin(); it != openList.end(); it++) {
+		//	if (currentNode == *it) {
+		//		endNode = node;
+		//		break;
+		//	}
+		//}
+
+		//While queue is not empty
+		while (!openList.empty())
+		{
+			//Sort open list based on the F score
+			openList.sort(pf::Node::compareFscore);		//Sort takes in a function object
+
+			currentTile = openList.front();				//Get current work node of the end of the queue
+			openList.pop_front();						//Remove node from the queue
+			closedList.push_back(currentTile);			//Current node is now traversed (mark it as traversed)
+
+			if (currentTile == endTile) break;			//Goal node found so break out
+
+			for (auto c : currentTile->connections) {		//[Loop through it's edges]
+				
+				if (c == nullptr) continue;			//What's the purpose of this?
+
+				//Determine if this tile is in any of the lists
+				bool inClosedList = std::find(closedList.begin(), closedList.end(), c->target) != closedList.end();
+				bool inOpenedList = std::find(openList.begin(), openList.end(), c->target) != openList.end();
+
+				//Calculate G score
+				float gScore = currentTile->G + c->cost;
+				float hScore;
+
+				if (!inClosedList) {	//inClosedList == false
+					//Not already traversed, set score
+					c->target->G = gScore;
+					c->target->parent = currentTile;
+				}
+				else {	//inClosedList == true
+					//Already traversed, check if we now have a lower score
+					if (gScore < c->target->G) {
+						c->target->G = gScore;
+						c->target->parent = currentTile;
+					}
+				}
+
+				if (!inOpenedList && !inClosedList) {
+					//Probably a fail safe
+					//If not in any lists (ie. first run), ad to priority queue
+					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
+				}
+
+				/*//// OLD CODE ////
+				//Add c.target to openList if not in closedList
+				for (auto traversed : closedList) {
+					if (c->target == static_cast<Node*>(traversed)) {
+						openList.push_back(static_cast<Tile*>(c->target));
+					}
+				}
+
+				//c.target.gScore = currentNode.gScore + c.cost
+				c->target->G = currentTile->G + c->cost;
+
+				//// A* modifications ////
+				c->target->H = pkr::Vector2::distance(c->target->cPos, endTile->cPos);			//n.hscore = distance from n to endnode
+				//c->target->F();		//Might not be required as F() automatically sums G + H	//n.fscore = n.gscore + h.hscore
+				//////////////////////////
+
+				c->target->parent = currentTile;				//c.target.parent = currentNode
+				*/
+			}
+		}
+
+		Path AstarSolution;
+		auto workTile = endTile;
+		while (workTile != nullptr) {
+			AstarSolution.push_back(workTile->cPos);
+			workTile = static_cast<Tile*>(workTile->parent);
+		}
+		return AstarSolution;
+	}
+
+	void Map::update(float deltaTime)
+	{
+		auto CoordConverter = KunoApp::Instance()->CoordConverter();
+		aie::Input* input = aie::Input::getInstance();
+
+		//// Get Tile that is being mouse over on ////
+		int mousex, mousey; input->getMouseXY(&mousex, &mousey);
+		auto mouseCpos = CoordConverter->ViewportToCartesian(mousex, mousey);
+		m_tileMouseOver = findTileFromIpos(mouseCpos);		//NOTE SURE WHY THIS WORKS
+
+		//// Get Start of path (left click) ////
+		if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT))
+			if (m_tileMouseOver != nullptr && m_tileMouseOver != m_pathEnd)	//The mouse is actually over a tile
+				m_pathStart = m_tileMouseOver;
+			else
+				m_pathStart = nullptr;
+
+		//// Get End of path (right click) ////
+		if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_RIGHT))
+			if (m_tileMouseOver != nullptr && m_tileMouseOver != m_pathStart)	//The mouse is actually over a tile
+				m_pathEnd = m_tileMouseOver;
+			else
+				m_pathEnd = nullptr;
+
+		//// If there are start and end nodes then try to A* ////
+		if (m_pathStart != nullptr && m_pathEnd != nullptr) {
+			m_path = getAStarPath(m_pathStart, m_pathEnd);
+		}
+
+	}
 
 	void Map::draw(aie::Renderer2D * renderer)
 	{
@@ -222,12 +377,15 @@ namespace pf {
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
 			//Set colour
-			if (t->onMouseOver())	renderer->setRenderColour(0.3f, 0.3f, 0.3f);
+			if (t == m_tileMouseOver)	renderer->setRenderColour(0.75f, 0.75f, 0.75f);
+			else if (t == m_pathStart)		renderer->setRenderColour(0, 0.25f, 0);
+			else if (t == m_pathEnd)		renderer->setRenderColour(0.25f, 0, 0);
 			else	renderer->setRenderColour(1, 1, 1);
 
 			//Draw tile including any objects it has
 			t->draw(renderer);
 
+#ifdef _DEBUG
 			//// DEBUG ////
 			//Draw the paths; all the node/tile connections
 			ImGui::Begin("Draw edge");
@@ -250,13 +408,28 @@ namespace pf {
 				else if (c->cost == 5.0f) {
 					renderer->setRenderColour(0.2f, 0.4f, 1.0f);
 				}
-				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.01f);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.9f);
 
 				//Print debugs
-				ImGui::Text("Start > x: %.1f, y: %.1f", start.x, start.y);
-				ImGui::Text("End > x: %.1f, y: %.1f", end.x, end.y);
+				ImGui::Text("x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", start.x, start.y, end.x, end.y);
 			}
 			ImGui::End();
+
+			//Draw the test map A* pathfinding
+			ImGui::Begin("Map's test path");
+			renderer->setRenderColour(0.85f, 0, 0);
+			if (!m_path.empty()) {
+				//Loop through all sets of waypoints and draw the path (isometrically)
+				for (int i = 0; i < m_path.size() - 1; ++i) {
+					auto start = app->CoordConverter()->CartesianToIsometric(m_path[i]);
+					auto end = app->CoordConverter()->CartesianToIsometric(m_path[i + 1]);
+					renderer->drawLine(start.x, start.y, end.x, end.y, 5.0f, 0.1f);
+					ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
+				}
+			}
+			ImGui::End();
+			////////////
+#endif
 		}
 
 	}

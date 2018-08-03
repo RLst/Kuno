@@ -55,7 +55,7 @@ namespace pf {
 		}
 
 		//Compare function objects for use with std::list::sort()
-		static bool compareGscore(Node *a, Node *b) { return a->F() < b->F(); }
+		static bool compareGscore(Node *a, Node *b) { return a->G < b->G; }
 		static bool compareFscore(Node *a, Node *b) { return a->F() < b->F(); }
 	};
 

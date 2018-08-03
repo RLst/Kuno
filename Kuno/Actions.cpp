@@ -104,8 +104,8 @@ namespace ai {
 		//(CONDITION) If the agent is not at the target position, then move towards it
 		if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
 			//(ACTION) Seek towards target
-			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos());
-			agent->move(seek * m_maxForce, deltaTime);
+			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos()) * m_maxForce;
+			agent->move(seek, deltaTime);
 			return RUNNING;
 		}
 		//Else; Agent has arrived, stop moving. Success

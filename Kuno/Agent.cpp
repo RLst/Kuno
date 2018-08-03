@@ -36,13 +36,13 @@ namespace ai {
 		m_behaviours.push_back(behaviour);
 	}
 
-	void Agent::move(const pkr::Vector2 & lMove, float deltaTime)
+	void Agent::move(const pkr::Vector2 & vel, float deltaTime)
 	{
 		//accel = force / mass;
 		//vel = vel + accel * deltaTime;
 		//pos = pos + vel * deltaTime;
 
-		m_cPos = m_cPos + lMove * deltaTime;
+		m_cPos = m_cPos + vel * deltaTime;
 	}
 
 	void Agent::moveIso(const pkr::Vector2 & lMove, float deltaTime)

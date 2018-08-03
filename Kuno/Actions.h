@@ -35,7 +35,7 @@ namespace ai {
 		aie::Input*		m_input;
 		float			m_maxForce;
 		pkr::Vector2	m_destination;
-		float			m_arriveThreshold = 5.0f;			//Raw inits; adjust accordingly
+		float			m_arriveThreshold = 20.0f;			//Raw inits; adjust accordingly
 		//float			m_arriveSmoothZone = 20.0f;
 	public:
 		MouseControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 500.0f);
@@ -94,11 +94,9 @@ namespace ai {
 	class Attack : public iBehaviour
 	{
 	private:
-		Agent *			m_target;
-		
+		Agent * m_target;
 	public:
-		eResult			execute(Agent *agent, float deltaTime) override;
-
+		eResult	execute(Agent *agent, float deltaTime) override;
 	};
 
 	}

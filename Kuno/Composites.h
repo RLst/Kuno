@@ -2,8 +2,7 @@
 #include "AI.h"
 #include "PF.h"
 
-namespace ai { 
-	namespace composite {
+namespace ai { namespace composite {
 
 	class FollowPathSequence : public Sequence
 	{
@@ -24,7 +23,7 @@ namespace ai {
 	class AttackSequence : public Sequence
 	{
 	private:
-		Agent * m_target;
+		Agent *		m_target;
 		float		m_attackRange = 100;
 
 	public:
@@ -35,5 +34,5 @@ namespace ai {
 		//eResult		execute(Agent *agent, float deltaTime) override;
 	};
 
-	}
+}
 }

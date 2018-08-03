@@ -376,11 +376,15 @@ namespace pf {
 			//Calculate render depth
 			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
 
-			//Set colour
-			if (t == m_tileMouseOver)	renderer->setRenderColour(0.75f, 0.75f, 0.75f);
-			else if (t == m_pathStart)		renderer->setRenderColour(0, 0.25f, 0);
-			else if (t == m_pathEnd)		renderer->setRenderColour(0.25f, 0, 0);
-			else	renderer->setRenderColour(1, 1, 1);
+			//Set tile colour
+			if (t == m_tileMouseOver)		renderer->setRenderColour(0.75f, 0.75f, 0.75f);			//Mouse over
+			else if (t == m_pathStart)		renderer->setRenderColour(0.35f, 0.7f, 0.35f);			//Start
+			else if (t == m_pathEnd)		renderer->setRenderColour(0.7f, 0.35f, 0.35f);			//End
+			//else if (t->terrain == GRASS)	renderer->setRenderColour(0, 0.6f, 0);
+			//else if (t->terrain == DIRT)	renderer->setRenderColour(0.7f, 0.35f, 0.65f);
+			//else if (t->terrain == GRAVEL)	renderer->setRenderColour(0.65f, 0.65f, 0.65f);
+			//else if (t->terrain == WATER)	renderer->setRenderColour(0.2f, 0.4f, 1);
+			else							renderer->setRenderColour(1, 1, 1);
 
 			//Draw tile including any objects it has
 			t->draw(renderer);
@@ -408,7 +412,7 @@ namespace pf {
 				else if (c->cost == 5.0f) {
 					renderer->setRenderColour(0.2f, 0.4f, 1.0f);
 				}
-				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.9f);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.3f);
 
 				//Print debugs
 				ImGui::Text("x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", start.x, start.y, end.x, end.y);
@@ -416,14 +420,14 @@ namespace pf {
 			ImGui::End();
 
 			//Draw the test map A* pathfinding
-			ImGui::Begin("Map's test path");
-			renderer->setRenderColour(0.85f, 0, 0);
+			ImGui::Begin("Map's Path");
+			renderer->setRenderColour(0.90f, 0, 0);
 			if (!m_path.empty()) {
 				//Loop through all sets of waypoints and draw the path (isometrically)
 				for (int i = 0; i < m_path.size() - 1; ++i) {
 					auto start = app->CoordConverter()->CartesianToIsometric(m_path[i]);
 					auto end = app->CoordConverter()->CartesianToIsometric(m_path[i + 1]);
-					renderer->drawLine(start.x, start.y, end.x, end.y, 5.0f, 0.1f);
+					renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.2f);
 					ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
 				}
 			}

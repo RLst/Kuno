@@ -41,7 +41,6 @@ namespace pf {
 		//Image width: 100
 		//Image height: 200
 	private:
-		bool			m_mouseOver = false;		//Tracks if the mouse is over it or not
 		pkr::Vector2	m_originOffset = { 0.5f, 0.18f };		//Change for each tile set
 
 	public:
@@ -67,8 +66,6 @@ namespace pf {
 		~Tile();	//Texture manager will delete the textures
 
 		Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 }, eTileTerrain terrain = SMOOTH_FLOOR, eTileTraversable = TRAVERSABLE);
-
-		bool			onMouseOver() const { return m_mouseOver; }
 
 		//Cores
 		void			draw(aie::Renderer2D* renderer);

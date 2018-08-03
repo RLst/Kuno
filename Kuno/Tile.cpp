@@ -28,10 +28,9 @@ namespace pf {
 		iPos = KunoApp::Instance()->CoordConverter()->CartesianToIsometric(cPos);
 		auto depth = KunoApp::Instance()->DepthSorter()->getSortDepth(iPos.y + dsOffset.y);		//for some reason iPos MINUS dsOffset works
 
-		//Draw tile
+		//Draw tile and objects
+		//(Any tints set before this will be applied to both tiles and any child static objects)
 		renderer->drawSprite(tex, iPos.x, iPos.y, 0, 0, 0, depth, m_originOffset.x, m_originOffset.y);		//Centred on the isometric middle of the tile
-
-		//Draw any objects
 		for (auto o : objects) {
 			o->draw(renderer);
 		}

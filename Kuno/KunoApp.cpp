@@ -184,35 +184,36 @@ bool KunoApp::setupEnemies()
 
 bool KunoApp::setupAI()
 {
-
-	/*//Behaviour tree
 	
-	if (GuardBehaviour)
-	{
-		//Idle
-		if (Idle)
-		{
-			wait 30 - 60 seconds;
-			move to patrol
-		}
-		//Patrol
-		if (Patrol)
-	
-	
-		//
-	
-	}
-	*/
-
 	//Setup player
 	aie::Input* input = aie::Input::getInstance();
-	m_player->addBehaviour(new ai::BasicController(input, 500.0f));
-	m_mouseControlled->addBehaviour(new ai::MouseController(input));
+	m_player->addBehaviour(new ai::action::KeyboardControl(input, 500.0f));
+	m_mouseControlled->addBehaviour(new ai::action::MouseControl(input));
 
-	//Setup enemies
+	//// Setup enemies /////
+	auto samurai = new ai::Selector();			//Root node for a melee samurai
+	auto samuraiBow = new ai::Selector();		//Root node for a ranged samurai
+
+	//Set critical values
+	float meleeAttackRange = 300.0f;
+	float rangedAttackRange = 300.0f;
+	float sightDistance = 500.0f;		//The distance from which the enemy can see
+	float viewRange = 90.0f;			//View cone of the enemies
+	
+	//// Setup some core AI composites ////
+	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_mouseControlled, meleeAttackRange);
+	ai::action::Attack* samuraiAttack = new ai::action::Attack();
+	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_mouseControlled, 200.f);
+
+	//Melee Samurai
+	ai::composite::AttackSequence* samuraiAttackSeq = new ai::composite::AttackSequence();
+	samuraiAttackSeq->addChild(samuraiWithinRangeCond);					//WithinRange
+	samuraiAttackSeq->addChild(samuraiSeek);		//TEST
+	//samuraiAttackSeq->addChild(samuraiAttack);						//Attack
+
 	for (auto e : m_enemyList)
 	{
-		e->addBehaviour(new ai::SeekAction(m_player, 400.0f));
+		e->addBehaviour(samuraiAttackSeq); 
 	}
 
 	return true;
@@ -229,6 +230,7 @@ void KunoApp::update(float deltaTime) {
 	m_camera->update(deltaTime);
 
 	//Update the map
+	m_map->update(deltaTime);		//Handle the tile tinting
 	
 	//Update the agents
 	m_player->update(deltaTime);

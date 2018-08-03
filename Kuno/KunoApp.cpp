@@ -149,30 +149,12 @@ bool KunoApp::setupMap()
 {
 	//// Build the map ////
 	m_map = new pf::Map();
-	m_map->buildTestMap(WORLD_WIDTH, WORLD_DEPTH);
+	m_map->buildRandomMap(WORLD_WIDTH, WORLD_DEPTH);
 	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	//// Connect tile/nodes in map ////
 	float NodeConnectRadius = 200;		//4 ways: 180, 8 ways: 200
 	m_map->connectNodesByDistance(NodeConnectRadius);
-
-	////Connect up adjacent neighbouring nodes
-	//for (auto nodeA : m_graph->getNodes()) 
-	//{
-	//	for (auto nodeB : m_graph->getNodes())
-	//	{
-	//		//Skip if they're both the same node
-	//		if (nodeA == nodeB)
-	//			continue;
-	//		//Find the distance between the node
-	//		float distance = pkr::Vector2::distance(nodeA->pos_tmp, nodeB->pos_tmp);
-	//		//If they're below a certain range then connect the nodes
-	//		if (distance < 60) {
-	//			m_graph->addConnection(nodeA, nodeB);
-	//			//This should also connect it both ways
-	//		}
-	//	}
-	//}
 
 	return true;
 }
@@ -202,23 +184,25 @@ bool KunoApp::setupEnemies()
 
 bool KunoApp::setupAI()
 {
-	////Behaviour tree
-	//
-	//if (GuardBehaviour)
-	//{
-	//	//Idle
-	//	if (Idle)
-	//	{
-	//		wait 30 - 60 seconds;
-	//		move to patrol
-	//	}
-	//	//Patrol
-	//	if (Patrol)
-	//
-	//
-	//	//
-	//
-	//}
+
+	/*//Behaviour tree
+	
+	if (GuardBehaviour)
+	{
+		//Idle
+		if (Idle)
+		{
+			wait 30 - 60 seconds;
+			move to patrol
+		}
+		//Patrol
+		if (Patrol)
+	
+	
+		//
+	
+	}
+	*/
 
 	//Setup player
 	aie::Input* input = aie::Input::getInstance();
@@ -275,12 +259,13 @@ void KunoApp::draw() {
 	//// Draw the map ////
 	//float mapDrawStartTime = KunoApp::Instance()->getTime();
 	m_map->draw(m_2dRenderer);
+	m_map->drawGraph(m_2dRenderer);
 	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 
 	//Draw agents
-	m_player->draw(m_2dRenderer);
-	m_mouseControlled->draw(m_2dRenderer);
-	for (auto enemy : m_enemyList) {
+	m_player->draw(m_2dRenderer);				//Keyboard
+	m_mouseControlled->draw(m_2dRenderer);		//Mouse
+	for (auto enemy : m_enemyList) {			//Enemies
 		enemy->draw(m_2dRenderer);
 	}
 
@@ -288,8 +273,8 @@ void KunoApp::draw() {
 	DEBUG(m_2dRenderer);
 	///////////////
 
-	//// END DRAW ////
 	m_2dRenderer->end();
+	//// END DRAW ////
 }
 
 void KunoApp::DEBUG(aie::Renderer2D* renderer)

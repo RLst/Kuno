@@ -193,23 +193,21 @@ namespace pf {
 		return AstarSolution;
 	}
 
-	void Graph::draw(aie::Renderer2D * renderer)
+	void Graph::drawGraph(aie::Renderer2D * renderer)
 	{
-		//Draw edges on the bottom
 		for (auto node : m_nodes) {
-			for (auto it : node->connections)
-			{
-				Edge* edge = it;
-				renderer->setRenderColour(1, 1, 1);
-				renderer->drawLine(node->cPos.x, node->cPos.y, edge->target->cPos.x, edge->target->cPos.y, 2.0f, 0.2f);
-			}
-		}
 
-		//Draw nodes on top
-		for (auto node : m_nodes) {
-			renderer->setRenderColour(1, 0.3f, 0);		//Required?
-			//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
+			//Draw nodes on top
+			renderer->setRenderColour(1, 0.3f, 0);
 			renderer->drawCircle(node->cPos.x, node->cPos.y, 0.1f);
+			//renderer->drawBox(node->pos.x, node->pos.y, 10, 10);
+
+			//Draw edges below nodes 
+			for (auto c : node->connections)
+			{
+				renderer->setRenderColour(0.9f, 0.9f, 0.9f);
+				renderer->drawLine(node->cPos.x, node->cPos.y, c->target->cPos.x, c->target->cPos.y, 2.0f, 0.2f);
+			}
 		}
 	}
 

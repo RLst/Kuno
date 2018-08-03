@@ -25,10 +25,10 @@ namespace ai {
 		std::vector<iBehaviour*> m_behaviours;
 
 		//Some basic transformation data
-		//float					m_maxForce;
+		float					m_maxForce;
 		//pkr::Vector2			m_force;
 		//pkr::Vector2			m_accel;
-		//pkr::Vector2			m_vel;
+		pkr::Vector2			m_vel;
 		pkr::Vector2			m_cPos;			//px; Cartesian
 		pkr::Vector2			m_iPos;			//px; Isometric
 
@@ -53,17 +53,18 @@ namespace ai {
 		void				addBehaviour(iBehaviour* behaviour);
 
 		//Translation
-		void				move(const pkr::Vector2 &lSpeed);			//Linear move (instant vel/accel)
-		void				moveIso(const pkr::Vector2 &lSpeed);		//Linear move in isometric
+		void				move(const pkr::Vector2 &lSpeed, float deltaTime);			//Linear move (instant vel/accel)
+		void				moveIso(const pkr::Vector2 &lSpeed, float deltaTime);		//Linear move in isometric
 
 		//State accessors
 		pkr::Vector2		getPos() const { return m_iPos; }
+		pkr::Vector2		getVel() const { return m_vel; }
 
 		//Core
 		void				update(float deltaTime);
 		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
 	
-		//Allow access to parent methods
+		//Allow access to parent methods (
 
 	};
 

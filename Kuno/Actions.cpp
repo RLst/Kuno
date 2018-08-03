@@ -12,7 +12,7 @@
 
 namespace ai {
 	BasicController::BasicController(aie::Input * input, float lSpeedMax) :
-		m_input(input), m_lSpeedMax(lSpeedMax)
+		m_input(input), m_maxForce(lSpeedMax)
 	{}
 
 	eResult BasicController::execute(Agent * agent, float deltaTime)
@@ -24,27 +24,27 @@ namespace ai {
 		//Keyboard controls
 		if (m_input->isKeyDown(aie::INPUT_KEY_UP))
 		{
-			agent->moveIso(pkr::Vector2(0.0f, m_lSpeedMax * deltaTime));
+			agent->moveIso(pkr::Vector2(0.0f, m_maxForce), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_DOWN))
 		{
-			agent->moveIso(pkr::Vector2(0.0f, -m_lSpeedMax * deltaTime));
+			agent->moveIso(pkr::Vector2(0.0f, -m_maxForce), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_LEFT))
 		{
-			agent->moveIso(pkr::Vector2(-m_lSpeedMax * deltaTime, 0.0f));
+			agent->moveIso(pkr::Vector2(-m_maxForce, 0.0f), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		{
-			agent->moveIso(pkr::Vector2(m_lSpeedMax * deltaTime, 0.0f));
+			agent->moveIso(pkr::Vector2(m_maxForce, 0.0f), deltaTime );
 		}
 
 		return eResult::SUCCESS;
 	}
 
 	//// Seek ////
-	SeekAction::SeekAction(Agent * target, float lSpeedMax) :
-		m_target(target), m_maxLspeed(lSpeedMax) {}
+	SeekAction::SeekAction(Agent * target, float maxForce) :
+		m_target(target), m_maxForce(maxForce) {}
 
 	//SeekAction::SeekAction(pkr::Vector2 destination, float maxLspeed) :
 	//	m_destination(destination), m_maxLspeed(maxLspeed) {}
@@ -61,7 +61,7 @@ namespace ai {
 	}
 
 	//// Patrol ////
-	PatrolAction::PatrolAction(Agent * pathObject)
+	PatrolAction::PatrolAction(Agent * pathObject, float maxForce)
 	{
 		//SeekAction* pathFollower = new SeekAction(pathObject);
 	}
@@ -79,8 +79,8 @@ namespace ai {
 	}
 
 	//// Mouse Controller ////
-	MouseController::MouseController(aie::Input * input, float maxSpeed) :
-		m_input(input), m_lSpeedMax(maxSpeed) {}
+	MouseController::MouseController(aie::Input * input, float maxForce) :
+		m_input(input), m_maxForce(maxForce) {}
 	
 	eResult MouseController::execute(Agent * agent, float deltaTime)
 	{
@@ -95,7 +95,7 @@ namespace ai {
 		if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
 			//Seek towards target
 			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos());
-			agent->move(seek * m_lSpeedMax * deltaTime);
+			agent->move(seek * m_maxForce, deltaTime);
 			return RUNNING;
 		}
 		//Else; Agent has arrived, stop moving. Success

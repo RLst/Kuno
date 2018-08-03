@@ -51,14 +51,14 @@ namespace ai {
 		m_behaviours.push_back(behaviour);
 	}
 
-	void Agent::move(const pkr::Vector2 & lMove)
+	void Agent::move(const pkr::Vector2 & lMove, float deltaTime)
 	{
 		m_cPos += lMove;
 	}
 
-	void Agent::moveIso(const pkr::Vector2 & lMove)
+	void Agent::moveIso(const pkr::Vector2 & lMove, float deltaTime)
 	{
-		m_cPos += KunoApp::Instance()->CoordConverter()->IsometricToCartesian(lMove);
+		m_cPos += KunoApp::Instance()->CoordConverter()->IsometricToCartesian(lMove) * deltaTime;
 	}
 
 

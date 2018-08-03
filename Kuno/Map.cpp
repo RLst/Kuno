@@ -33,10 +33,10 @@ namespace pf {
 		m_depth(mapDepth),
 		m_mapOffset(mapOffset)
 	{
-		buildTestMap(m_width, m_depth);
+		buildRandomMap(m_width, m_depth);
 	}
 
-	void Map::buildTestMap(int width, int depth)
+	void Map::buildRandomMap(int width, int depth)
 	{
 		//Call texture manager
 		auto TM = KunoApp::Instance()->TextureManager();

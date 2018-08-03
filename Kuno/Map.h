@@ -21,14 +21,6 @@ class StaticObject;
 //typedef std::vector<Tile*> TileList;
 //typedef std::vector<pkr::Vector2*> PointList;		//More accurate list of waypoints
 
-enum eLayerType {	//Also holds the depth setting
-	BACKGROUND = 0,
-	GROUND = 1,
-	OBJECT = 10,
-	WALLS = 10,
-	ROOF = 100,
-};
-
 class Map : public Graph
 {
 	//A map contains a grid of tiles
@@ -49,12 +41,12 @@ public:
 	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
 
 	//Setups
-	void				buildTestMap(int width, int depth);
+	void				buildRandomMap(int width, int depth);
 	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 
-	void				buildKunoMap();				//Build game map raw
+	void				buildKunoMap();									//Build game map from raw data (maybe this should be in Game.cpp)
 
-	//void				loadMap();					//From file? Implement later
+	//void				loadMap();	//From file? Implement later
 	//void				addTile(Tile* tile);
 	
 	//Core	

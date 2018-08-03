@@ -17,6 +17,9 @@ namespace pf {
 
 	struct Node;
 
+	typedef std::vector<pkr::Vector2> Path;
+	typedef std::list<Node*> NodeList;
+
 	struct Edge
 	{
 		Node*	target;
@@ -55,9 +58,6 @@ namespace pf {
 		static bool compareFscore(Node *a, Node *b) { return a->F() < b->F(); }
 	};
 
-	typedef std::vector<pkr::Vector2> Path;
-	typedef std::list<Node*> NodeList;
-
 	class Graph
 	{
 	private:
@@ -87,7 +87,7 @@ namespace pf {
 		Path		getAStarPath(Node* startNode, Node* endNode) const;
 
 		//Cores
-		void	draw(aie::Renderer2D* renderer);
+		void		drawGraph(aie::Renderer2D* renderer);		//Draws the basic
 
 	};
 }

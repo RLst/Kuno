@@ -9,13 +9,16 @@
 #include "Agent.h"
 #include "pkr/Vector2.h"
 #include "KunoApp.h"
+#include "Tile.h"
 
 namespace ai {
-	BasicController::BasicController(aie::Input * input, float lSpeedMax) :
+	namespace action {
+
+	KeyboardControl::KeyboardControl(aie::Input * input, float lSpeedMax) :
 		m_input(input), m_maxForce(lSpeedMax)
 	{}
 
-	eResult BasicController::execute(Agent * agent, float deltaTime)
+	eResult KeyboardControl::execute(Agent * agent, float deltaTime)
 	{
 		//Mouse controls
 		//int mouseX = input->getMouseX();
@@ -43,32 +46,34 @@ namespace ai {
 	}
 
 	//// Seek ////
-	SeekAction::SeekAction(Agent * target, float maxForce) :
+	Seek::Seek(Agent * target, float maxForce) :
 		m_target(target), m_maxForce(maxForce) {}
 
 	//SeekAction::SeekAction(pkr::Vector2 destination, float maxLspeed) :
 	//	m_destination(destination), m_maxLspeed(maxLspeed) {}
 
-	eResult SeekAction::execute(Agent * agent, float deltaTime)
+	eResult Seek::execute(Agent * agent, float deltaTime)
 	{	//Seek vector = Target position - Agent position
 		//Find the normalised seek vector towards target
-		pkr::Vector2 nrmSeekVector = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
+
+		pkr::Vector2 SeekDirection = pkr::Vector2::normalise(m_target->getPos() - agent->getPos());
 
 		//Apply max force towards target
-		agent->move(nrmSeekVector * m_maxLspeed * deltaTime);
+		agent->move(SeekDirection * m_maxForce, deltaTime);
+		//agent->move(nrmSeekVector - agent.getVel() * m_maxLspeed, deltaTime);
 
 		return eResult::SUCCESS;
 	}
 
 	//// Patrol ////
-	PatrolAction::PatrolAction(Agent * pathObject, float maxForce)
+	Patrol::Patrol(Agent * pathObject, float maxForce)
 	{
 		//SeekAction* pathFollower = new SeekAction(pathObject);
 	}
 
-	eResult PatrolAction::execute(Agent * agent, float deltaTime)
+	eResult Patrol::execute(Agent * agent, float deltaTime)
 	{
-		SeekAction* followPath = new SeekAction(agent, m_maxForce);
+		Seek* followPath = new Seek(agent, m_maxForce);
 
 		//Get a new point from path agent/object
 		
@@ -79,21 +84,26 @@ namespace ai {
 	}
 
 	//// Mouse Controller ////
-	MouseController::MouseController(aie::Input * input, float maxForce) :
+	MouseControl::MouseControl(aie::Input * input, float maxForce) :
 		m_input(input), m_maxForce(maxForce) {}
 	
-	eResult MouseController::execute(Agent * agent, float deltaTime)
+	eResult MouseControl::execute(Agent * agent, float deltaTime)	//MESSY
 	{
-		//Retrieve new destination if any (later make this retrieve a new waypoint/node)
+		//Get GameApp
+		auto app = KunoApp::Instance();
+
+		//Get current cartesian mouse position
+		int mousex, mousey; m_input->getMouseXY(&mousex, &mousey);
+		auto mCpos = app->CoordConverter()->ViewportToCartesian(mousex, mousey);
+
+		//(CONDITION) Retrieve new destination if any (later make this retrieve a new waypoint/node)
 		if (m_input->wasMouseButtonReleased(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-			//Convert from viewport to isometric
-			int mousex, mousey; m_input->getMouseXY(&mousex, &mousey);
-			m_destination = KunoApp::Instance()->CoordConverter()->ViewportToCartesian(mousex, mousey);
+			m_destination = mCpos;	//(ACTION)
 		}
 
-		//If the agent is not at the target position, then move towards it
+		//(CONDITION) If the agent is not at the target position, then move towards it
 		if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
-			//Seek towards target
+			//(ACTION) Seek towards target
 			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos());
 			agent->move(seek * m_maxForce, deltaTime);
 			return RUNNING;
@@ -102,5 +112,13 @@ namespace ai {
 		else {
 			return SUCCESS;
 		}
+
 	}
+
+	eResult Attack::execute(Agent * agent, float deltaTime)
+	{
+		return eResult();
+	}
+
+}
 }

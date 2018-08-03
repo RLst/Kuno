@@ -10,15 +10,16 @@
 #include <Renderer2D.h>
 #include <vector>
 #include <list>
-#include <stack>
 
 //Pathfinding related methods and implementations
 namespace pf {
 
 	struct Node;
+	struct Tile;
 
-	typedef std::vector<pkr::Vector2> Path;
+	typedef std::vector<pkr::Vector2> Path;		//could also be vector<node*>
 	typedef std::list<Node*> NodeList;
+	typedef std::list<Tile*> TileList;
 
 	struct Edge
 	{
@@ -83,8 +84,8 @@ namespace pf {
 		Node*		findNode(pkr::Vector2 position, float searchRadius = 0.0f);			//Return node that is at position or within range
 		NodeList&	findNodes(pkr::Vector2 position, float searchRadius = 0.0f);		//Return a list of nodes that are within a certain search radius
 
-		Path		getDjikstraPath(Node* startNode, Node* endNode) const;	
-		Path		getAStarPath(Node* startNode, Node* endNode) const;
+		//Path		getDjikstraPath(Node* startNode, Node* endNode) const;	
+		//Path		getAStarPath(Node* startNode, Node* endNode) const;
 
 		//Cores
 		void		drawGraph(aie::Renderer2D* renderer);		//Draws the basic

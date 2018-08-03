@@ -4,26 +4,11 @@
 ///////////////
 
 #include "Agent.h"
-#include <Vector2.h>
+#include <pkr\Vector2.h>
 #include "AI.h"
 #include "KunoApp.h"
 
 namespace ai {
-
-	//Agent::Agent(const Agent & other) :		//Copy constructor
-	//	m_behaviours(other.m_behaviours),
-	//	m_maxForce(other.m_maxForce),
-	//	m_force(other.m_force),
-	//	m_accel(other.m_accel),
-	//	m_vel(other.m_vel),
-	//	m_pos(other.m_pos),
-	//	m_size(other.m_size),
-	//	m_colour(other.m_colour),
-	//	m_texture(other.m_texture),
-	//	m_currentWaypointIndex(other.m_currentWaypointIndex),
-	//	m_currentPath(other.m_currentPath),
-	//	m_waypointSearchRadius(other.m_waypointSearchRadius)
-	//{}
 
 	Agent::Agent(float circleSize, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
 		m_size(circleSize),
@@ -33,10 +18,10 @@ namespace ai {
 	Agent::~Agent()
 	{
 		//Behaviours
-		for (auto &behaviour : m_behaviours) {
-			delete behaviour;			//Do the behaviours have to be deleted?
-			behaviour = nullptr;
-		}
+		//for (auto &behaviour : m_behaviours) {
+		//	delete behaviour;			//Do the behaviours have to be deleted?
+		//	behaviour = nullptr;
+		//}
 
 		//Path
 		for (auto &point : m_currentPath) {
@@ -53,7 +38,11 @@ namespace ai {
 
 	void Agent::move(const pkr::Vector2 & lMove, float deltaTime)
 	{
-		m_cPos += lMove;
+		//accel = force / mass;
+		//vel = vel + accel * deltaTime;
+		//pos = pos + vel * deltaTime;
+
+		m_cPos = m_cPos + lMove * deltaTime;
 	}
 
 	void Agent::moveIso(const pkr::Vector2 & lMove, float deltaTime)

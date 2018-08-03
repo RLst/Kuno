@@ -4,10 +4,12 @@
 ///////////////
 
 
-#include "Condition.h"
+#include "Conditions.h"
 #include "Agent.h"
 
 namespace ai {
+	namespace condition {
+
 	WithinRangeCondition::WithinRangeCondition(Agent * target, float range) :
 		m_target(target), m_range(range) {}
 	eResult WithinRangeCondition::execute(Agent * agent, float deltaTime)
@@ -34,5 +36,6 @@ namespace ai {
 		//	return FAILURE;
 		return eResult();
 	}
-	
+
+	}
 }

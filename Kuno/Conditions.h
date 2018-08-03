@@ -14,6 +14,9 @@ namespace ai {
 	class Agent;
 	class Character;
 
+	namespace condition {
+
+
 	class WithinRangeCondition : public iBehaviour 
 	{
 		//Checks if an agent is within range
@@ -22,10 +25,25 @@ namespace ai {
 		float		m_range;
 
 	public:
-		~WithinRangeCondition() override { delete m_target; }
+		~WithinRangeCondition() override { /*delete m_target;*/ }
 		WithinRangeCondition(Agent* target, float range);
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
+
+	class OutOfAttackingRange : public iBehaviour
+	{
+		//NOTE! maybe just use WithinRangeCondition() with different range and NotDecorator() instead
+		//Returns success if agent out of attack range
+	private:
+		Agent *		m_target;
+		float		m_attackRange;
+
+	public:
+		~OutOfAttackingRange() override { /*delete m_target;*/ }
+		OutOfAttackingRange(Agent* target, float attackRange);
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
 
 	class InViewCondition : public iBehaviour
 	{
@@ -45,4 +63,5 @@ namespace ai {
 	};
 
 
+	}
 }

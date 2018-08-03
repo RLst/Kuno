@@ -55,9 +55,6 @@
     <ClCompile Include="Actions.cpp">
       <Filter>AI\src</Filter>
     </ClCompile>
-    <ClCompile Include="Condition.cpp">
-      <Filter>AI\src</Filter>
-    </ClCompile>
     <ClCompile Include="KunoApp.cpp" />
     <ClCompile Include="CoordConverter.cpp">
       <Filter>Util\src</Filter>
@@ -69,6 +66,12 @@
       <Filter>PF\src</Filter>
     </ClCompile>
     <ClCompile Include="SpriteObject.cpp">
+      <Filter>AI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Conditions.cpp">
+      <Filter>AI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Composites.cpp">
       <Filter>AI\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,9 +107,6 @@
     <ClInclude Include="Actions.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="Condition.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="CoordConverter.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -117,6 +117,12 @@
       <Filter>PF</Filter>
     </ClInclude>
     <ClInclude Include="SpriteObject.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Conditions.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Composites.h">
       <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -142,5 +148,8 @@
     <Image Include="..\bin\textures\prototype_iso\slab_N.png">
       <Filter>Assets</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -23,15 +23,16 @@
 #include "AI.h"
 #include "Agent.h"
 #include "Actions.h"
-#include "Condition.h"
+#include "Conditions.h"
+#include "Composites.h"
 
 //PF
 #include "PF.h"
 #include "Tile.h"
 #include "Map.h"
 
-#include "pkr\Vector2.h"
-#include "pkr\Vector3.h"
+#include <pkr\Vector2.h>
+#include <pkr\Vector3.h>
 
 //// MODERN SINGLETON PATTERN ////
 KunoApp* KunoApp::Instance()
@@ -261,7 +262,6 @@ void KunoApp::draw() {
 	//// Draw the map ////
 	//float mapDrawStartTime = KunoApp::Instance()->getTime();
 	m_map->draw(m_2dRenderer);
-	m_map->drawGraph(m_2dRenderer);
 	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 
 	//Draw agents
@@ -271,9 +271,11 @@ void KunoApp::draw() {
 		enemy->draw(m_2dRenderer);
 	}
 
-	//// DEBUGS ////
-	DEBUG(m_2dRenderer);
-	///////////////
+//// DEBUGS ////
+#ifdef _DEBUG
+DEBUG(m_2dRenderer);
+#endif
+///////////////
 
 	m_2dRenderer->end();
 	//// END DRAW ////

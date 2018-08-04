@@ -20,7 +20,7 @@ namespace util {
 		m_cam(&camera)
 	{}
 
-	pkr::Vector2 CoordConverter::ViewportToCartesian(pkr::Vector2 viewport) const
+	pkr::Vector2 CoordConverter::ViewportToCanvas(pkr::Vector2 viewport) const
 	{
 		//Init vars for return
 		pkr::Vector2 canvas = { 0,0 };
@@ -49,37 +49,37 @@ namespace util {
 		return canvas;
 	}
 
-	pkr::Vector2 CoordConverter::ViewportToCartesian(float viewportX, float viewportY) const
+	pkr::Vector2 CoordConverter::ViewportToCanvas(float viewportX, float viewportY) const
 	{
 		//Just redirect
-		return ViewportToCartesian(pkr::Vector2(viewportX, viewportY));
+		return ViewportToCanvas(pkr::Vector2(viewportX, viewportY));
 	}
 
-	pkr::Vector2 CoordConverter::CartesianToIsometric(pkr::Vector2 canvas) const
+	pkr::Vector2 CoordConverter::WorldToCanvas(pkr::Vector2 world) const			//Used to be cartesian to isometric
 	{
 		//// WAIT WHAT??? Is CANVAS actually just CARTESIAN
-		pkr::Vector2 iso = { 0,0 };
-		iso.x = canvas.x - canvas.y;
-		iso.y = (canvas.x + canvas.y) / TILE_RATIO;
-		return iso;
+		pkr::Vector2 canvas = { 0,0 };
+		canvas.x = world.x - world.y;
+		canvas.y = (world.x + world.y) / TILE_RATIO;
+		return canvas;
 	}
 
-	pkr::Vector2 CoordConverter::CartesianToIsometric(float cartX, float cartY) const
+	pkr::Vector2 CoordConverter::WorldToCanvas(float worldX, float worldY) const
 	{
-		return CartesianToIsometric(pkr::Vector2(cartX, cartY));		//Redirect
+		return WorldToCanvas(pkr::Vector2(worldX, worldY));		//Redirect
 	}
 
-	pkr::Vector2 CoordConverter::IsometricToCartesian(pkr::Vector2 iso) const
+	pkr::Vector2 CoordConverter::CanvasToWorld(pkr::Vector2 canvas) const			//Used to be isometric to cartesian
 	{
-		pkr::Vector2 cart;
-		cart.x = (TILE_RATIO * iso.y + iso.x) / TILE_RATIO;
-		cart.y = (TILE_RATIO * iso.y - iso.x) / TILE_RATIO;
-		return cart;
+		pkr::Vector2 world = { 0,0 };
+		world.x = (TILE_RATIO * canvas.y + canvas.x) / 2.0f;
+		world.y = (TILE_RATIO * canvas.y - canvas.x) / 2.0f;
+		return world;
 	}
 
-	pkr::Vector2 CoordConverter::IsometricToCartesian(float isoX, float isoY) const
+	pkr::Vector2 CoordConverter::CanvasToWorld(float canvasX, float canvasY) const
 	{
-		return IsometricToCartesian(pkr::Vector2(isoX, isoY));
+		return CanvasToWorld(pkr::Vector2(canvasX, canvasY));
 	}
 
 }

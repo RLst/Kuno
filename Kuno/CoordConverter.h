@@ -3,8 +3,9 @@
 // 2 Aug 2018 //
 ///////////////
 
-
 #pragma once
+
+#include "GameDefines.h"
 
 namespace pkr {
 	class Vector2;
@@ -15,10 +16,16 @@ namespace util {
 	class Camera;
 
 	//Converts between coordinate systems: Viewport, Cartesian, Isometric
+	//UPDATE: 4 AUG 2018
+	//Viewport: The viewport
+	//Canvas: The actual canvas that the renderer draws to and which we see, which is actually the ISOMETRIC world
+	//World: The cartesian world that all game entities are supposed to live and move in. This is not visible to the screen, unless I make a mini map
 	class CoordConverter
 	{
 	private:
 		Camera*		m_cam;
+		float		m_tileRatio = 2.5f;
+		//float		m_tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
 
 	public:
 		CoordConverter() = default;
@@ -27,14 +34,14 @@ namespace util {
 		CoordConverter(Camera& camera);		//If passing in an actual camera
 
 		//// MAIN CONVERSION FUNCTIONS ////
-		pkr::Vector2		ViewportToCartesian(pkr::Vector2 viewportPos) const;					//Use by the mouse			
-		pkr::Vector2		ViewportToCartesian(float viewportX, float viewportY) const;
+		pkr::Vector2		ViewportToCanvas(pkr::Vector2 viewport) const;					//Use by the mouse			
+		pkr::Vector2		ViewportToCanvas(float viewportX, float viewportY) const;
 
-		pkr::Vector2		CartesianToIsometric(pkr::Vector2 cartesianPos) const;					//Use by the renderer
-		pkr::Vector2		CartesianToIsometric(float cartesianX, float cartesianY) const;
+		pkr::Vector2		WorldToCanvas(pkr::Vector2 world) const;						//Use by the renderer
+		pkr::Vector2		WorldToCanvas(float worldX, float worldY) const;
 	
-		pkr::Vector2		IsometricToCartesian(pkr::Vector2 iso) const;							//Used by keyboard controller
-		pkr::Vector2		IsometricToCartesian(float isometricX, float isometricY) const;
+		pkr::Vector2		CanvasToWorld(pkr::Vector2 canvas) const;						//Used by keyboard controller
+		pkr::Vector2		CanvasToWorld(float canvasX, float canvasY) const;				//BUG!! ONLY WORKS IF the tiles are 2x wide as their height
 
 	};
 

@@ -14,7 +14,7 @@ namespace ai {
 		m_target(target), m_range(range) {}
 	eResult WithinRangeCondition::execute(Agent * agent, float deltaTime)
 	{
-		if (pkr::Vector2::distance(agent->getPos(), m_target->getPos()) < m_range)
+		if (pkr::Vector2::distance(agent->getCpos(), m_target->getCpos()) < m_range)
 			return SUCCESS;		//Target agent is within range
 		else
 			return FAILURE;

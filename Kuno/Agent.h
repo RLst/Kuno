@@ -55,7 +55,8 @@ namespace ai {
 		void				moveIso(const pkr::Vector2 &lSpeed, float deltaTime);		//Linear move in isometric
 
 		//State accessors
-		pkr::Vector2		getPos() const { return m_iPos; }
+		pkr::Vector2		getCpos() const { return m_cPos; }
+		pkr::Vector2		getIpos() const { return m_iPos; }
 		pkr::Vector2		getVel() const { return m_vel; }
 
 		//Core

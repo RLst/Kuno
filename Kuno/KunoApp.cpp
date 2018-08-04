@@ -301,15 +301,15 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	ImGui::End();
 
 	//// Coord converter ////
-	float x = 0, y = 0;
-	x = (float)input->getMouseX(); y = (float)input->getMouseY();										//Get Viewport coords
-	pkr::Vector2 cart = m_coordConverter->ViewportToCartesian(pkr::Vector2(x, y));		//Convert from Viewport to Cartesian
+	float viewX = 0, viewY = 0;
+	viewX = (float)input->getMouseX(); viewY = (float)input->getMouseY();										//Get Viewport coords
+	pkr::Vector2 cart = m_coordConverter->ViewportToCartesian(pkr::Vector2(viewX, viewY));		//Convert from Viewport to Cartesian
 	pkr::Vector2 iso = m_coordConverter->CartesianToIsometric(cart);					//Convert from Cartesian to Isometric
 	ImGui::Begin("Coord Converter");
 
-	ImGui::Text("Viewport > x: %.0f, y: %.0f", x, y);
+	ImGui::Text("Viewport > x: %.0f, y: %.0f", viewX, viewY);
 	renderer->setRenderColour(1, 0, 0);
-	renderer->drawText(m_font, "VIEW", x, y);
+	renderer->drawText(m_font, "VIEW", viewX, viewY);
 	//renderer->drawCircle(x, y, 2.5f);
 
 	ImGui::Text("Cartesian > x: %.2f, y: %.2f", cart.x, cart.y);

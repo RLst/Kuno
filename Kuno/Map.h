@@ -21,7 +21,7 @@ class StaticObject;
 //typedef std::vector<Tile*> TileList;
 //typedef std::vector<pkr::Vector2*> PointList;		//More accurate list of waypoints
 
-class Map /*: public Graph*/
+class Map
 {
 	//A map contains a grid of tiles
 	//A grid is 

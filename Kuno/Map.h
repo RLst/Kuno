@@ -38,6 +38,7 @@ private:
 	Tile*				m_tileMouseOver;		//The tile the mouse is over
 
 	//Test out pathfinding
+	bool				m_useAstar = true;
 	Path				m_path;
 	Tile*				m_pathStart = nullptr;
 	Tile*				m_pathEnd = nullptr;
@@ -57,9 +58,10 @@ public:
 	//void				addTile(Tile* tile);
 
 	//Find tile
-	Tile*				findTileFromCpos(pkr::Vector2 &cPos, float searchRadius = 75.f);	//Get the nearest tile using an CARTESIAN coord
-	Tile*				findTileFromIpos(pkr::Vector2 &iPos, float searchRadius = 75.f);	//Get the nearest tile using an ISOMETRIC coord
+	Tile*				findTileFromCpos(pkr::Vector2 &cPos, float searchRadius = 100.f);	//Get the nearest tile using an CARTESIAN coord
+	Tile*				findTileFromIpos(pkr::Vector2 &iPos, float searchRadius = 100.f);	//Get the nearest tile using an ISOMETRIC coord
 
+	Path				getDjikstraPath(Tile* startTile, Tile* endTile) const;
 	Path				getAStarPath(Tile* startTile, Tile* endTile) const;
 
 	//Core

@@ -229,12 +229,89 @@ namespace pf {
 		return nullptr;		//Tile not found; return null
 	}
 
+	Path Map::getDjikstraPath(Tile * startTile, Tile * endTile) const
+	{
+		//Inits
+		Node*		currentTile;
+		NodeList	openList;
+		NodeList	closedList;
+
+		//Set all parents to null and G scores to infinity
+		for (auto t : m_tiles) {
+			t->parent = nullptr;
+			t->G = INFINITY;
+		}
+
+		//Clear and push start node onto open list
+		startTile->parent = nullptr;		//This will act as the root; will be used when tracing back
+		startTile->G = 0;				//0 because there's no traversal yet
+		openList.push_back(startTile);
+
+		//Slight optimization; Stop once you get to the node you're looking for
+		//Downside: Might not always find the shortest parth
+		//for (auto o : openList) {
+		//	if (currentTile == o) {	//Not sure if this is right
+		//		endTile = static_cast<Tile*>(currentTile);
+		//	}
+		//}
+
+		//While queue is not empty
+		while (!openList.empty())
+		{
+			//Sort open list based on the F score
+			openList.sort(pf::Node::compareGscore);		//Sort takes in a function object
+
+			currentTile = openList.front();				//Get current work node of the end of the queue
+			openList.pop_front();						//Remove node from the queue
+			closedList.push_back(currentTile);			//Current node is now traversed (mark it as traversed)
+
+			if (currentTile == endTile) break;			//Goal node found so break out
+
+			for (auto c : currentTile->connections) {		//[Loop through it's edges]
+
+				if (c == nullptr) continue;			//What's the purpose of this?
+
+													//Determine if this tile is in any of the lists
+				bool inClosedList = std::find(closedList.begin(), closedList.end(), c->target) != closedList.end();
+				bool inOpenedList = std::find(openList.begin(), openList.end(), c->target) != openList.end();
+
+				//Calculate G score
+				float gScore = currentTile->G + c->cost;
+
+				if (!inClosedList) {	//inClosedList == false
+										//Not already traversed, set score
+					c->target->G = gScore;
+					c->target->parent = currentTile;
+				}
+				else {	//inClosedList == true
+					//Already traversed, check if we now have a lower score
+					if (gScore < c->target->G) {
+						c->target->G = gScore;
+						c->target->parent = currentTile;
+					}
+				}
+
+				if (!inOpenedList && !inClosedList) {
+					//Probably a fail safe
+					//If not in any lists (ie. first run), ad to priority queue
+					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
+				}
+			}
+		}
+
+		//Return the solution
+		Path DjikstraSolution;
+		auto workTile = endTile;
+		while (workTile != nullptr) {
+			DjikstraSolution.push_back(workTile->cPos);
+			workTile = static_cast<Tile*>(workTile->parent);
+		}
+		return DjikstraSolution;
+	}
+
 	Path Map::getAStarPath(Tile * startTile, Tile * endTile) const
 	{
 		//Inits
-		//Tile*		currentTile;
-		//TileList	openList;
-		//TileList	closedList;
 		Node*		currentTile;
 		NodeList	openList;
 		NodeList	closedList;
@@ -282,17 +359,22 @@ namespace pf {
 
 				//Calculate G score
 				float gScore = currentTile->G + c->cost;
-				float hScore;
+				float hScore = pkr::Vector2::distance(currentTile->cPos, endTile->cPos);
+				//float fScore = gScore + hScore;
 
 				if (!inClosedList) {	//inClosedList == false
 					//Not already traversed, set score
 					c->target->G = gScore;
+					c->target->H = hScore;
+					//c->target->F = fScore;
 					c->target->parent = currentTile;
 				}
 				else {	//inClosedList == true
 					//Already traversed, check if we now have a lower score
 					if (gScore < c->target->G) {
 						c->target->G = gScore;
+						c->target->H = hScore;
+						//c->target->F = fScore;
 						c->target->parent = currentTile;
 					}
 				}
@@ -302,28 +384,10 @@ namespace pf {
 					//If not in any lists (ie. first run), ad to priority queue
 					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
 				}
-
-				/*//// OLD CODE ////
-				//Add c.target to openList if not in closedList
-				for (auto traversed : closedList) {
-					if (c->target == static_cast<Node*>(traversed)) {
-						openList.push_back(static_cast<Tile*>(c->target));
-					}
-				}
-
-				//c.target.gScore = currentNode.gScore + c.cost
-				c->target->G = currentTile->G + c->cost;
-
-				//// A* modifications ////
-				c->target->H = pkr::Vector2::distance(c->target->cPos, endTile->cPos);			//n.hscore = distance from n to endnode
-				//c->target->F();		//Might not be required as F() automatically sums G + H	//n.fscore = n.gscore + h.hscore
-				//////////////////////////
-
-				c->target->parent = currentTile;				//c.target.parent = currentNode
-				*/
 			}
 		}
 
+		//Return the solution
 		Path AstarSolution;
 		auto workTile = endTile;
 		while (workTile != nullptr) {
@@ -359,7 +423,10 @@ namespace pf {
 
 		//// If there are start and end nodes then try to A* ////
 		if (m_pathStart != nullptr && m_pathEnd != nullptr) {
-			m_path = getAStarPath(m_pathStart, m_pathEnd);
+			if (m_useAstar)
+				m_path = getAStarPath(m_pathStart, m_pathEnd);
+			else
+				m_path = getDjikstraPath(m_pathStart, m_pathEnd);
 		}
 
 	}
@@ -433,8 +500,15 @@ namespace pf {
 			}
 			ImGui::End();
 			////////////
-#endif
 		}
-
+		//// DEBUG ///
+		ImGui::Begin("Pathfinding Method");
+		const char* buttonText;
+		if (m_useAstar) buttonText = "A* Search";
+		else buttonText = "Dijkstra Search";
+		if (ImGui::Button(buttonText))
+			m_useAstar = !m_useAstar;
+		ImGui::End();
+#endif
 	}
 }

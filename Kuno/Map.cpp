@@ -309,10 +309,10 @@ namespace pf {
 		return DjikstraSolution;
 	}
 
-	Path Map::getAStarPath(Tile * startTile, Tile * endTile) const
+	Path Map::getAStarPath(Tile * startNode, Tile * endNode) const
 	{
 		//Inits
-		Node*		currentTile;
+		Node*		currentNode;
 		NodeList	openList;
 		NodeList	closedList;
 
@@ -324,9 +324,9 @@ namespace pf {
 		}
 
 		//Clear and push start node onto open list
-		startTile->parent = nullptr;		//This will act as the root; will be used when tracing back
-		startTile->G = 0;				//0 because there's no traversal yet
-		openList.push_back(startTile);
+		startNode->parent = nullptr;		//This will act as the root; will be used when tracing back
+		startNode->G = 0;				//0 because there's no traversal yet
+		openList.push_back(startNode);
 
 		//Slight optimization; Stop once you get to the node you're looking for
 		//Downside: Might not always find the shortest parth
@@ -343,13 +343,13 @@ namespace pf {
 			//Sort open list based on the F score
 			openList.sort(pf::Node::compareFscore);		//Sort takes in a function object
 
-			currentTile = openList.front();				//Get current work node of the end of the queue
+			currentNode = openList.front();				//Get current work node of the end of the queue
 			openList.pop_front();						//Remove node from the queue
-			closedList.push_back(currentTile);			//Current node is now traversed (mark it as traversed)
+			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
 
-			if (currentTile == endTile) break;			//Goal node found so break out
+			if (currentNode == endNode) break;			//Goal node found so break out
 
-			for (auto c : currentTile->connections) {		//[Loop through it's edges]
+			for (auto c : currentNode->connections) {		//[Loop through it's edges]
 				
 				if (c == nullptr) continue;			//What's the purpose of this?
 
@@ -358,30 +358,27 @@ namespace pf {
 				bool inOpenedList = std::find(openList.begin(), openList.end(), c->target) != openList.end();
 
 				//Calculate G score
-				float gScore = currentTile->G + c->cost;
-				float hScore = pkr::Vector2::distance(currentTile->pos, endTile->pos);
-				//float fScore = gScore + hScore;
+				float gScore = currentNode->G + c->cost;
+				float hScore = pkr::Vector2::distance(currentNode->pos, endNode->pos);
+				float fScore = gScore + hScore;
 
-				if (!inClosedList) {	//inClosedList == false
-					//Not already traversed, set score
+				if (!inClosedList) {	//inClosedList == false; Not already traversed, set score
 					c->target->G = gScore;
 					c->target->H = hScore;
-					//c->target->F = fScore;
-					c->target->parent = currentTile;
+					c->target->F = fScore;
+					c->target->parent = currentNode;
 				}
-				else {	//inClosedList == true
-					//Already traversed, check if we now have a lower score
+				else {					//inClosedList == true; Already traversed, check if we now have a lower score
 					if (gScore < c->target->G) {
 						c->target->G = gScore;
 						c->target->H = hScore;
-						//c->target->F = fScore;
-						c->target->parent = currentTile;
+						c->target->F = fScore;
+						c->target->parent = currentNode;
 					}
 				}
 
-				if (!inOpenedList && !inClosedList) {
+				if (!inOpenedList && !inClosedList) {	//If not in any lists (ie. first run), ad to priority queue
 					//Probably a fail safe
-					//If not in any lists (ie. first run), ad to priority queue
 					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
 				}
 			}
@@ -389,10 +386,10 @@ namespace pf {
 
 		//Return the solution
 		Path AstarSolution;
-		auto workTile = endTile;
-		while (workTile != nullptr) {
-			AstarSolution.push_back(workTile->pos);
-			workTile = static_cast<Tile*>(workTile->parent);
+		auto workNode = endNode;
+		while (workNode != nullptr) {
+			AstarSolution.push_back(workNode->pos);
+			workNode = static_cast<Tile*>(workNode->parent);
 		}
 		return AstarSolution;
 	}

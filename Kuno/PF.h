@@ -38,7 +38,7 @@ namespace pf {
 		Node*				parent = nullptr;
 		float				G = INFINITY;					//G score should default to infinity?
 		float				H;								//Heuristic score
-		float				F() const { return G + H; }		//Final score
+		float				F;								//Final score
 		pkr::Vector2		pos;							//WORLD COORDINATES
 		pkr::Vector2		cPos;						//CANVAS/ISO COORDINATES
 		std::vector<Edge*>	connections;
@@ -56,7 +56,7 @@ namespace pf {
 
 		//Compare function objects for use with std::list::sort()
 		static bool compareGscore(Node *a, Node *b) { return a->G < b->G; }
-		static bool compareFscore(Node *a, Node *b) { return a->F() < b->F(); }
+		static bool compareFscore(Node *a, Node *b) { return a->F < b->F; }
 	};
 
 }

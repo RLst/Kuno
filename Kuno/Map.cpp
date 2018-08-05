@@ -425,6 +425,8 @@ namespace pf {
 			else
 				m_path = getDjikstraPath(m_pathStart, m_pathEnd);
 		}
+		else
+			m_path.clear();
 
 	}
 
@@ -457,47 +459,54 @@ namespace pf {
 			//// DEBUG ////
 			//Draw the paths; all the node/tile connections
 			ImGui::Begin("Draw edge");
-			for (auto c : t->connections) {
-				pkr::Vector2 start = t->cPos;
-				pkr::Vector2 end = c->target->cPos;
-				//Set line color based on terrain cost
-				if (c->cost == 0.5f) {	
-					renderer->setRenderColour(0, 0, 0, 0.5f);
-				}
-				else if (c->cost == 1.0f) {
-					renderer->setRenderColour(0, 0.60f, 0, 0.5f);
-				}
-				else if (c->cost == 1.3f) {
-					renderer->setRenderColour(0.7f, 0.35f, 0.1f, 0.5f);
-				}
-				else if (c->cost == 2.0f) {
-					renderer->setRenderColour(0.65f, 0.65f, 0.65f, 0.5f);
-				}
-				else if (c->cost == 5.0f) {
-					renderer->setRenderColour(0.2f, 0.4f, 1.0f, 0.5f);
-				}
-				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.3f);
+			int index = 0;
+			for (auto c : t->connections) 
+			{	{
+					//Canvas coords
+					pkr::Vector2 start = t->cPos;
+					pkr::Vector2 end = c->target->cPos;
+					//Set line color based on terrain cost
+					if (c->cost == 0.5f) {
+						renderer->setRenderColour(0, 0, 0);
+					}
+					else if (c->cost == 1.0f) {
+						renderer->setRenderColour(0, 0.60f, 0);
+					}
+					else if (c->cost == 1.3f) {
+						renderer->setRenderColour(0.7f, 0.35f, 0.1f);
+					}
+					else if (c->cost == 2.0f) {
+						renderer->setRenderColour(0.65f, 0.65f, 0.65f);
+					}
+					else if (c->cost == 5.0f) {
+						renderer->setRenderColour(0.2f, 0.4f, 1.0f);
+					}
+					renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
 
-				//Print debugs
-				ImGui::Text("x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", start.x, start.y, end.x, end.y);
-			}
+					//World coords
+					start = t->pos;
+					end = c->target->pos;
+
+					//Print debugs
+					ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
+			} ++index; 	}
 			ImGui::End();
 
-			//Draw the test map A* pathfinding
-			ImGui::Begin("Map's Path");
-			renderer->setRenderColour(0.90f, 0, 0);
-			if (!m_path.empty()) {
-				//Loop through all sets of waypoints and draw the path (isometrically)
-				for (int i = 0; i < m_path.size() - 1; ++i) {
-					auto start = app->CoordConverter()->WorldToCanvas(m_path[i]);
-					auto end = app->CoordConverter()->WorldToCanvas(m_path[i + 1]);
-					renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.2f);
-					ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
-				}
-			}
-			ImGui::End();
-			////////////
 		}
+		//Draw the test map A* pathfinding
+		ImGui::Begin("Map's Path");
+		renderer->setRenderColour(0.90f, 0, 0);
+		if (!m_path.empty()) {
+			//Loop through all sets of waypoints and draw the path (isometrically)
+			for (int i = 0; i < m_path.size() - 1; ++i) {
+				auto start = app->CoordConverter()->WorldToCanvas(m_path[i]);
+				auto end = app->CoordConverter()->WorldToCanvas(m_path[i + 1]);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.3f);
+				ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
+			}
+		}
+		ImGui::End();
+		////////////
 		//// DEBUG ///
 		ImGui::Begin("Pathfinding Method");
 		const char* buttonText;

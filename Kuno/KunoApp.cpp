@@ -301,16 +301,15 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	ImGui::End();
 
 	//// Coord converter ////
-	float viewX = 0, viewY = 0;
 	pkr::Vector2 view = { (float)input->getMouseX(), (float)input->getMouseY() };			//Get Viewport coords
 	pkr::Vector2 canvas = m_coordConverter->ViewportToCanvas(view);							//Convert from Viewport to Canvas
 	pkr::Vector2 world = m_coordConverter->CanvasToWorld(canvas);							//Convert from Canvas to World
 	pkr::Vector2 world2canvas = m_coordConverter->WorldToCanvas(world);						//Convert from World BACK to Canvas
 
 	ImGui::Begin("Coord Converter");
-	ImGui::Text("Viewport > x: %.0f, y: %.0f", viewX, viewY);
+	ImGui::Text("Viewport > x: %.0f, y: %.0f", view.x, view.y);
 	renderer->setRenderColour(1, 0, 0);
-	renderer->drawText(m_font, "VIEW", viewX, viewY);
+	renderer->drawText(m_font, "VIEW", view.x, view.y);
 
 	ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
 	renderer->setRenderColour(0, 1, 0);
@@ -332,7 +331,7 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 		pkr::Vector2 circCanvas = m_coordConverter->ViewportToCanvas(view.x, view.y);
 		float depth = m_depthSorter->getSortDepth(circCanvas.y);
 		m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
-		m_2dRenderer->drawCircle(circCanvas.x, circCanvas.y + 15.0f, 15.0f, depth);
+		m_2dRenderer->drawCircle(circCanvas.x, circCanvas.y, 5.0f, depth);
 		ImGui::Begin("Depth Sorter");
 		ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
 		ImGui::Text("Viewport > x: %.2f, y: %.2f", view.x, view.y);

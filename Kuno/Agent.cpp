@@ -19,7 +19,8 @@ namespace ai {
 	{
 		//Behaviours
 		for (auto behaviour : m_behaviours) {
-			delete behaviour;			//Do the behaviours have to be deleted?
+			if (behaviour != nullptr)
+				delete behaviour;			//Do the behaviours have to be deleted?
 			//behaviour = nullptr;
 		}
 

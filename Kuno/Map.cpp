@@ -209,7 +209,7 @@ namespace pf {
 	}
 
 
-	Tile * Map::findTileFromCpos(pkr::Vector2 & cPos, float searchRadius)
+	Tile * Map::findTileFromPos(pkr::Vector2 & cPos, float searchRadius)
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
@@ -219,7 +219,7 @@ namespace pf {
 		return nullptr;		//Tile not found; return null
 	}
 
-	Tile * Map::findTileFromIpos(pkr::Vector2 & iPos, float searchRadius)
+	Tile * Map::findTileFromCanvasPos(pkr::Vector2 & iPos, float searchRadius)
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
@@ -403,9 +403,9 @@ namespace pf {
 		aie::Input* input = aie::Input::getInstance();
 
 		//// Get Tile that is being mouse over on ////
-		int mousex, mousey; input->getMouseXY(&mousex, &mousey);
-		auto mouseCpos = CoordConverter->ViewportToCanvas(mousex, mousey);
-		m_tileMouseOver = findTileFromIpos(mouseCpos);		//NOTE SURE WHY THIS WORKS
+		auto mView = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
+		auto mCanvas = CoordConverter->ViewportToCanvas(mView);
+		m_tileMouseOver = findTileFromCanvasPos(mCanvas);		//UPDATE! Totally know why it works... NOTE SURE WHY THIS WORKS
 
 		//// Get Start of path (left click) ////
 		if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT))

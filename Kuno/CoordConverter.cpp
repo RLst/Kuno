@@ -20,7 +20,7 @@ namespace util {
 		m_cam(&camera)
 	{}
 
-	pkr::Vector2 CoordConverter::ViewportToCanvas(pkr::Vector2 viewport) const
+	pkr::Vector2 CoordConverter::ViewportToCanvas(pkr::Vector2 viewport) const			//Used to be ViewportToCartesian
 	{
 		//Init vars for return
 		pkr::Vector2 canvas = { 0,0 };
@@ -57,7 +57,7 @@ namespace util {
 
 	pkr::Vector2 CoordConverter::WorldToCanvas(pkr::Vector2 world) const			//Used to be cartesian to isometric
 	{
-		//// WAIT WHAT??? Is CANVAS actually just CARTESIAN
+		//// WAIT WHAT??? Is CANVAS actually just CARTESIAN... NOPE! IT'S CANVAS === ISOMETRIC
 		pkr::Vector2 canvas = { 0,0 };
 		canvas.x = world.x - world.y;
 		canvas.y = (world.x + world.y) / TILE_RATIO;

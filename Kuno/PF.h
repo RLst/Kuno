@@ -39,14 +39,14 @@ namespace pf {
 		float				G = INFINITY;					//G score should default to infinity?
 		float				H;								//Heuristic score
 		float				F() const { return G + H; }		//Final score
-		pkr::Vector2		cPos;							//CARTESIAN WORLD COORDINATES
-		pkr::Vector2		iPos;							//ISOMETRIC WORLD COORDINATES
+		pkr::Vector2		pos;							//WORLD COORDINATES
+		pkr::Vector2		cPos;						//CANVAS/ISO COORDINATES
 		std::vector<Edge*>	connections;
 
 		~Node() { for (auto c : connections) { delete c; } }
-		Node() : G(INFINITY), cPos(0, 0), parent(nullptr) {}								//Default
-		Node(pkr::Vector2 pos) : G(INFINITY), cPos(pos), parent(nullptr) {}					//Overload (nullptr parent)
-		Node(pkr::Vector2 pos, Node* parent) : G(INFINITY), cPos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
+		Node() : G(INFINITY), pos(0, 0), parent(nullptr) {}								//Default
+		Node(pkr::Vector2 pos) : G(INFINITY), pos(pos), parent(nullptr) {}					//Overload (nullptr parent)
+		Node(pkr::Vector2 pos, Node* parent) : G(INFINITY), pos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
 
 		//Connect
 		static void connect(Node *nodeFrom, Node *nodeTo, float cost = 1.0f) {		//Set connection (helper function?)

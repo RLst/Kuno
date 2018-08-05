@@ -28,19 +28,19 @@ namespace ai {
 		float				m_maxForce;
 		//pkr::Vector2		m_force;
 		//pkr::Vector2		m_accel;
-		pkr::Vector2		m_vel;
-		pkr::Vector2		m_cPos;			//px; Cartesian
-		pkr::Vector2		m_iPos;			//px; Isometric
+		//pkr::Vector2		m_vel;
+		pkr::Vector2		m_pos;				//WORLD
+		pkr::Vector2		m_cPos;				//px; CANVAS (Isometric)
 
 		//Circle agent
 		float				m_size;
 		pkr::Vector3		m_colour;
 
 		//Path Following
-		int					m_currentWaypointIndex;	//???Is this right?
-		std::vector<pkr::Vector2*> m_currentPath;
-		float				m_waypointSearchRadius;
-		pkr::Vector2		pathFollowing();
+		//int					m_currentWaypointIndex;	//???Is this right?
+		//std::vector<pkr::Vector2*> m_currentPath;
+		//float				m_waypointSearchRadius;
+		//pkr::Vector2		pathFollowing();
 
 	public:
 		//Agent(const Agent &other);	//Copy
@@ -51,13 +51,12 @@ namespace ai {
 		void				addBehaviour(iBehaviour* behaviour);
 
 		//Translation
-		void				move(const pkr::Vector2 &lSpeed, float deltaTime);			//Linear move (instant vel/accel)
-		void				moveIso(const pkr::Vector2 &lSpeed, float deltaTime);		//Linear move in isometric
+		void				move(const pkr::Vector2 &speed, float deltaTime);				//Move in world coordinates
+		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//Move in pixels on the canvas itself
 
 		//State accessors
-		pkr::Vector2		getCpos() const { return m_cPos; }
-		pkr::Vector2		getIpos() const { return m_iPos; }
-		pkr::Vector2		getVel() const { return m_vel; }
+		pkr::Vector2		getPos() const { return m_pos; }			//Get world position
+		pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
 
 		//Core
 		virtual void		update(float deltaTime);

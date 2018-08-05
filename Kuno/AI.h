@@ -13,7 +13,6 @@
 //For header definitions
 #include <Renderer2D.h>
 #include <Input.h>
-#include "Path.h"
 
 namespace aie {
 	//class Renderer2D;

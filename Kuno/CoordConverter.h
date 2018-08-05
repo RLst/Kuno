@@ -24,8 +24,6 @@ namespace util {
 	{
 	private:
 		Camera*		m_cam;
-		float		m_tileRatio = 2.5f;
-		//float		m_tileRatio = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;
 
 	public:
 		CoordConverter() = default;

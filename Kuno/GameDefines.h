@@ -17,6 +17,8 @@
 
 #define ISO_TILE_WIDTH		255		//px; Width of isometric tile; Must change according to assets
 #define ISO_TILE_HEIGHT		148		//px; Height of isometric tile; Must change according to assets
+//#define ISO_TILE_WIDTH		200		//px; Width of isometric tile; Must change according to assets
+//#define ISO_TILE_HEIGHT		100		//px; Height of isometric tile; Must change according to assets
 const float TILE_RATIO = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;	//Used for Iso<>Cart conversions
 
 namespace pkr {

@@ -41,7 +41,7 @@ namespace pf {
 		//Image width: 100
 		//Image height: 200
 	private:
-		pkr::Vector2	m_originOffset = { 0.5f, 0.18f };		//Change for each tile set
+		pkr::Vector2	m_originOffset = { 0.5f, 0.18f };		//MUST modify for each tile set
 
 	public:
 		//int				ID;
@@ -49,7 +49,7 @@ namespace pf {
 		std::vector<StaticObject*> objects;		//StaticObjects include walls and unmovable objects
 
 		//Terrain and accessibility
-		eTileTerrain	terrain;
+		eTileTerrain			terrain;
 		eTileTraversable		access;
 
 		//NOTE!!!

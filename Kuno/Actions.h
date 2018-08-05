@@ -34,7 +34,7 @@ namespace ai {
 	private:
 		aie::Input*		m_input;
 		float			m_maxForce;
-		pkr::Vector2	m_destination;
+		pkr::Vector2	m_dest;								//WORLD
 		float			m_arriveThreshold = 20.0f;			//Raw inits; adjust accordingly
 		//float			m_arriveSmoothZone = 20.0f;
 	public:
@@ -49,7 +49,7 @@ namespace ai {
 	//This needs to take in a target agent
 	private:
 		Agent *			m_target;
-		pkr::Vector2	m_destination;
+		pkr::Vector2	m_dest;					//WORLD
 		float			m_maxForce;
 	public:
 		Seek(Agent* target, float maxForce = 200.0f);		//Point based if target agent not specified

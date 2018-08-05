@@ -27,7 +27,8 @@ namespace pf {
 		pkr::Vector2	dsOffset = { 0,0 };		//px; depthsortOffset
 
 		//Position
-		pkr::Vector2	cPos, iPos;
+		pkr::Vector2	pos;			//WORLD
+		pkr::Vector2	cPos;			//CANVAS
 		
 	public:
 		//~StaticObject();

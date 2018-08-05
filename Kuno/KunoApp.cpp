@@ -154,7 +154,7 @@ bool KunoApp::setupMap()
 	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	//// Connect tile/nodes in map ////
-	float NodeConnectRadius = 200;		//4 ways: 180, 8 ways: 200
+	float NodeConnectRadius = 250;		//4 ways: 180, 8 ways: 200
 	m_map->connectNodesByDistance(NodeConnectRadius);
 
 	return true;
@@ -289,7 +289,7 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	//// FPS ////
 	char fps[10];
 	sprintf_s(fps, 10, "%i FPS", getFPS());
-	pkr::Vector2 fpsPos = m_coordConverter->ViewportToCartesian(0, 0);		//Stick to the bottom left hand corner of screen
+	pkr::Vector2 fpsPos = m_coordConverter->ViewportToCanvas(0, 0);		//Stick to the bottom left hand corner of screen
 	m_2dRenderer->setRenderColour(0.1f, 0.1f, 0.1f);
 	m_2dRenderer->drawText(m_font, fps, fpsPos.x, fpsPos.y);
 
@@ -302,40 +302,45 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	//// Coord converter ////
 	float viewX = 0, viewY = 0;
-	viewX = (float)input->getMouseX(); viewY = (float)input->getMouseY();										//Get Viewport coords
-	pkr::Vector2 cart = m_coordConverter->ViewportToCartesian(pkr::Vector2(viewX, viewY));		//Convert from Viewport to Cartesian
-	pkr::Vector2 iso = m_coordConverter->CartesianToIsometric(cart);					//Convert from Cartesian to Isometric
-	ImGui::Begin("Coord Converter");
+	pkr::Vector2 view = { (float)input->getMouseX(), (float)input->getMouseY() };			//Get Viewport coords
+	pkr::Vector2 canvas = m_coordConverter->ViewportToCanvas(view);							//Convert from Viewport to Canvas
+	pkr::Vector2 world = m_coordConverter->CanvasToWorld(canvas);							//Convert from Canvas to World
+	pkr::Vector2 world2canvas = m_coordConverter->WorldToCanvas(world);						//Convert from World BACK to Canvas
 
+	ImGui::Begin("Coord Converter");
 	ImGui::Text("Viewport > x: %.0f, y: %.0f", viewX, viewY);
 	renderer->setRenderColour(1, 0, 0);
 	renderer->drawText(m_font, "VIEW", viewX, viewY);
-	//renderer->drawCircle(x, y, 2.5f);
 
-	ImGui::Text("Cartesian > x: %.2f, y: %.2f", cart.x, cart.y);
+	ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
 	renderer->setRenderColour(0, 1, 0);
-	renderer->drawText(m_font, "CART", cart.x, cart.y);
-	//renderer->drawCircle(cart.y, cart.y, 2.5f);
+	renderer->drawText(m_font, "CANVAS", canvas.x, canvas.y);
 
-	ImGui::Text("Isometric > x: %.2f, y: %.2f", iso.x, iso.y);
+	ImGui::Text("World > x: %.2f, y: %.2f", world.x, world.y);
 	renderer->setRenderColour(0, 0, 1);
-	renderer->drawText(m_font, "ISO", iso.x, iso.y, m_depthSorter->getSortDepth(iso.y));
+	renderer->drawText(m_font, "WORLD", world.x, world.y, m_depthSorter->getSortDepth(world.y));
+
+	ImGui::Text("World2Canvas > x: %.2f, y: %.2f", world2canvas.x, world2canvas.y);
+	renderer->setRenderColour(0, 0, 0);
+	renderer->drawText(m_font, "W2C", world2canvas.x, world2canvas.y, m_depthSorter->getSortDepth(world2canvas.y));
 	ImGui::End();
 
 	//// Depth Sorter ////
-	// An orange circle will locate where the cursor is should be depth sorted by the sorter
-	pkr::Vector2 mouseCpos = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
-	pkr::Vector2 mouseIpos = m_coordConverter->ViewportToCartesian(mouseCpos.x, mouseCpos.y);
-	float depth = m_depthSorter->getSortDepth(mouseIpos.y);
-	m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
-	m_2dRenderer->drawCircle(mouseIpos.x, mouseIpos.y + 15.0f, 15.0f, depth);
-	ImGui::Begin("Depth Sorter");
-	ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
-	ImGui::Text("Cartesian > x: %.2f, y: %.2f", mouseCpos.x, mouseCpos.y);
-	ImGui::Text("Isometric > x: %.2f, y: %.2f", mouseIpos.x, mouseIpos.y);
-	ImGui::Text("Depth (Cursor): %.2f", depth);
-	ImGui::Text("Depth Iterator: %f", m_depthSorter->m_depthIterator);
-	ImGui::End();
+	{
+		// An orange circle will locate where the cursor is should be depth sorted by the sorter
+		pkr::Vector2 view = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
+		pkr::Vector2 circCanvas = m_coordConverter->ViewportToCanvas(view.x, view.y);
+		float depth = m_depthSorter->getSortDepth(circCanvas.y);
+		m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
+		m_2dRenderer->drawCircle(circCanvas.x, circCanvas.y + 15.0f, 15.0f, depth);
+		ImGui::Begin("Depth Sorter");
+		ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
+		ImGui::Text("Viewport > x: %.2f, y: %.2f", view.x, view.y);
+		ImGui::Text("Canvas > x: %.2f, y: %.2f", circCanvas.x, circCanvas.y);
+		ImGui::Text("Depth (Cursor): %.2f", depth);
+		ImGui::Text("Depth Iterator: %f", m_depthSorter->m_depthIterator);
+		ImGui::End();
+	}
 
 	//////////////
 	////m_graph->draw(m_2dRenderer);

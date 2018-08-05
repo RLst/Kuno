@@ -55,7 +55,7 @@ float DepthSorter::getSortDepth(float spriteYpos)
 float DepthSorter::getSortDepth(ai::Agent * agent)
 {
 	//Get agent's isometric y position and then pass through first getSortDepth
-	float agentYpos = agent->getCpos().y;
+	float agentYpos = agent->getPos().y;
 
 	return getSortDepth(agentYpos);		//Hopefully the agent's Y position corresponds to it's sprite Y position too
 }

@@ -58,7 +58,7 @@ namespace pf {
 
 				//// Position tile ////
 				//newTile->ID = ID;
-				newTile->cPos = m_mapOffset + pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
+				newTile->pos = m_mapOffset + pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
 				//// Set the base //// (The ground/floor)
 				switch (pkr::Random(0, 5))
@@ -113,31 +113,31 @@ namespace pf {
 					{
 					case 0: //HugeBlock
 						newObject->tex = TM->getTexture("HugeBlock");
-						newObject->cPos = newTile->cPos;
+						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 75.0f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
 					case 1: //Column
 						newObject->tex = TM->getTexture("Column");
-						newObject->cPos = newTile->cPos;
+						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 19.f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
 					case 2:	//ColumnBlocks
 						newObject->tex = TM->getTexture("ColumnBlocks");
-						newObject->cPos = newTile->cPos;
+						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 19.f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
 					case 3:	//SmallBlock
 						newObject->tex = TM->getTexture("SmallBlock");
-						newObject->cPos = newTile->cPos;
+						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 19.f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
 					case 4:	//LargeBlock
 						newObject->tex = TM->getTexture("LargeBlock");
-						newObject->cPos = newTile->cPos;
+						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 39.f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
@@ -170,7 +170,7 @@ namespace pf {
 				if (!t2->objects.empty()) continue;
 
 				//// Find the distance between the two tiles ////
-				float distanceBetween = t1->cPos.distance(t2->cPos);
+				float distanceBetween = t1->pos.distance(t2->pos);
 
 				//If they're within range then connect taking into account terrain
 				if (distanceBetween < connectRadius) {
@@ -213,7 +213,7 @@ namespace pf {
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
-			if (pkr::Vector2::distance(t->cPos, cPos) < searchRadius)
+			if (pkr::Vector2::distance(t->pos, cPos) < searchRadius)
 				return t;
 		}
 		return nullptr;		//Tile not found; return null
@@ -223,7 +223,7 @@ namespace pf {
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
-			if (pkr::Vector2::distance(t->iPos, iPos) < searchRadius)
+			if (pkr::Vector2::distance(t->cPos, iPos) < searchRadius)
 				return t;
 		}
 		return nullptr;		//Tile not found; return null
@@ -303,7 +303,7 @@ namespace pf {
 		Path DjikstraSolution;
 		auto workTile = endTile;
 		while (workTile != nullptr) {
-			DjikstraSolution.push_back(workTile->cPos);
+			DjikstraSolution.push_back(workTile->pos);
 			workTile = static_cast<Tile*>(workTile->parent);
 		}
 		return DjikstraSolution;
@@ -359,7 +359,7 @@ namespace pf {
 
 				//Calculate G score
 				float gScore = currentTile->G + c->cost;
-				float hScore = pkr::Vector2::distance(currentTile->cPos, endTile->cPos);
+				float hScore = pkr::Vector2::distance(currentTile->pos, endTile->pos);
 				//float fScore = gScore + hScore;
 
 				if (!inClosedList) {	//inClosedList == false
@@ -391,7 +391,7 @@ namespace pf {
 		Path AstarSolution;
 		auto workTile = endTile;
 		while (workTile != nullptr) {
-			AstarSolution.push_back(workTile->cPos);
+			AstarSolution.push_back(workTile->pos);
 			workTile = static_cast<Tile*>(workTile->parent);
 		}
 		return AstarSolution;
@@ -404,7 +404,7 @@ namespace pf {
 
 		//// Get Tile that is being mouse over on ////
 		int mousex, mousey; input->getMouseXY(&mousex, &mousey);
-		auto mouseCpos = CoordConverter->ViewportToCartesian(mousex, mousey);
+		auto mouseCpos = CoordConverter->ViewportToCanvas(mousex, mousey);
 		m_tileMouseOver = findTileFromIpos(mouseCpos);		//NOTE SURE WHY THIS WORKS
 
 		//// Get Start of path (left click) ////
@@ -438,10 +438,10 @@ namespace pf {
 		for (auto t : m_tiles) 
 		{
 			//Convert cartesian to isometric, readying the sprite for drawing
-			t->iPos = app->CoordConverter()->CartesianToIsometric(t->cPos);
+			t->cPos = app->CoordConverter()->WorldToCanvas(t->pos);
 
 			//Calculate render depth
-			auto depth = app->DepthSorter()->getSortDepth(t->iPos.y);
+			auto depth = app->DepthSorter()->getSortDepth(t->cPos.y);
 
 			//Set tile colour
 			if (t == m_tileMouseOver)		renderer->setRenderColour(0.75f, 0.75f, 0.75f);			//Mouse over
@@ -461,23 +461,23 @@ namespace pf {
 			//Draw the paths; all the node/tile connections
 			ImGui::Begin("Draw edge");
 			for (auto c : t->connections) {
-				pkr::Vector2 start = t->iPos;
-				pkr::Vector2 end = c->target->iPos;
+				pkr::Vector2 start = t->cPos;
+				pkr::Vector2 end = c->target->cPos;
 				//Set line color based on terrain cost
 				if (c->cost == 0.5f) {	
-					renderer->setRenderColour(0, 0, 0);
+					renderer->setRenderColour(0, 0, 0, 0.5f);
 				}
 				else if (c->cost == 1.0f) {
-					renderer->setRenderColour(0, 0.60f, 0);
+					renderer->setRenderColour(0, 0.60f, 0, 0.5f);
 				}
 				else if (c->cost == 1.3f) {
-					renderer->setRenderColour(0.7f, 0.35f, 0.1f);
+					renderer->setRenderColour(0.7f, 0.35f, 0.1f, 0.5f);
 				}
 				else if (c->cost == 2.0f) {
-					renderer->setRenderColour(0.65f, 0.65f, 0.65f);
+					renderer->setRenderColour(0.65f, 0.65f, 0.65f, 0.5f);
 				}
 				else if (c->cost == 5.0f) {
-					renderer->setRenderColour(0.2f, 0.4f, 1.0f);
+					renderer->setRenderColour(0.2f, 0.4f, 1.0f, 0.5f);
 				}
 				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.3f);
 
@@ -492,8 +492,8 @@ namespace pf {
 			if (!m_path.empty()) {
 				//Loop through all sets of waypoints and draw the path (isometrically)
 				for (int i = 0; i < m_path.size() - 1; ++i) {
-					auto start = app->CoordConverter()->CartesianToIsometric(m_path[i]);
-					auto end = app->CoordConverter()->CartesianToIsometric(m_path[i + 1]);
+					auto start = app->CoordConverter()->WorldToCanvas(m_path[i]);
+					auto end = app->CoordConverter()->WorldToCanvas(m_path[i + 1]);
 					renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.2f);
 					ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
 				}

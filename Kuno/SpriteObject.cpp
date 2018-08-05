@@ -35,8 +35,8 @@ void SpriteObject::draw(aie::Renderer2D * renderer)
 {
 	auto app = KunoApp::Instance();
 	auto depth = app->DepthSorter()->getSortDepth(this);
-	m_iPos = app->CoordConverter()->CartesianToIsometric(m_cPos);
-	renderer->drawSprite(m_tex, m_iPos.x, m_iPos.y, 0, 0, 0, depth);
+	m_cPos = app->CoordConverter()->WorldToCanvas(m_pos);
+	renderer->drawSprite(m_tex, m_cPos.x, m_cPos.y, 0, 0, 0, depth);
 	//auto currentFrame = getCurrentAnimationFrame();
 	//renderer->drawSprite(currentFrame, m_pos.x + m_offset.x, m_pos.y + m_offset.y, 0, 0, 0, depth, 0,0);
 }

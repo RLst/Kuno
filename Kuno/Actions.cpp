@@ -27,19 +27,19 @@ namespace ai {
 		//Keyboard controls
 		if (m_input->isKeyDown(aie::INPUT_KEY_UP))
 		{
-			agent->moveIso(pkr::Vector2(0.0f, m_maxForce), deltaTime );
+			agent->moveOnCanvas(pkr::Vector2(0.0f, m_maxForce), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_DOWN))
 		{
-			agent->moveIso(pkr::Vector2(0.0f, -m_maxForce), deltaTime );
+			agent->moveOnCanvas(pkr::Vector2(0.0f, -m_maxForce), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_LEFT))
 		{
-			agent->moveIso(pkr::Vector2(-m_maxForce, 0.0f), deltaTime );
+			agent->moveOnCanvas(pkr::Vector2(-m_maxForce, 0.0f), deltaTime );
 		}
 		if (m_input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		{
-			agent->moveIso(pkr::Vector2(m_maxForce, 0.0f), deltaTime );
+			agent->moveOnCanvas(pkr::Vector2(m_maxForce, 0.0f), deltaTime );
 		}
 
 		return eResult::SUCCESS;
@@ -93,21 +93,28 @@ namespace ai {
 		auto app = KunoApp::Instance();
 
 		//Get current cartesian mouse position
-		int mousex, mousey; m_input->getMouseXY(&mousex, &mousey);
-		auto mCpos = app->CoordConverter()->ViewportToCartesian(mousex, mousey);
+		auto mView = pkr::Vector2(m_input->getMouseX(), m_input->getMouseY());
+		auto mCanvas = app->CoordConverter()->ViewportToCanvas(mView);
+		auto mWorld = app->CoordConverter()->CanvasToWorld(mCanvas);
 
 		//(CONDITION) Retrieve new destination if any (later make this retrieve a new waypoint/node)
 		if (m_input->wasMouseButtonReleased(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-			m_destination = mCpos;	//(ACTION)
+			m_dest = mWorld;	//(ACTION)
 		}
 
 		//(CONDITION) If the agent is not at the target position, then move towards it
-		if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
+		if (pkr::Vector2::distance(agent->getPos(), m_dest) > m_arriveThreshold) {
 			//(ACTION) Seek towards target
-			auto seek = pkr::Vector2::normalise(m_destination - agent->getPos()) * m_maxForce;
+			auto seek = pkr::Vector2::normalise(m_dest - agent->getPos()) * m_maxForce;
 			agent->move(seek, deltaTime);
 			return RUNNING;
 		}
+		//if (pkr::Vector2::distance(agent->getPos(), m_destination) > m_arriveThreshold) {
+		//	//(ACTION) Seek towards target
+		//	auto seek = pkr::Vector2::normalise(m_destination - agent->getPos()) * m_maxForce;
+		//	agent->move(seek, deltaTime);
+		//	return RUNNING;
+		//}
 		//Else; Agent has arrived, stop moving. Success
 		else {
 			return SUCCESS;

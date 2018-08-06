@@ -18,11 +18,11 @@ namespace ai {
 	Agent::~Agent()
 	{
 		//Behaviours
-		for (auto behaviour : m_behaviours) {
-			if (behaviour != nullptr)
-				delete behaviour;			//Do the behaviours have to be deleted?
-			//behaviour = nullptr;
-		}
+		//for (auto behaviour : m_behaviours) {
+		//	if (behaviour != nullptr)
+		//		delete behaviour;			//Do the behaviours have to be deleted?
+		//	//behaviour = nullptr;
+		//}
 
 		/*
 		//Path
@@ -52,23 +52,38 @@ namespace ai {
 		m_pos += KunoApp::Instance()->CoordConverter()->CanvasToWorld(speed) * deltaTime;
 	}
 
+	void Agent::seek(const pkr::Vector2 & target, float deltaTime)
+	{
+		auto seek = pkr::Vector2::normalise(target - m_pos) * m_maxForce;
+		move(seek, deltaTime);
+	}
+
 	/*
-	pkr::Vector2 Agent::pathFollowing()
+	pkr::Vector2 Agent::followPath()
 	{
 		//Clear target way point
 		auto targetPoint = pkr::Vector2();
 
 		//If there is an available path
-		if (!m_currentPath.empty()) {
-			//Get the way points
-			auto workingPath = m_currentPath;
+		if (!m_path->empty()) {
 
-			targetPoint = workingPath[m_currentWaypointIndex];
+			targetPoint = m_path->at(m_currentWaypointIndex);
 
 			//If agent has arrived at a waypoint
-			if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) {
+			if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) 
+			{
+				if (m_isPatrolling) {
+					
+				}
+				else {
+					++m_currentWaypointIndex;
+					//Stop if reached the end
+					if (m_currentWaypointIndex > m_path->size())
+						m_currentWaypointIndex = m_path->size() - 1;
+				}
+
 				++m_currentWaypointIndex;
-				if (m_currentWaypointIndex >= workingPath.size()) {
+				if (m_currentWaypointIndex >= m_path->size()) {
 					m_currentWaypointIndex = workingPath.size() - 1;
 				}
 			}

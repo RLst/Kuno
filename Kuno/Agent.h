@@ -37,10 +37,12 @@ namespace ai {
 		pkr::Vector3		m_colour;
 
 		//Path Following
-		//int					m_currentWaypointIndex;	//???Is this right?
-		//std::vector<pkr::Vector2*> m_currentPath;
-		//float				m_waypointSearchRadius;
-		//pkr::Vector2		pathFollowing();
+		int					m_currentWaypointID;	//???Is this right?
+		pf::Path*			m_path;
+		float				m_pathRadius;
+		//bool				m_isPatrolling = false;
+		//int				m_pathingDirection;
+		//pkr::Vector2		followPath();
 
 	public:
 		//Agent(const Agent &other);	//Copy
@@ -49,14 +51,22 @@ namespace ai {
 
 		//Behaviours
 		void				addBehaviour(iBehaviour* behaviour);
+		//iBehaviour		getBehaviour(iBehaviour* behaviour);	//How to get ie. the FollowPath behaviour so I can change it's working path?
 
 		//Translation
 		void				move(const pkr::Vector2 &speed, float deltaTime);				//Move in world coordinates
 		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//Move in pixels on the canvas itself
+		void				seek(const pkr::Vector2 &target, float deltaTime);
 
 		//State accessors
 		pkr::Vector2		getPos() const { return m_pos; }			//Get world position
 		pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
+		float				getMaxSpeed() const { return m_maxForce; }
+
+		//Pathfinding
+		pf::Path*			getPath() const { return m_path; }
+		void				setPath(pf::Path* path) { m_path = path; }
+		//void				setPatrolling(bool patrolState) { m_isPatrolling = patrolState; }
 
 		//Core
 		virtual void		update(float deltaTime);

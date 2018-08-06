@@ -320,7 +320,7 @@ namespace pf {
 		for (auto t : m_tiles ) {
 			t->parent = nullptr;
 			t->G = INFINITY;
-			//H as well?
+			t->F = INFINITY;
 		}
 
 		//Clear and push start node onto open list
@@ -425,9 +425,13 @@ namespace pf {
 			else
 				m_path = getDjikstraPath(m_pathStart, m_pathEnd);
 		}
-		else
+		else {
 			m_path.clear();
+		}
 
+		//// DEBUG //// Swap between algorithms
+		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
+			m_useAstar = !m_useAstar;
 	}
 
 	void Map::draw(aie::Renderer2D * renderer)
@@ -509,6 +513,7 @@ namespace pf {
 		////////////
 		//// DEBUG ///
 		ImGui::Begin("Pathfinding Method");
+		ImGui::Text("Press space bar to toggle between methods");
 		const char* buttonText;
 		if (m_useAstar) buttonText = "A* Search";
 		else buttonText = "Dijkstra Search";

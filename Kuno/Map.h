@@ -63,6 +63,9 @@ public:
 	Path				getDjikstraPath(Tile* startTile, Tile* endTile) const;
 	Path				getAStarPath(Tile* startTile, Tile* endTile) const;
 
+	//Accessors
+	Path				getPath() const { return m_path; }
+
 	//Core
 	void				update(float deltaTime);					//Handles mouse over tiles etc
 	void				draw(aie::Renderer2D* renderer);			//Only draw tiles, walls and static objects

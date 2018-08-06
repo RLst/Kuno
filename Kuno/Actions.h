@@ -5,6 +5,7 @@
 
 #pragma once
 #include "AI.h"
+#include "PF.h"
 #include <pkr/Vector2.h>
 
 namespace aie {
@@ -19,7 +20,7 @@ namespace ai {
 	namespace action {
 
 	//// CONTROL AGENT BY INPUT ////
-	class KeyboardControl : public iBehaviour		//Keyboard controller
+	class KeyboardControl : public iBehaviour	//DEBUG
 	{
 	private:
 		aie::Input*		m_input;
@@ -29,47 +30,93 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class MouseControl : public iBehaviour
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	class MouseControl : public iBehaviour		//DEBUG
 	{
 	private:
 		aie::Input*		m_input;
-		float			m_maxForce;
+		float			m_maxSpeed;
 		pkr::Vector2	m_dest;								//WORLD
-		float			m_arriveThreshold = 20.0f;			//Raw inits; adjust accordingly
-		//float			m_arriveSmoothZone = 20.0f;
+		float			m_arriveThreshold = 5.0f;			//Raw inits; adjust accordingly
 	public:
 		MouseControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 500.0f);
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	class MouseLeftClicked : public iBehaviour	//DEBUG
+	{
+		aie::Input*		m_input;
+	public:
+		MouseLeftClicked(aie::Input * input = aie::Input::getInstance()) :
+			m_input(input) {}
+		eResult execute(Agent* agent, float deltaTime) override 
+		{
+			if (m_input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
+				return SUCCESS;
+			}
+			else
+				return FAILURE;
+		}
+	};
 
-
-	//// ENEMY AI Behaviours ////
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class Seek : public iBehaviour 
 	{
 	//This needs to take in a target agent
 	private:
-		Agent *			m_target;
-		pkr::Vector2	m_dest;					//WORLD
-		float			m_maxForce;
+		Agent *			m_target = nullptr;
+		pkr::Vector2	m_dest;										//WORLD
+		float			m_maxSpeed;
+		float			m_arriveRadius = 20.0f;					//Raw inits; adjust accordingly
 	public:
-		Seek(Agent* target, float maxForce = 200.0f);		//Point based if target agent not specified
-		//SeekAction(pkr::Vector2 destination, float maxLspeed = 200.0f);
-		//~SeekAction() { delete m_target; }									//Destructor
+		~Seek() = default;											//Destructor
+		Seek(Agent* target, float maxSpeed = 200.0f);				//Point based if target agent not specified
+		Seek(pkr::Vector2 destination, float maxSpeed = 200.0f);
+
+		//Modify
+		void			setTarget(Agent* agent) { m_target = agent; }
+		void			setDestination(pkr::Vector2 destination) { m_dest = destination; }
+		void			setMaxSpeed(float maxSpeed) { m_maxSpeed = maxSpeed; }
+		void			setArriveRadius(float arriveRadius) { m_arriveRadius = arriveRadius; }
+
+		//Core
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	class SeekToPoint : public iBehaviour
+	{
+	private:
 
-	////// Pathfinding ////
-	//class PatrolSequence : public aComposite
-	//{
-	//	//If agent doesn't not have a patrol path
-	//		//Get path
-	//			//Look through paths
-	//	//else
-	//		//Seek towards next path step/node
-	//};
+	public:
+		~SeekToPoint() = default;
+		SeekToPoint() = default;
+	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	class SeekAndArrive : public iBehaviour
+	{
+		Agent *			m_target = nullptr;
+		pkr::Vector2	m_dest;										//WORLD
+		float			m_maxSpeed;
+		float			m_slowZone = 50.0f;			//radius; raw; adjust accordingly
+		float			m_arriveZone = 2.0f;		//radius, raw; adjust accordingly
+	public:
+		~SeekAndArrive() = default;											//Destructor
+		SeekAndArrive(Agent* target, float maxSpeed = 200.0f);				//Point based if target agent not specified
+		SeekAndArrive(pkr::Vector2 destination, float maxSpeed = 200.0f);
 
+		//Modify
+		void			setTarget(Agent* agent) { m_target = agent; }
+		void			setDestination(pkr::Vector2 destination) { m_dest = destination; }
+		void			setMaxSpeed(float maxSpeed) { m_maxSpeed = maxSpeed; }
+		void			setArriveRadius(float arriveRadius) { m_slowZone = arriveRadius; }
+
+		//Core
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class Idle : public iBehaviour
 	{
 	private:
@@ -80,17 +127,19 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-	class Patrol : public iBehaviour		//MAYBE THIS NEEDS TO BE A COMPOSITE???
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	class PatrolPath : public iBehaviour		//MAYBE THIS NEEDS TO BE A COMPOSITE???
 	{
 	private:
 		Agent *			m_pathAgent;
 		float			m_maxForce;
 	public:
-		Patrol(Agent* pathObject, float maxForce = 200);
-		~Patrol() { delete m_pathAgent; }
+		PatrolPath(Agent* pathObject, float maxForce = 200);
+		~PatrolPath() { delete m_pathAgent; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class Attack : public iBehaviour
 	{
 	private:
@@ -98,6 +147,29 @@ namespace ai {
 	public:
 		eResult	execute(Agent *agent, float deltaTime) override;
 	};
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	class GetNextPathWaypoint : public iBehaviour 
+	{
+	private:
+		pf::Path*		m_path;		//?
 
+	public:
+
+		
+	};
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	class FollowPath : public iBehaviour
+	{
+	private:
+		//pf::Path*		m_path;
+		int				m_currentWaypoint = 0;			//std::vector index; -1 means pathfollowing has not started yet
+		float			m_pathRadius;	//Should make a class Path and put this together; To smoooth the pathfinding a bit
+	public:
+		FollowPath();
+		~FollowPath() = default;
+
+		eResult			execute(Agent *agent, float deltaTime) override;
+	};
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 }

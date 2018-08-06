@@ -59,4 +59,15 @@ namespace pf {
 		static bool compareFscore(Node *a, Node *b) { return a->F < b->F; }
 	};
 
+	//struct Path 
+	//{
+	//private:
+	//	std::vector<pkr::Vector2> m_path;
+	//public:
+	//	std::vector<pkr::Vector2> getPath() const { return m_path; }
+	//	float		m_radius;
+	//	//operator [] (int index) { return m_path.at(index); }
+
+	//};
+
 }

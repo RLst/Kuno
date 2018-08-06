@@ -162,8 +162,9 @@ bool KunoApp::setupMap()
 
 bool KunoApp::setupPlayer()
 {
-	m_player = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.75f, 0));
-	m_mouseControlled = new ai::Agent(50.0f, pkr::Vector3(0.25f, 0.05f, 0.75f));
+	m_player = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.75f, 0));
+	m_mouseControlled = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.05f, 0.75f));
+	m_pathFollower = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.9f, 0));
 
 	return true;
 }
@@ -185,15 +186,27 @@ bool KunoApp::setupEnemies()
 
 bool KunoApp::setupAI()
 {
-	
-	//Setup player
+	//////////////////////////
+	//// Setup player(s) ////
+	////////////////////////
 	aie::Input* input = aie::Input::getInstance();
 	m_player->addBehaviour(new ai::action::KeyboardControl(input, 500.0f));
 	m_mouseControlled->addBehaviour(new ai::action::MouseControl(input));
 
+	//Path follower
+	auto FollowPath = new ai::Sequence();					//Make a FollowPathSequence
+	//FollowPathOnClick->addChild(new ai::action::MouseLeftClicked());
+	FollowPath->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
+	m_pathFollower->addBehaviour(FollowPath);				//Add FollowPath sequence to path follower
+	auto TestPath = static_cast<std::vector<pkr::Vector2>*>(&m_map->getPath());					//WTF???		
+	m_pathFollower->setPath(TestPath);						//Point path follower's path to map's path
+
+	/////////////////////////
 	//// Setup enemies /////
+	///////////////////////
 	auto samurai = new ai::Selector();			//Root node for a melee samurai
 	auto samuraiBow = new ai::Selector();		//Root node for a ranged samurai
+	auto lord = new ai::Selector();
 
 	//Set critical values
 	float meleeAttackRange = 300.0f;
@@ -202,14 +215,15 @@ bool KunoApp::setupAI()
 	float viewRange = 90.0f;			//View cone of the enemies
 	
 	//// Setup some core AI composites ////
-	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_mouseControlled, meleeAttackRange);
+	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_mouseControlled, sightDistance);
 	ai::action::Attack* samuraiAttack = new ai::action::Attack();
+	ai::action::SeekAndArrive* samuraiSeekAndArrive = new ai::action::SeekAndArrive(m_mouseControlled, 200.0f);
 	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_mouseControlled, 200.f);
 
 	//Melee Samurai
 	ai::composite::AttackSequence* samuraiAttackSeq = new ai::composite::AttackSequence();
 	samuraiAttackSeq->addChild(samuraiWithinRangeCond);					//WithinRange
-	samuraiAttackSeq->addChild(samuraiSeek);		//TEST
+	samuraiAttackSeq->addChild(samuraiSeekAndArrive);							//TEST
 	//samuraiAttackSeq->addChild(samuraiAttack);						//Attack
 
 	for (auto e : m_enemyList)
@@ -236,6 +250,8 @@ void KunoApp::update(float deltaTime) {
 	//Update the agents
 	m_player->update(deltaTime);
 	m_mouseControlled->update(deltaTime);
+
+	m_pathFollower->update(deltaTime);
 	for (auto enemy : m_enemyList)
 		enemy->update(deltaTime);
 
@@ -267,6 +283,9 @@ void KunoApp::draw() {
 	//Draw agents
 	m_player->draw(m_2dRenderer);				//Keyboard
 	m_mouseControlled->draw(m_2dRenderer);		//Mouse
+	
+	m_pathFollower->draw(m_2dRenderer);
+
 	for (auto enemy : m_enemyList) {			//Enemies
 		enemy->draw(m_2dRenderer);
 	}

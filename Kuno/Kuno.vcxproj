@@ -194,7 +194,6 @@
     <ClInclude Include="GameDefines.h" />
     <ClInclude Include="KunoApp.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Path.h" />
     <ClInclude Include="PF.h" />
     <ClInclude Include="SpriteObject.h" />
     <ClInclude Include="StaticObject.h" />

@@ -57,6 +57,7 @@ protected:
 	//Agents
 	ai::Agent*					m_player;
 	ai::Agent*					m_mouseControlled;
+	ai::Agent*					m_pathFollower;
 	std::vector<ai::Agent*>		m_enemyList;
 
 	//Map and pathfinding
@@ -105,4 +106,5 @@ public:
 
 	//DEBUGS
 	void DEBUG(aie::Renderer2D* renderer);			//Print important values and test stuff
+	pf::Map*					getMap() const { return m_map; }
 };

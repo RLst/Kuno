@@ -94,9 +94,6 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Path.h">
-      <Filter>PF</Filter>
-    </ClInclude>
     <ClInclude Include="KunoApp.h" />
     <ClInclude Include="DepthSorter.h">
       <Filter>Util</Filter>

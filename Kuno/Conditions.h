@@ -16,7 +16,7 @@ namespace ai {
 
 	namespace condition {
 
-
+		//////////////////////////////////////////////////////////////////////////////////////////////////
 	class WithinRangeCondition : public iBehaviour 
 	{
 		//Checks if an agent is within range
@@ -30,6 +30,7 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class OutOfAttackingRange : public iBehaviour
 	{
 		//NOTE! maybe just use WithinRangeCondition() with different range and NotDecorator() instead
@@ -44,7 +45,7 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class InViewCondition : public iBehaviour
 	{
 		//Checks to see if an agent is within view of target agent

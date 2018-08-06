@@ -58,6 +58,7 @@ namespace ai {
 		for (auto child : m_childBehaviours) {
 			if (child->execute(agent, deltaTime) == eResult::FAILURE)
 				return eResult::FAILURE;
+			//What if it returns RUNNING?
 		}
 		return eResult::SUCCESS;
 	}

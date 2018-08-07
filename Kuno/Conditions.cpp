@@ -37,5 +37,17 @@ namespace ai {
 		return eResult();
 	}
 
+	HealthLowCond::HealthLowCond(Agent * subject) :
+		m_subject(subject), m_lowHealthThreshold(15)
+	{}
+
+	eResult HealthLowCond::execute(Agent * agent, float deltaTime)
+	{
+		if (agent->getHealth() < m_lowHealthThreshold)
+			return eResult::SUCCESS;
+		else
+			return eResult::FAILURE;
+	}
+
 	}
 }

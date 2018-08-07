@@ -16,7 +16,7 @@ namespace ai {
 
 	namespace condition {
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 	class WithinRangeCondition : public iBehaviour 
 	{
 		//Checks if an agent is within range
@@ -63,6 +63,16 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	class HealthLowCond : public iBehaviour
+	{
+	protected:
+		Agent * m_subject;
+		float	m_lowHealthThreshold = 20;
+	public:
+		HealthLowCond(Agent* subject);
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
 
 	}
 }

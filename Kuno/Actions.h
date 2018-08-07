@@ -171,5 +171,16 @@ namespace ai {
 		eResult			execute(Agent *agent, float deltaTime) override;
 	};
 	/////////////////////////////////////////////////////////////////////////////////////////////////
+	class Flee : public iBehaviour
+	{
+	protected:
+		Agent *		m_target;
+		float		m_fleeRange;
+	public:
+		Flee(Agent* target, float fleeRange);
+		eResult			execute(Agent *agent, float deltaTime) override;
+	};
+
+
 	}
 }

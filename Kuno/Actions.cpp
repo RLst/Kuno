@@ -198,5 +198,23 @@ namespace ai {
 			return eResult::FAILURE;
 	}
 
+	Flee::Flee(Agent * target, float fleeRange) :
+		m_target(target), m_fleeRange(fleeRange)
+	{}
+
+	eResult Flee::execute(Agent * agent, float deltaTime)
+	{
+		if (pkr::Vector2::distance(m_target->getPos(), agent->getPos()) < m_fleeRange) {
+			//Within flee range so flee from target
+			auto flee = pkr::Vector2::normalise(agent->getPos() - m_target->getPos());
+			agent->move(flee * agent->getMaxSpeed(), deltaTime);
+			//agent->seek(-flee, deltaTime);
+			return eResult::SUCCESS;
+		}
+		else
+			return eResult::FAILURE;
+	}
+
+
 }
 }

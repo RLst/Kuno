@@ -66,8 +66,8 @@ namespace pf {
 	//public:
 	//	std::vector<pkr::Vector2> getPath() const { return m_path; }
 	//	float		m_radius;
-	//	//operator [] (int index) { return m_path.at(index); }
-
+	//	operator [] (int index) { return m_path.at(index); }
 	//};
+
 
 }

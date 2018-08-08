@@ -91,7 +91,7 @@ void KunoApp::shutdown() {
 	delete m_font;
 
 	//Agents
-	delete m_player;
+	delete m_Player;
 	for (auto enemy : m_enemyList)
 		delete enemy;
 
@@ -162,9 +162,10 @@ bool KunoApp::setupMap()
 
 bool KunoApp::setupPlayer()
 {
-	m_player = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.75f, 0));
-	m_mouseControlled = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.05f, 0.75f));
-	m_pathFollower = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.9f, 0));
+	m_Player = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.75f, 0));
+	m_MouseGent = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.05f, 0.75f));
+	m_PathFollowGent = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.9f, 0));
+	m_FleeGent = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.4f, 0.4f));
 
 	return true;
 }
@@ -190,16 +191,23 @@ bool KunoApp::setupAI()
 	//// Setup player(s) ////
 	////////////////////////
 	aie::Input* input = aie::Input::getInstance();
-	m_player->addBehaviour(new ai::action::KeyboardControl(input, 500.0f));
-	m_mouseControlled->addBehaviour(new ai::action::MouseControl(input));
+	m_Player->addBehaviour(new ai::action::KeyboardControl(input, 500.0f));
+	m_MouseGent->addBehaviour(new ai::action::MouseControl(input));
+
+	//Flee//
+	auto fleeSeq = new ai::Sequence();
+	fleeSeq->addChild(new ai::condition::HealthLowCond(m_FleeGent));
+	fleeSeq->addChild(new ai::action::Flee(m_Player, 300.0f));
+	m_FleeGent->addBehaviour(fleeSeq);
 
 	//Path follower
-	auto FollowPath = new ai::Sequence();					//Make a FollowPathSequence
+	auto followPathSeq = new ai::Sequence();					//Make a FollowPathSequence
 	//FollowPathOnClick->addChild(new ai::action::MouseLeftClicked());
-	FollowPath->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
-	m_pathFollower->addBehaviour(FollowPath);				//Add FollowPath sequence to path follower
+	followPathSeq->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
+	m_PathFollowGent->addBehaviour(followPathSeq);				//Add FollowPath sequence to path follower
+	//m_PathFollowGent->addBehaviour(new ai::action::FollowPath());
 	auto TestPath = static_cast<std::vector<pkr::Vector2>*>(&m_map->getPath());					//WTF???		
-	m_pathFollower->setPath(TestPath);						//Point path follower's path to map's path
+	m_PathFollowGent->setPath(TestPath);						//Point path follower's path to map's path
 
 	/////////////////////////
 	//// Setup enemies /////
@@ -215,10 +223,10 @@ bool KunoApp::setupAI()
 	float viewRange = 90.0f;			//View cone of the enemies
 	
 	//// Setup some core AI composites ////
-	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_mouseControlled, sightDistance);
+	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_MouseGent, sightDistance);
 	ai::action::Attack* samuraiAttack = new ai::action::Attack();
-	ai::action::SeekAndArrive* samuraiSeekAndArrive = new ai::action::SeekAndArrive(m_mouseControlled, 200.0f);
-	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_mouseControlled, 200.f);
+	ai::action::SeekAndArrive* samuraiSeekAndArrive = new ai::action::SeekAndArrive(m_MouseGent, 200.0f);
+	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_MouseGent, 200.f);
 
 	//Melee Samurai
 	ai::composite::AttackSequence* samuraiAttackSeq = new ai::composite::AttackSequence();
@@ -248,10 +256,11 @@ void KunoApp::update(float deltaTime) {
 	m_map->update(deltaTime);		//Handle the tile tinting
 	
 	//Update the agents
-	m_player->update(deltaTime);
-	m_mouseControlled->update(deltaTime);
+	m_Player->update(deltaTime);
+	m_MouseGent->update(deltaTime);
+	m_PathFollowGent->update(deltaTime);
+	m_FleeGent->update(deltaTime);
 
-	m_pathFollower->update(deltaTime);
 	for (auto enemy : m_enemyList)
 		enemy->update(deltaTime);
 
@@ -281,10 +290,10 @@ void KunoApp::draw() {
 	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 
 	//Draw agents
-	m_player->draw(m_2dRenderer);				//Keyboard
-	m_mouseControlled->draw(m_2dRenderer);		//Mouse
-	
-	m_pathFollower->draw(m_2dRenderer);
+	m_Player->draw(m_2dRenderer);				//Keyboard
+	m_MouseGent->draw(m_2dRenderer);		//Mouse
+	m_PathFollowGent->draw(m_2dRenderer);
+	m_FleeGent->draw(m_2dRenderer);
 
 	for (auto enemy : m_enemyList) {			//Enemies
 		enemy->draw(m_2dRenderer);

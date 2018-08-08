@@ -55,9 +55,10 @@ protected:
 	aie::Font*					m_font;
 
 	//Agents
-	ai::Agent*					m_player;
-	ai::Agent*					m_mouseControlled;
-	ai::Agent*					m_pathFollower;
+	ai::Agent*					m_Player;
+	ai::Agent*					m_MouseGent;
+	ai::Agent*					m_PathFollowGent;
+	ai::Agent*					m_FleeGent;
 	std::vector<ai::Agent*>		m_enemyList;
 
 	//Map and pathfinding

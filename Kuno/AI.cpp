@@ -27,8 +27,8 @@ namespace ai {
 	}
 	eResult Selector::execute(Agent * agent, float deltaTime)
 	{
-		auto child = m_pendingChild;
-		m_pendingChild = nullptr;
+		auto child = m_runningChild;
+		m_runningChild = nullptr;
 
 		//If there weren't any pending child from the last frame
 		if (child == nullptr)
@@ -42,7 +42,7 @@ namespace ai {
 			if (result == FAILURE)
 				++child;	//Next child
 			if (result == RUNNING) {
-				m_pendingChild = child;
+				m_runningChild = child;
 				return RUNNING;
 			}
 		}
@@ -75,30 +75,43 @@ namespace ai {
 
 	eResult Sequence::execute(Agent * agent, float deltaTime)
 	{
-		auto child = m_pendingChild;
-		m_pendingChild = nullptr;
+		//auto child = m_runningChild;
+		//m_runningChild = nullptr;
 
-		//If there weren't any pending child from the last frame
-		if (child == nullptr)
-			child = m_childBehaviours.front();
+		////If there weren't any pending child from the last frame
+		//if (child == nullptr)
+		//	child = m_childBehaviours.front();
 
-		for (auto it = m_childBehaviours.begin(); it != m_childBehaviours.end(), ++it) {
+		////for (auto it = m_childBehaviours.begin(); it != m_childBehaviours.end(), it++) {
 
-		}
+		////}
 
-		while (child <= m_childBehaviours.back()) {		//BUG!!!
+		for (auto child : m_childBehaviours) {
 			auto result = child->execute(agent, deltaTime);
 
-			if (result == FAILURE)
-				return FAILURE;
-			if (result == SUCCESS)
-				child++;	//Run next child		//POTENTIAL BUG!!!
-			if (result == RUNNING) {
-				m_pendingChild = child;
+			if (result == FAILURE) return FAILURE;
+			else if (result == SUCCESS)
+				child++;
+			else if (result == RUNNING) {
+				m_runningChild = child;
 				return RUNNING;
 			}
-		} 
-		return eResult::SUCCESS;		//Right now it's just skipping straight to SUCCESS
+		}
+		return SUCCESS;
+
+		//while (child <= m_childBehaviours.back()) {		//BUG!!!
+		//	auto result = child->execute(agent, deltaTime);
+
+		//	if (result == FAILURE)
+		//		return FAILURE;
+		//	if (result == SUCCESS)
+		//		child++;	//Run next child		//POTENTIAL BUG!!!
+		//	if (result == RUNNING) {
+		//		m_runningChild = child;
+		//		return RUNNING;
+		//	}
+		//} 
+		//return eResult::SUCCESS;		//Right now it's just skipping straight to SUCCESS
 
 		////AND node; Returns SUCCESS only if ALL children return SUCCESS
 		//for (auto child : m_childBehaviours) {

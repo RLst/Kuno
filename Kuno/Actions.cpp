@@ -171,12 +171,12 @@ namespace ai {
 		//Try using the agent's member path
 		//How do you get a path from here?
 		auto map = KunoApp::Instance()->getMap();
-		agent->setPath(&map->getPath());
+		agent->setPath(map->getPath());
 
 		//If there is an available path
 		if (!agent->getPath()->empty()) {
 			//If the agent has reached the end of the path
-			if (m_currentWaypoint > agent->getPath()->size()) {
+			if (m_currentWaypoint > agent->getPath()->size()-1) {
 				m_currentWaypoint = 0;	//Reset waypoint
 				return eResult::SUCCESS;
 			}
@@ -193,6 +193,7 @@ namespace ai {
 					return eResult::RUNNING;
 				}
 			}
+
 		}
 		else	//Path unavailable; FAIL!
 			return eResult::FAILURE;

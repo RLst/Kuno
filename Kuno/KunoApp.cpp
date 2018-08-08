@@ -205,9 +205,17 @@ bool KunoApp::setupAI()
 	//FollowPathOnClick->addChild(new ai::action::MouseLeftClicked());
 	followPathSeq->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
 	m_PathFollowGent->addBehaviour(followPathSeq);				//Add FollowPath sequence to path follower
-	//m_PathFollowGent->addBehaviour(new ai::action::FollowPath());
-	auto TestPath = static_cast<std::vector<pkr::Vector2>*>(&m_map->getPath());					//WTF???		
-	m_PathFollowGent->setPath(TestPath);						//Point path follower's path to map's path
+	
+																//m_PathFollowGent->addBehaviour(new ai::action::FollowPath());
+	//auto TestPath = static_cast<std::vector<pkr::Vector2>*>(&m_map->getPath());					//WTF???	
+	//m_PathFollowGent->setPath(TestPath);						//Point path follower's path to map's path
+
+																//auto TestPath = new pf::Path();
+	//TestPath->push_back(pkr::Vector2(100, 100));
+	//TestPath->push_back(pkr::Vector2(200, 100));
+	//TestPath->push_back(pkr::Vector2(300, 100));
+	//TestPath->push_back(pkr::Vector2(400, 100));
+	//TestPath->push_back(pkr::Vector2(500, 100));
 
 	/////////////////////////
 	//// Setup enemies /////

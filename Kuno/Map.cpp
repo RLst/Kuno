@@ -429,9 +429,13 @@ namespace pf {
 			m_path.clear();
 		}
 
-		//// DEBUG //// Swap between algorithms
+		//// DEBUG //// 
+		//Swap between pathing algorithms
 		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 			m_useAstar = !m_useAstar;
+		//Toggle connection draws
+		if (input->wasKeyPressed(aie::INPUT_KEY_C))
+			m_drawConnections = !m_drawConnections;
 	}
 
 	void Map::draw(aie::Renderer2D * renderer)
@@ -462,38 +466,41 @@ namespace pf {
 #ifdef _DEBUG
 			//// DEBUG ////
 			//Draw the paths; all the node/tile connections
-			ImGui::Begin("Draw edge");
-			int index = 0;
-			for (auto c : t->connections) 
-			{	{
-					//Canvas coords
-					pkr::Vector2 start = t->cPos;
-					pkr::Vector2 end = c->target->cPos;
-					//Set line color based on terrain cost
-					if (c->cost == 0.5f) {
-						renderer->setRenderColour(0, 0, 0);
-					}
-					else if (c->cost == 1.0f) {
-						renderer->setRenderColour(0, 0.60f, 0);
-					}
-					else if (c->cost == 1.3f) {
-						renderer->setRenderColour(0.7f, 0.35f, 0.1f);
-					}
-					else if (c->cost == 2.0f) {
-						renderer->setRenderColour(0.65f, 0.65f, 0.65f);
-					}
-					else if (c->cost == 5.0f) {
-						renderer->setRenderColour(0.2f, 0.4f, 1.0f);
-					}
-					renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
+			ImGui::Begin("Path connections");
+			if (m_drawConnections) 
+			{
+				int index = 0;
+				for (auto c : t->connections) 
+				{	{
+						//Canvas coords
+						pkr::Vector2 start = t->cPos;
+						pkr::Vector2 end = c->target->cPos;
+						//Set line color based on terrain cost
+						if (c->cost == 0.5f) {
+							renderer->setRenderColour(0, 0, 0);
+						}
+						else if (c->cost == 1.0f) {
+							renderer->setRenderColour(0, 0.60f, 0);
+						}
+						else if (c->cost == 1.3f) {
+							renderer->setRenderColour(0.7f, 0.35f, 0.1f);
+						}
+						else if (c->cost == 2.0f) {
+							renderer->setRenderColour(0.65f, 0.65f, 0.65f);
+						}
+						else if (c->cost == 5.0f) {
+							renderer->setRenderColour(0.2f, 0.4f, 1.0f);
+						}
+						renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
 
-					//World coords
-					start = t->pos;
-					end = c->target->pos;
+						//World coords
+						start = t->pos;
+						end = c->target->pos;
 
-					//Print debugs
-					ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
-			} ++index; 	}
+						//Print debugs
+						ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
+				} ++index; 	}
+			}
 			ImGui::End();
 
 		}

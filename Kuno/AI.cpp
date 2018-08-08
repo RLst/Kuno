@@ -75,34 +75,38 @@ namespace ai {
 
 	eResult Sequence::execute(Agent * agent, float deltaTime)
 	{
-		//auto child = m_pendingChild;
-		//m_pendingChild = nullptr;
+		auto child = m_pendingChild;
+		m_pendingChild = nullptr;
 
-		////If there weren't any pending child from the last frame
-		//if (child == nullptr)
-		//	child = m_childBehaviours.front();
+		//If there weren't any pending child from the last frame
+		if (child == nullptr)
+			child = m_childBehaviours.front();
 
-		//while (child <= m_childBehaviours.back()) {
-		//	auto result = child->execute(agent, deltaTime);
+		for (auto it = m_childBehaviours.begin(); it != m_childBehaviours.end(), ++it) {
 
-		//	if (result == FAILURE)
-		//		return FAILURE;
-		//	if (result == SUCCESS)
-		//		++child;	//Run next child
-		//	if (result == RUNNING) {
-		//		m_pendingChild = child;
-		//		return RUNNING;
-		//	}
-		//} 
-		//return eResult::SUCCESS;
-
-		//AND node; Returns SUCCESS only if ALL children return SUCCESS
-		for (auto child : m_childBehaviours) {
-			if (child->execute(agent, deltaTime) == eResult::FAILURE)
-				return eResult::FAILURE;
-			//What if it returns RUNNING?
 		}
-		return eResult::SUCCESS;
+
+		while (child <= m_childBehaviours.back()) {		//BUG!!!
+			auto result = child->execute(agent, deltaTime);
+
+			if (result == FAILURE)
+				return FAILURE;
+			if (result == SUCCESS)
+				child++;	//Run next child		//POTENTIAL BUG!!!
+			if (result == RUNNING) {
+				m_pendingChild = child;
+				return RUNNING;
+			}
+		} 
+		return eResult::SUCCESS;		//Right now it's just skipping straight to SUCCESS
+
+		////AND node; Returns SUCCESS only if ALL children return SUCCESS
+		//for (auto child : m_childBehaviours) {
+		//	if (child->execute(agent, deltaTime) == eResult::FAILURE)
+		//		return eResult::FAILURE;
+		//	//What if it returns RUNNING?
+		//}
+		//return eResult::SUCCESS;
 	}
 
 	//Decorators

@@ -161,14 +161,17 @@ namespace ai {
 	class FollowPath : public iBehaviour
 	{
 	private:
-		//pf::Path*		m_path;
+		pf::Path*		m_path;
 		int				m_currentWaypoint = 0;			//std::vector index; -1 means pathfollowing has not started yet
-		float			m_pathRadius;	//Should make a class Path and put this together; To smoooth the pathfinding a bit
+		float			m_pathRadius;					//Should make a class Path and put this together; To smoooth the pathfinding a bit
 	public:
 		FollowPath();
 		~FollowPath() = default;
 
 		eResult			execute(Agent *agent, float deltaTime) override;
+
+		//Test
+		void			setPath(pf::Path* path) { m_path = path; }
 	};
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	class Flee : public iBehaviour

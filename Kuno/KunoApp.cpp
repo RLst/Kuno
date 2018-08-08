@@ -172,7 +172,7 @@ bool KunoApp::setupPlayer()
 
 bool KunoApp::setupEnemies()
 {
-	static int numOfEnemies = 20;
+	static int numOfEnemies = 2;
 
 	//Load in a bunch of blue seekers
 	pkr::Vector3 seekerColour = pkr::Vector3(0.75f, 0.25f, 0);

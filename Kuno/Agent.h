@@ -27,7 +27,7 @@ namespace ai {
 
 		//// ESSENTIALS ////
 		//Basic transform
-		float				m_maxForce = 100;
+		float				m_maxForce = 400;
 		//pkr::Vector2		m_force;
 		//pkr::Vector2		m_accel;
 		//pkr::Vector2		m_vel;

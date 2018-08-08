@@ -174,14 +174,14 @@ namespace ai {
 		agent->setPath(map->getPath());
 
 		//If there is an available path
-		if (!agent->getPath()->empty()) {
+		if (!agent->getPath().empty()) {
 			//If the agent has reached the end of the path
-			if (m_currentWaypoint > agent->getPath()->size()-1) {
+			if (m_currentWaypoint > agent->getPath().size()-1) {
 				m_currentWaypoint = 0;	//Reset waypoint
 				return eResult::SUCCESS;
 			}
 			else {
-				auto waypoint = agent->getPath()->at(m_currentWaypoint);	//Get target waypoint
+				auto waypoint = agent->getPath()[m_currentWaypoint];	//Get target waypoint
 
 				//Seek towards it
 				if (pkr::Vector2::distance(waypoint, agent->getPos()) > m_pathRadius) {

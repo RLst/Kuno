@@ -37,7 +37,7 @@ namespace ai {
 		//Path Following
 		int					m_currentWaypointID;	//???Is this right?
 		pf::Path			m_path;
-		float				m_pathRadius;
+		float				m_pathRadius = 5.0f;
 		//bool				m_isPatrolling = false;
 		//int				m_pathingDirection;
 		//pkr::Vector2		followPath();
@@ -49,8 +49,6 @@ namespace ai {
 		//// EXTRA TRAITS ////
 		float				m_health = 10;
 		//float				m_;
-
-
 
 	public:
 		//Agent(const Agent &other);	//Copy
@@ -72,7 +70,7 @@ namespace ai {
 		float				getHealth() const { return m_health; }
 
 		//Pathfinding
-		pf::Path*		getPath()  { return &m_path; }
+		pf::Path			getPath() const { return m_path; }
 		void				setPath(pf::Path path) { m_path = path;	}
 		//void				setPatrolling(bool patrolState) { m_isPatrolling = patrolState; }
 

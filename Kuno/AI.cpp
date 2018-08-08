@@ -27,12 +27,33 @@ namespace ai {
 	}
 	eResult Selector::execute(Agent * agent, float deltaTime)
 	{
-		//OR node; Returns SUCCESS if any child returns SUCCESS
-		for (auto child : m_childBehaviours) {
-			if (child->execute(agent, deltaTime) == eResult::SUCCESS)
-				return eResult::SUCCESS;
+		auto child = m_pendingChild;
+		m_pendingChild = nullptr;
+
+		//If there weren't any pending child from the last frame
+		if (child == nullptr)
+			child = m_childBehaviours.front();
+
+		while (child <= m_childBehaviours.back()) {
+			auto result = child->execute(agent, deltaTime);
+
+			if (result == SUCCESS)
+				return SUCCESS;
+			if (result == FAILURE)
+				++child;	//Next child
+			if (result == RUNNING) {
+				m_pendingChild = child;
+				return RUNNING;
+			}
 		}
-		return eResult::FAILURE;
+		return FAILURE;
+
+		//OR node; Returns SUCCESS if any child returns SUCCESS
+		//for (auto child : m_childBehaviours) {
+		//	if (child->execute(agent, deltaTime) == eResult::SUCCESS)
+		//		return eResult::SUCCESS;
+		////}
+		//return eResult::FAILURE;
 	}
 
 	eResult SelectorRandom::execute(Agent * agent, float deltaTime)
@@ -54,6 +75,27 @@ namespace ai {
 
 	eResult Sequence::execute(Agent * agent, float deltaTime)
 	{
+		//auto child = m_pendingChild;
+		//m_pendingChild = nullptr;
+
+		////If there weren't any pending child from the last frame
+		//if (child == nullptr)
+		//	child = m_childBehaviours.front();
+
+		//while (child <= m_childBehaviours.back()) {
+		//	auto result = child->execute(agent, deltaTime);
+
+		//	if (result == FAILURE)
+		//		return FAILURE;
+		//	if (result == SUCCESS)
+		//		++child;	//Run next child
+		//	if (result == RUNNING) {
+		//		m_pendingChild = child;
+		//		return RUNNING;
+		//	}
+		//} 
+		//return eResult::SUCCESS;
+
 		//AND node; Returns SUCCESS only if ALL children return SUCCESS
 		for (auto child : m_childBehaviours) {
 			if (child->execute(agent, deltaTime) == eResult::FAILURE)

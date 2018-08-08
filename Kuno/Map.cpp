@@ -388,7 +388,7 @@ namespace pf {
 		Path AstarSolution;
 		auto workNode = endNode;
 		while (workNode != nullptr) {
-			AstarSolution.push_back(workNode->pos);
+			AstarSolution.insert(AstarSolution.begin(), workNode->pos);		//Push to the front instead; FollowAgent() starts from the rear
 			workNode = static_cast<Tile*>(workNode->parent);
 		}
 		return AstarSolution;

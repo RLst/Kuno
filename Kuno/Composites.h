@@ -7,7 +7,7 @@ namespace ai { namespace composite {
 	class FollowPathSequence : public Sequence
 	{
 	private:
-		pf::Path	m_path;		//The path the agent will be following
+		pf::Path	m_path;		//The path the agent could be following
 
 	public:
 		FollowPathSequence() = default;

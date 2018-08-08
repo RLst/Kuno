@@ -21,20 +21,18 @@ namespace ai {
 	////Agents
 	class Agent
 	{
+		friend class		iBehaviour;
 	protected:
 		std::vector<iBehaviour*> m_behaviours;
 
-		//Some basic transformation data
-		float				m_maxForce;
+		//// ESSENTIALS ////
+		//Basic transform
+		float				m_maxForce = 100;
 		//pkr::Vector2		m_force;
 		//pkr::Vector2		m_accel;
 		//pkr::Vector2		m_vel;
 		pkr::Vector2		m_pos;				//WORLD
 		pkr::Vector2		m_cPos;				//px; CANVAS (Isometric)
-
-		//Circle agent
-		float				m_size;
-		pkr::Vector3		m_colour;
 
 		//Path Following
 		int					m_currentWaypointID;	//???Is this right?
@@ -44,6 +42,16 @@ namespace ai {
 		//int				m_pathingDirection;
 		//pkr::Vector2		followPath();
 
+		//Circle agent
+		float				m_size;
+		pkr::Vector3		m_colour;
+
+		//// EXTRA TRAITS ////
+		float				m_health = 10;
+		//float				m_;
+
+
+
 	public:
 		//Agent(const Agent &other);	//Copy
 		virtual ~Agent();				//Destructor 
@@ -51,7 +59,6 @@ namespace ai {
 
 		//Behaviours
 		void				addBehaviour(iBehaviour* behaviour);
-		//iBehaviour		getBehaviour(iBehaviour* behaviour);	//How to get ie. the FollowPath behaviour so I can change it's working path?
 
 		//Translation
 		void				move(const pkr::Vector2 &speed, float deltaTime);				//Move in world coordinates
@@ -62,6 +69,7 @@ namespace ai {
 		pkr::Vector2		getPos() const { return m_pos; }			//Get world position
 		pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
 		float				getMaxSpeed() const { return m_maxForce; }
+		float				getHealth() const { return m_health; }
 
 		//Pathfinding
 		pf::Path*			getPath() const { return m_path; }

@@ -166,7 +166,7 @@ namespace ai {
 		int				m_currentWaypoint = 0;			//std::vector index; -1 means pathfollowing has not started yet
 		float			m_pathRadius;					//Should make a class Path and put this together; To smoooth the pathfinding a bit
 	public:
-		FollowPath(float pathRadius = 20.0f);
+		FollowPath(float pathRadius = 10.0f);
 		~FollowPath() = default;
 
 		eResult			execute(Agent *agent, float deltaTime) override;

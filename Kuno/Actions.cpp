@@ -183,7 +183,8 @@ namespace ai {
 			if (!agent->getPath().empty()) {
 				//If the agent has reached the end of the path
 				if (m_currentWaypoint > agent->getPath().size() - 1) {
-					m_currentWaypoint = 0;	//Reset waypoint
+					//m_currentWaypoint = agent->getPath().size();	//Stop following path
+					m_currentWaypoint = 0;	//Reset waypoint??
 					return eResult::SUCCESS;
 				}
 				else {
@@ -263,6 +264,5 @@ namespace ai {
 		//Set agents path as the new path
 		}
 
-
-	}
+}
 }

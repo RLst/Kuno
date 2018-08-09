@@ -60,6 +60,12 @@ public:
 	//Find tile
 	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = 100.f);	//Get the nearest tile using an CARTESIAN coord
 	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = 100.f);	//Get the nearest tile using an ISOMETRIC coord
+	
+	//Clamps
+	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);		//Returns a clamped WORLD position 
+	Tile*				clampwithinMapRetTILE(const pkr::Vector2 &Wpos);			//Returns the nearest tile after clamping
+
+	//Pathfinding
 	Path				getDjikstraPath(Tile* startTile, Tile* endTile) const;
 	Path				getAStarPath(Tile* startTile, Tile* endTile) const;
 

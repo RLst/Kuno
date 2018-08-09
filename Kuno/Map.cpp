@@ -228,6 +228,24 @@ namespace pf {
 		return nullptr;		//Tile not found; return null
 	}
 
+	pkr::Vector2 Map::clampWithinMapRetWORLD(const pkr::Vector2 & pos)
+	{
+		auto clamped = pos;
+
+		//// Simple clamp ////
+		clamped.x = pkr::Clamp(pos.x, 0.0f, static_cast<float>(m_width * WORLD_WIDTH));
+		clamped.y = pkr::Clamp(pos.y, 0.0f, static_cast<float>(m_depth * WORLD_DEPTH));
+
+		return clamped;
+	}
+
+	Tile * Map::clampwithinMapRetTILE(const pkr::Vector2 & Wpos)
+	{
+		auto clamped = clampWithinMapRetWORLD(Wpos);
+		auto clampedTile = findTileFromPos(clamped);
+		return clampedTile;
+	}
+
 	Path Map::getDjikstraPath(Tile * startTile, Tile * endTile) const
 	{
 		//Inits

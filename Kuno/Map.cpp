@@ -208,7 +208,7 @@ namespace pf {
 	}
 
 
-	Tile * Map::findTileFromPos(pkr::Vector2 & cPos, float searchRadius)
+	Tile * Map::findTileFromPos(const pkr::Vector2 & cPos, float searchRadius)
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
@@ -218,7 +218,7 @@ namespace pf {
 		return nullptr;		//Tile not found; return null
 	}
 
-	Tile * Map::findTileFromCanvasPos(pkr::Vector2 & iPos, float searchRadius)
+	Tile * Map::findTileFromCanvasPos(const pkr::Vector2 & iPos, float searchRadius)
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position

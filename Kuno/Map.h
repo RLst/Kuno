@@ -58,9 +58,8 @@ public:
 	//void				addTile(Tile* tile);
 
 	//Find tile
-	Tile*				findTileFromPos(pkr::Vector2 &cPos, float searchRadius = 100.f);	//Get the nearest tile using an CARTESIAN coord
-	Tile*				findTileFromCanvasPos(pkr::Vector2 &iPos, float searchRadius = 100.f);	//Get the nearest tile using an ISOMETRIC coord
-
+	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = 100.f);	//Get the nearest tile using an CARTESIAN coord
+	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = 100.f);	//Get the nearest tile using an ISOMETRIC coord
 	Path				getDjikstraPath(Tile* startTile, Tile* endTile) const;
 	Path				getAStarPath(Tile* startTile, Tile* endTile) const;
 

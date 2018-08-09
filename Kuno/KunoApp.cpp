@@ -154,7 +154,7 @@ bool KunoApp::setupMap()
 	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	//// Connect tile/nodes in map ////
-	float NodeConnectRadius = 250;		//4 ways: 180, 8 ways: 200
+	float NodeConnectRadius = 280;		//4 ways: 180, 8 ways: 200
 	m_map->connectNodesByDistance(NodeConnectRadius);
 
 	return true;

@@ -69,6 +69,12 @@ namespace ai {
 			return eResult::SUCCESS;
 		}
 
+		//// Idle ////
+		eResult Idle::execute(Agent * agent, float deltaTime)
+		{
+			return eResult();	//Do nothing!
+		}
+
 		//// Patrol ////
 		PatrolPath::PatrolPath(Agent * pathObject, float maxForce)
 		{

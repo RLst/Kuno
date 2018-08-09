@@ -29,10 +29,9 @@ namespace pf {
 
 	}
 
-	Map::Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset) :
+	Map::Map(int mapWidth, int mapDepth) :
 		m_width(mapWidth),
-		m_depth(mapDepth),
-		m_mapOffset(mapOffset)
+		m_depth(mapDepth)
 	{
 		buildRandomMap(m_width, m_depth);
 	}
@@ -58,7 +57,7 @@ namespace pf {
 
 				//// Position tile ////
 				//newTile->ID = ID;
-				newTile->pos = m_mapOffset + pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
+				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
 				//// Set the base //// (The ground/floor)
 				switch (pkr::Random(0, 5))

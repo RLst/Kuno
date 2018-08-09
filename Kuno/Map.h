@@ -27,7 +27,7 @@ class Map
 	//The map draws the tile according to the tile's offset and height etc
 
 private:
-	pkr::Vector2		m_mapOffset = { 0, 0 };	//Default starts at 0,0
+	//pkr::Vector2		m_mapCoffset = { 0, 0 };	//MAP SHOULD ALWAYS START AT 0,0!!! Default starts at 0,0
 	int					m_width = 0;			//Columns
 	int					m_depth = 0;			//Rows
 
@@ -48,7 +48,7 @@ public:
 	Map() = default;
 	~Map();			//Delete everything in the layers
 
-	Map(int mapWidth, int mapDepth, pkr::Vector2 mapOffset);
+	Map(int mapWidth, int mapDepth);
 
 	//Create maps
 	void				buildRandomMap(int width, int depth);

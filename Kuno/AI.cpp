@@ -142,10 +142,12 @@ namespace ai {
 	eResult TimeoutDecorator::execute(Agent * agent, float deltaTime)
 	{
 		m_timeout -= deltaTime;
-		if (m_timeout > 0)
-			return eResult::FAILURE;
-		m_timeout = m_duration;
-		//Returns result of child unless it times out
+		if (m_timeout > 0) {
+			m_timeout = m_duration;		//Resets the timeout
+			return eResult::RUNNING;
+			//return eResult::FAILURE;
+		}
+		//Returns result of child unless it times out ie: runs the child for duration set
 		return m_child->execute(agent, deltaTime);
 	}
 

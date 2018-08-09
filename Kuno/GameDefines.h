@@ -27,11 +27,13 @@ namespace pkr {
 	template <typename T>
 	T Clamp(const T& value, const T& min, const T& max)
 	{
+		if (min > max) assert(false);	//If min and max have invalid values
+
 		if (value < min)
 			return min;
 		else if (value > max)
 			return max;
-		//Else it is already clamped OR the min/max values are invalid :P
+		//Else it is already within the min-max (OR the min/max values are invalid :P)
 		return value;
 	}
 

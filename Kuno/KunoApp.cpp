@@ -197,7 +197,7 @@ bool KunoApp::setupAI()
 	//Flee//
 	auto fleeSeq = new ai::Sequence();
 	fleeSeq->addChild(new ai::condition::HealthLowCond(m_FleeGent));
-	fleeSeq->addChild(new ai::action::Flee(m_Player, 300.0f));
+	fleeSeq->addChild(new ai::action::Flee(m_Player, m_map));
 	m_FleeGent->addBehaviour(fleeSeq);
 
 	//Path follower

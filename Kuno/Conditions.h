@@ -76,6 +76,14 @@ namespace ai {
 
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////
-	class ReachedEndOfPath;
+	class ReachedEndOfPath : public iBehaviour/*, public FollowPath*/
+	{
+	protected:
+		
+
+	public:
+		eResult execute(Agent* agent, float deltaTime) override;
+
+	};
 
 }

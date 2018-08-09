@@ -59,7 +59,7 @@ namespace ai {
 		void				addBehaviour(iBehaviour* behaviour);
 
 		//Translation
-		void				move(const pkr::Vector2 &speed, float deltaTime);				//Move in world coordinates
+		void				move(const pkr::Vector2 &speed, float deltaTime);				//Make this private later; Move in world coordinates
 		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//Move in pixels on the canvas itself
 		void				seek(const pkr::Vector2 &target, float deltaTime);
 
@@ -69,7 +69,8 @@ namespace ai {
 		float				getMaxSpeed() const { return m_maxForce; }
 		float				getHealth() const { return m_health; }
 
-		//Pathfinding
+		////Pathfinding
+		bool				pathTo(const pf::Path &path, float deltaTime);		//Returns true if reached the end of the path?
 		pf::Path			getPath() const { return m_path; }
 		void				setPath(pf::Path path) { m_path = path;	}
 		//void				setPatrolling(bool patrolState) { m_isPatrolling = patrolState; }

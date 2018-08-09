@@ -6,6 +6,7 @@
 #pragma once
 #include "AI.h"
 #include "PF.h"
+#include "Map.h"
 #include <pkr/Vector2.h>
 
 namespace aie {
@@ -165,7 +166,7 @@ namespace ai {
 		int				m_currentWaypoint = 0;			//std::vector index; -1 means pathfollowing has not started yet
 		float			m_pathRadius;					//Should make a class Path and put this together; To smoooth the pathfinding a bit
 	public:
-		FollowPath();
+		FollowPath(float pathRadius = 20.0f);
 		~FollowPath() = default;
 
 		eResult			execute(Agent *agent, float deltaTime) override;
@@ -177,11 +178,16 @@ namespace ai {
 	class Flee : public iBehaviour
 	{
 	protected:
+		pf::Map*	m_map;
+		pf::Path	m_path;
 		Agent *		m_target;
 		float		m_fleeRange;
 	public:
-		Flee(Agent* target, float fleeRange);
-		eResult			execute(Agent *agent, float deltaTime) override;
+		Flee() = default;
+		Flee(Agent* target, pf::Map* map, float fleeRange = 400);
+		//Flee(Agent* target, float fleeRange);
+		eResult		execute(Agent *agent, float deltaTime) override;
+		void		getPath(Agent* agent, pkr::Vector2 destination);
 	};
 
 

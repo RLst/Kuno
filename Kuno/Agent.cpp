@@ -94,6 +94,7 @@ namespace ai {
 	}
 	*/
 
+
 	void Agent::update(float deltaTime)
 	{
 		//Execute all behaviours

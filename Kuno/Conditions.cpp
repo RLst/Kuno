@@ -50,4 +50,11 @@ namespace ai {
 	}
 
 	}
+	eResult ReachedEndOfPath::execute(Agent * agent, float deltaTime)
+	{
+		//If the agent has reached the end of the path then return success
+
+
+		return eResult();
+	}
 }

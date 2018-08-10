@@ -13,7 +13,7 @@ namespace ai {
 	Agent::Agent(float circleSize, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
 		m_size(circleSize),
 		m_colour(colour),
-		m_pos(startingPos) {}
+		pos(startingPos) {}
 
 	Agent::~Agent()
 	{
@@ -44,17 +44,17 @@ namespace ai {
 		//vel = vel + accel * deltaTime;
 		//pos = pos + vel * deltaTime;
 
-		m_pos += speed * deltaTime;
+		pos += speed * deltaTime;
 	}
 
 	void Agent::moveOnCanvas(const pkr::Vector2 & speed, float deltaTime)
 	{
-		m_pos += KunoApp::Instance()->CoordConverter()->CanvasToWorld(speed) * deltaTime;
+		pos += KunoApp::Instance()->CoordConverter()->CanvasToWorld(speed) * deltaTime;
 	}
 
 	void Agent::seek(const pkr::Vector2 & target, float deltaTime)
 	{
-		auto seek = pkr::Vector2::normalise(target - m_pos) * m_maxForce;
+		auto seek = pkr::Vector2::normalise(target - pos) * m_maxSpeed;
 		move(seek, deltaTime);
 	}
 
@@ -95,6 +95,12 @@ namespace ai {
 	*/
 
 
+	bool Agent::followPath(float deltaTime)
+	{
+
+		return false;
+	}
+
 	void Agent::update(float deltaTime)
 	{
 		//Execute all behaviours
@@ -106,7 +112,7 @@ namespace ai {
 	void Agent::draw(aie::Renderer2D * renderer)
 	{
 		auto app = KunoApp::Instance();
-		m_cPos = app->CoordConverter()->WorldToCanvas(m_pos);			//Convert agents coords to isometric
+		m_cPos = app->CoordConverter()->WorldToCanvas(pos);			//Convert agents coords to isometric
 		auto depth = app->DepthSorter()->getSortDepth(m_cPos.y);					//Sort drawing depth of agent
 
 		renderer->setRenderColour(m_colour.r, m_colour.g, m_colour.b);

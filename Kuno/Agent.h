@@ -18,37 +18,60 @@ namespace ai {
 
 	class iBehaviour;
 
+	//enum class eEnemyState
+	//{
+	//	PATROL,
+	//	SUSPICIOUS,
+	//	ALERT
+	//};
+
+	//enum class ePlayerState 
+	//{
+	//	NORMAL,
+	//	STEALTH
+	//};
+
 	////Agents
 	class Agent
 	{
+	private:
 		friend class		iBehaviour;
+
 	protected:
 		std::vector<iBehaviour*> m_behaviours;
 
-		//// ESSENTIALS ////
-		//Basic transform
-		float				m_maxForce = 400;
+		pkr::Vector2		m_cPos;				//px; CANVAS (Isometric)
 		//pkr::Vector2		m_force;
 		//pkr::Vector2		m_accel;
 		//pkr::Vector2		m_vel;
-		pkr::Vector2		m_pos;				//WORLD
-		pkr::Vector2		m_cPos;				//px; CANVAS (Isometric)
+		float				m_health = 10;
 
-		//Path Following
+		//// PATHFINDING ////
 		int					m_currentWaypointID;	//???Is this right?
 		pf::Path			m_path;
 		float				m_pathRadius = 5.0f;
-		//bool				m_isPatrolling = false;
-		//int				m_pathingDirection;
-		//pkr::Vector2		followPath();
 
-		//Circle agent
+		//Circle agent only (if nothing inherits this, will default to a circle being drawn)
 		float				m_size;
 		pkr::Vector3		m_colour;
 
-		//// EXTRA TRAITS ////
-		float				m_health = 10;
-		//float				m_;
+		//Flags
+		bool				m_lastSeenAvailable = false;		//NOT IDEAL
+
+	public:
+		enum class eState
+		{
+			NORMAL,
+			STEALTH,
+			PATROL,
+			SUSPICIOUS,
+			ALERT,
+		};
+
+		eState				state;
+		pkr::Vector2		pos;				//WORLD
+		float				m_facing = 0;		//Where the agent is looking at
+		float				m_maxSpeed = 400;
 
 	public:
 		//Agent(const Agent &other);	//Copy
@@ -63,24 +86,26 @@ namespace ai {
 		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//Move in pixels on the canvas itself
 		void				seek(const pkr::Vector2 &target, float deltaTime);
 
-		//State accessors
-		pkr::Vector2		getPos() const { return m_pos; }			//Get world position
-		pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
-		float				getMaxSpeed() const { return m_maxForce; }
+		//Accessors
+		//pkr::Vector2		getPos() const { return m_pos; }			//Get world position
+		//pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
+		//float				getMaxSpeed() const { return m_maxSpeed; }
+		//STATE				getState() const { return m_state; }
 		float				getHealth() const { return m_health; }
+		void				takeDamage(float damage) { m_health -= damage; }
+		bool				isLastSeenAvailable() const { return m_lastSeenAvailable; }
+		void				setLastSeenAvailable(bool set) { m_lastSeenAvailable = set; }
 
 		////Pathfinding
-		bool				pathTo(const pf::Path &path, float deltaTime);		//Returns true if reached the end of the path?
-		pf::Path			getPath() const { return m_path; }
+		bool				moveByPath(const pf::Path &path, float deltaTime);		//Returns true if reached the end of the path?
+		bool				followPath(float deltaTime);
 		void				setPath(pf::Path path) { m_path = path;	}
-		//void				setPatrolling(bool patrolState) { m_isPatrolling = patrolState; }
+		pf::Path			getPath() const { return m_path; }
 
 		//Core
 		virtual void		update(float deltaTime);
 		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
 	
-		//Allow access to parent methods (
-
 	};
 
 
@@ -90,12 +115,7 @@ namespace ai {
 		//Textures
 		aie::Texture*		m_tex;
 
-		//Extra translations
-		pkr::Vector2		m_facing;		//normalised vec; where the character is facing
-
 	public:
-		pkr::Vector2		getFacing() const { return m_facing; }
-
 		//Core
 		void				update(float deltaTime) override;
 		void				draw(aie::Renderer2D* renderer) override;

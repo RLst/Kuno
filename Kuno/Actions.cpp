@@ -50,7 +50,7 @@ namespace ai {
 		Seek::Seek(Agent * target, float maxForce) :
 			m_target(target), m_maxSpeed(maxForce)
 		{
-			m_dest = m_target->getPos();
+			m_dest = m_target->pos;
 		}
 
 		Seek::Seek(pkr::Vector2 destination, float maxSpeed) :
@@ -60,7 +60,7 @@ namespace ai {
 		{	//Seek vector = Target position - Agent position
 			//Find the normalised seek vector towards target
 
-			pkr::Vector2 seekVec = pkr::Vector2::normalise(m_dest - agent->getPos());
+			pkr::Vector2 seekVec = pkr::Vector2::normalise(m_dest - agent->pos);
 
 			//Apply max force towards target
 			agent->move(seekVec * m_maxSpeed, deltaTime);
@@ -113,9 +113,9 @@ namespace ai {
 			}
 
 			//(CONDITION) If the agent is not at the target position, then move towards it
-			if (pkr::Vector2::distance(agent->getPos(), m_dest) > m_arriveThreshold) {
+			if (pkr::Vector2::distance(agent->pos, m_dest) > m_arriveThreshold) {
 				//(ACTION) Seek towards target
-				auto seek = pkr::Vector2::normalise(m_dest - agent->getPos()) * m_maxSpeed;
+				auto seek = pkr::Vector2::normalise(m_dest - agent->pos) * m_maxSpeed;
 				agent->move(seek, deltaTime);
 				return RUNNING;
 			}
@@ -191,7 +191,7 @@ namespace ai {
 					auto waypoint = agent->getPath()[m_currentWaypoint];	//Get target waypoint
 
 					//Seek towards it
-					if (pkr::Vector2::distance(waypoint, agent->getPos()) > m_pathRadius) {
+					if (pkr::Vector2::distance(waypoint, agent->pos) > m_pathRadius) {
 						agent->seek(waypoint, deltaTime);
 						return eResult::RUNNING;
 					}
@@ -236,10 +236,10 @@ namespace ai {
 
 
 
-			if (pkr::Vector2::distance(m_target->getPos(), agent->getPos()) < m_fleeRange) {
+			if (pkr::Vector2::distance(m_target->pos, agent->pos) < m_fleeRange) {
 				//Within flee range so flee from target
-				auto flee = pkr::Vector2::normalise(agent->getPos() - m_target->getPos());
-				agent->move(flee * agent->getMaxSpeed(), deltaTime);
+				auto flee = pkr::Vector2::normalise(agent->pos - m_target->pos);
+				agent->move(flee * agent->m_maxSpeed, deltaTime);
 				//agent->seek(-flee, deltaTime);
 				return eResult::SUCCESS;
 			}
@@ -256,7 +256,7 @@ namespace ai {
 			auto destTile = m_map->clampwithinMapRetTILE(destination);
 
 			//Get tile the agent is on
-			auto startTile = m_map->findTileFromPos(agent->getPos());
+			auto startTile = m_map->findTileFromPos(agent->pos);
 
 			//Pathfind from agent to destination tile
 			m_path = m_map->getAStarPath(startTile, destTile);

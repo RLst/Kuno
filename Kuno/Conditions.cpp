@@ -10,14 +10,33 @@
 namespace ai {
 	namespace condition {
 
-	WithinRangeCondition::WithinRangeCondition(Agent * target, float range) :
-		m_target(target), m_range(range) {}
-	eResult WithinRangeCondition::execute(Agent * agent, float deltaTime)
-	{
-		if (pkr::Vector2::distance(agent->getPos(), m_target->getPos()) < m_range)
-			return SUCCESS;		//Target agent is within range
-		else
-			return FAILURE;
+		WithinRange::WithinRange(Agent * target, float range) :
+			m_target(target), m_range(range) {}
+		eResult WithinRange::execute(Agent * agent, float deltaTime)
+		{
+			if (pkr::Vector2::distance(agent->pos, m_target->pos) < m_range)
+				return eResult::SUCCESS;		//Target agent is within range
+			else
+				return eResult::FAILURE;
+		}
+
+		eResult CheckState::execute(Agent * agent, float deltaTime)
+		{
+			//Return success if state matches
+			if (agent->state == m_state)
+				return eResult::SUCCESS;
+			else
+				return eResult::FAILURE;
+		}
+
+		eResult CheckHealth::execute(Agent * agent, float deltaTime)
+		{
+			if (agent->getHealth() < m_lowHealthThreshold)
+				return SUCCESS;
+			else
+				return FAILURE;
+		}
+
 	}
 
 	InViewCondition::InViewCondition(Agent * target, pf::Map * map) :

@@ -189,6 +189,32 @@ namespace ai {
 		eResult		execute(Agent *agent, float deltaTime) override;
 		void		getPath(Agent* agent, pkr::Vector2 destination);
 	};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class UpdateState : public iBehaviour
+		{
+			//Changes the state of the agent to a set state
+		private:
+			ai::Agent::eState		m_desiredState;
+
+		public:
+			UpdateState(ai::Agent::eState desiredState) : m_desiredState(desiredState) { /*m_desiredState = desiredState;*/ }
+			~UpdateState() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class UpdateLastSeen : public iBehaviour
+		{
+			//Stores the last seen position of target agent
+		private:
+			pkr::Vector2	m_lastSeen;
+			bool			m_isAvailable;		//Last seen exist; NOT SURE IF THIS IS NEEDED
+
+		public:
+			UpdateLastSeen() = default;
+			~UpdateLastSeen() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	}

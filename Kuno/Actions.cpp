@@ -261,7 +261,21 @@ namespace ai {
 			//Pathfind from agent to destination tile
 			m_path = m_map->getAStarPath(startTile, destTile);
 
-		//Set agents path as the new path
+			//Set agents path as the new path
+		}
+
+		eResult UpdateState::execute(Agent * agent, float deltaTime)
+		{
+			//Just change the agent's state to the desired state
+			agent->state = m_desiredState;
+			return eResult::SUCCESS;		//Should always return success
+		}
+
+		eResult UpdateLastSeen::execute(Agent * agent, float deltaTime)
+		{
+			m_lastSeen = agent->pos;			//Get last seen from agent and store in the Action
+			agent->setLastSeenAvailable(true);
+			return eResult::SUCCESS;
 		}
 
 }

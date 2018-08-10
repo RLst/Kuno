@@ -187,6 +187,9 @@ bool KunoApp::setupEnemies()
 
 bool KunoApp::setupAI()
 {
+	//// TEST VALUES ////
+	auto lowHealthThreshold = 15;
+
 	//////////////////////////
 	//// Setup player(s) ////
 	////////////////////////
@@ -196,7 +199,7 @@ bool KunoApp::setupAI()
 
 	//Flee//
 	auto fleeSeq = new ai::Sequence();
-	fleeSeq->addChild(new ai::condition::HealthLowCond(m_FleeGent));
+	//fleeSeq->addChild(new ai::condition::CheckHealth(m_FleeGent, lowHealth));
 	fleeSeq->addChild(new ai::action::Flee(m_Player, m_map));
 	m_FleeGent->addBehaviour(fleeSeq);
 
@@ -231,7 +234,7 @@ bool KunoApp::setupAI()
 	float viewRange = 90.0f;			//View cone of the enemies
 	
 	//// Setup some core AI composites ////
-	ai::condition::WithinRangeCondition* samuraiWithinRangeCond = new ai::condition::WithinRangeCondition(m_MouseGent, sightDistance);
+	ai::condition::WithinRange* samuraiWithinRangeCond = new ai::condition::WithinRange(m_MouseGent, sightDistance);
 	ai::action::Attack* samuraiAttack = new ai::action::Attack();
 	ai::action::SeekAndArrive* samuraiSeekAndArrive = new ai::action::SeekAndArrive(m_MouseGent, 200.0f);
 	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_MouseGent, 200.f);

@@ -39,6 +39,12 @@ namespace ai {
 
 	}
 
+}
+
+
+
+
+/*
 	InViewCondition::InViewCondition(Agent * target, pf::Map * map) :
 		m_target(target), m_map(map) {}
 	eResult InViewCondition::execute(Agent * agent, float deltaTime)
@@ -55,7 +61,6 @@ namespace ai {
 		//	return FAILURE;
 		return eResult();
 	}
-
 	HealthLowCond::HealthLowCond(Agent * subject) :
 		m_subject(subject), m_lowHealthThreshold(15)
 	{}
@@ -67,8 +72,6 @@ namespace ai {
 		else
 			return eResult::FAILURE;
 	}
-
-	}
 	eResult ReachedEndOfPath::execute(Agent * agent, float deltaTime)
 	{
 		//If the agent has reached the end of the path then return success
@@ -76,4 +79,4 @@ namespace ai {
 
 		return eResult();
 	}
-}
+*/

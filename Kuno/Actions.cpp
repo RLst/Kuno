@@ -75,24 +75,6 @@ namespace ai {
 			return eResult();	//Do nothing!
 		}
 
-		//// Patrol ////
-		PatrolPath::PatrolPath(Agent * pathObject, float maxForce)
-		{
-			//SeekAction* pathFollower = new SeekAction(pathObject);
-		}
-
-		eResult PatrolPath::execute(Agent * agent, float deltaTime)
-		{
-			Seek* followPath = new Seek(agent, m_maxForce);
-
-			//Get a new point from path agent/object
-
-
-			//Seek towards the new point
-
-			return eResult();
-		}
-
 		//// Mouse Controller ////
 		MouseControl::MouseControl(aie::Input * input, float maxForce) :
 			m_input(input), m_maxSpeed(maxForce) {}
@@ -129,43 +111,6 @@ namespace ai {
 		eResult Attack::execute(Agent * agent, float deltaTime)
 		{
 			return eResult();
-		}
-
-		//////////////////////////////////////////////////////////////////////////////////////
-		SeekAndArrive::SeekAndArrive(Agent * target, float maxSpeed) :
-			m_target(target), m_maxSpeed(maxSpeed)
-		{
-			m_dest = m_target->getPos();
-		}
-
-		SeekAndArrive::SeekAndArrive(pkr::Vector2 destination, float maxSpeed) :
-			m_dest(destination), m_maxSpeed(maxSpeed) {}
-
-		eResult SeekAndArrive::execute(Agent * agent, float deltaTime)
-		{
-			//Get current seek destination if target agent is set
-			if (m_target != nullptr)
-				m_dest = m_target->getPos();
-
-			//auto seek = m_dest - agent->getPos();				//Get the seek vector
-			//auto distance = pkr::Vector2::magnitude(seek);		//Get the distance from destination
-			//seek.normalise();
-			//seek *= m_maxSpeed;
-			auto seek = pkr::Vector2::normalise(m_dest - agent->getPos());
-			auto distance = pkr::Vector2::distance(m_dest, agent->getPos());
-
-			//If within arrive zone...
-			if (distance < m_slowZone) {
-				agent->move(seek * (distance / m_slowZone), deltaTime);		//Slow down accordingly
-				return RUNNING;
-			}
-			else {
-				agent->move(seek * m_maxSpeed, deltaTime);					//Otherwise go full speed
-				return RUNNING;
-			}
-			if (distance <= m_arriveZone) {
-				return SUCCESS;
-			}
 		}
 
 		FollowPath::FollowPath(float pathRadius) :
@@ -280,3 +225,61 @@ namespace ai {
 
 }
 }
+
+
+/*
+//// Patrol ////
+PatrolPath::PatrolPath(Agent * pathObject, float maxForce)
+{
+//SeekAction* pathFollower = new SeekAction(pathObject);
+}
+
+eResult PatrolPath::execute(Agent * agent, float deltaTime)
+{
+Seek* followPath = new Seek(agent, m_maxForce);
+
+//Get a new point from path agent/object
+
+
+//Seek towards the new point
+
+return eResult();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+SeekAndArrive::SeekAndArrive(Agent * target, float maxSpeed) :
+m_target(target), m_maxSpeed(maxSpeed)
+{
+m_dest = m_target->getPos();
+}
+
+SeekAndArrive::SeekAndArrive(pkr::Vector2 destination, float maxSpeed) :
+m_dest(destination), m_maxSpeed(maxSpeed) {}
+
+eResult SeekAndArrive::execute(Agent * agent, float deltaTime)
+{
+//Get current seek destination if target agent is set
+if (m_target != nullptr)
+m_dest = m_target->getPos();
+
+//auto seek = m_dest - agent->getPos();				//Get the seek vector
+//auto distance = pkr::Vector2::magnitude(seek);		//Get the distance from destination
+//seek.normalise();
+//seek *= m_maxSpeed;
+auto seek = pkr::Vector2::normalise(m_dest - agent->getPos());
+auto distance = pkr::Vector2::distance(m_dest, agent->getPos());
+
+//If within arrive zone...
+if (distance < m_slowZone) {
+agent->move(seek * (distance / m_slowZone), deltaTime);		//Slow down accordingly
+return RUNNING;
+}
+else {
+agent->move(seek * m_maxSpeed, deltaTime);					//Otherwise go full speed
+return RUNNING;
+}
+if (distance <= m_arriveZone) {
+return SUCCESS;
+}
+}
+*/

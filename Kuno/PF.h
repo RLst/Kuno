@@ -17,7 +17,7 @@ namespace pf {
 	struct Node;
 	class Tile;
 
-	typedef std::vector<pkr::Vector2> Path;		//could also be vector<node*>
+	//typedef std::vector<pkr::Vector2> Path;		//could also be vector<node*>
 	typedef std::list<Node*> NodeList;
 	typedef std::list<Tile*> TileList;
 
@@ -59,15 +59,34 @@ namespace pf {
 		static bool compareFscore(Node *a, Node *b) { return a->F < b->F; }
 	};
 
-	//struct Path 
-	//{
-	//private:
-	//	std::vector<pkr::Vector2> m_path;
-	//public:
-	//	std::vector<pkr::Vector2> getPath() const { return m_path; }
-	//	float		m_radius;
-	//	operator [] (int index) { return m_path.at(index); }
-	//};
+	struct Path : public std::vector<pkr::Vector2>
+		//std::vector has no virtual destructor so don't call delete on the elements?
+	{
+		using	std::vector<pkr::Vector2>::vector;			//Use the constructor from std::vector
+
+	public:
+		size_t		index = 0;		//Important that this is init to 0!!!
+		float		radius = 5.0f;								//Custom parameter
+
+	public:
+		bool		isAvailable() const { return !empty(); }
+		
+		pkr::Vector2 getWaypoint() { return this->at(index); }		//Get the current waypoint position
+
+		void		next() { ++index; }
+		
+		void		reset()		//Clears and resets working index
+		{
+			index = 0;
+			this->clear();
+		}
+
+		bool		endReached() const { return index > this->size(); }
+
+		//Range checked overrides
+		pkr::Vector2& operator[](size_t i) { return std::vector<pkr::Vector2>::at(i); }
+		const pkr::Vector2& operator[](size_t i) const { return std::vector<pkr::Vector2>::at(i); }
+	};
 
 
 }

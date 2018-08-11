@@ -15,7 +15,7 @@
 namespace pf {
 
 	struct Node;
-	struct Tile;
+	class Tile;
 
 	typedef std::vector<pkr::Vector2> Path;		//could also be vector<node*>
 	typedef std::list<Node*> NodeList;
@@ -26,27 +26,27 @@ namespace pf {
 		Node*	target;
 		float	cost;			//The traversal cost to move through this edge
 
+	public:
 		Edge() : target(nullptr), cost(0) {}		//Default
-
 		Edge(Node* nodeTo) : target(nodeTo), cost(0) {}		//Overload (zero cost)
-
 		Edge(Node* nodeTo, float cost) : target(nodeTo), cost(cost) {}		//Overload
 	};
 
 	struct Node
 	{
 		Node*				parent = nullptr;
-		float				G = INFINITY;					//G score should default to infinity?
-		float				H;								//Heuristic score
-		float				F;								//Final score
+		float				G = INFINITY;					//G score
+		float				H = INFINITY;					//Heuristic score
+		float				F = 0;							//Final score
 		pkr::Vector2		pos;							//WORLD COORDINATES
-		pkr::Vector2		cPos;						//CANVAS/ISO COORDINATES
+		pkr::Vector2		cPos;							//CANVAS/ISO COORDINATES
 		std::vector<Edge*>	connections;
 
+	public:
 		~Node() { for (auto c : connections) { delete c; } }
-		Node() : G(INFINITY), pos(0, 0), parent(nullptr) {}								//Default
-		Node(pkr::Vector2 pos) : G(INFINITY), pos(pos), parent(nullptr) {}					//Overload (nullptr parent)
-		Node(pkr::Vector2 pos, Node* parent) : G(INFINITY), pos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
+		Node() : pos(0, 0), parent(nullptr) {}								//Default
+		Node(pkr::Vector2 pos) : pos(pos), parent(nullptr) {}				//Overload (nullptr parent)
+		Node(pkr::Vector2 pos, Node* parent) : pos(pos), parent(parent) {}	//Overload (not sure if this would be needed)
 
 		//Connect
 		static void connect(Node *nodeFrom, Node *nodeTo, float cost = 1.0f) {		//Set connection (helper function?)

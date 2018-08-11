@@ -5,13 +5,29 @@
 
 
 #include "GameDefines.h"
-#include <random>
 
 namespace pkr {
 
 	int Random(int min, int max)
 	{
-		return min + (rand() % (max - min + 1));
+		//C
+		return min + (rand() % (max - min + 1)); 
+
+		//C++
+		//std::default_random_engine DRE;
+		//std::uniform_int_distribution<int> result(min, max);
+		//return result(DRE);
+	}
+
+	float Random(float min, float max)
+	{
+		//C
+		return (float)rand() / (float)RAND_MAX;
+
+		//C++
+		//std::default_random_engine DRE;
+		//std::uniform_real_distribution<float> result(min, max);
+		//return result(DRE);
 	}
 
 }

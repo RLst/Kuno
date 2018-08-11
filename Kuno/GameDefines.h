@@ -4,6 +4,7 @@
 ///////////////
 
 #pragma once
+#include <random>
 
 //#define SCREEN_WIDTH 1280
 //#define SCREEN_HEIGHT 720
@@ -22,7 +23,8 @@ const float TILE_RATIO = (float)ISO_TILE_WIDTH / (float)ISO_TILE_HEIGHT;	//Used 
 
 namespace pkr {
 
-	int Random(int min, int max);		//int RNG
+	int Random(int min, int max);			//int RNG
+	float Random(float min, float max);		//float RNG
 
 	template <typename T>
 	T Clamp(const T& value, const T& min, const T& max)
@@ -38,7 +40,6 @@ namespace pkr {
 	}
 
 }
-
 
 
 //// RANDOM TRASH BIN ////

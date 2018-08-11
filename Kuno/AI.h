@@ -53,8 +53,9 @@ namespace ai {
 	class aComposite : public iBehaviour
 	{
 	protected:
-		std::list<iBehaviour*>		m_childBehaviours;
-		iBehaviour*					m_runningChild = nullptr;
+		std::vector<iBehaviour*>		m_childBehaviours;
+		int								m_runningChild = 0;
+		//iBehaviour*					m_runningChild = nullptr;
 	public:
 		~aComposite() override;
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;

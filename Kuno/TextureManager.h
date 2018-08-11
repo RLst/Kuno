@@ -8,10 +8,10 @@
 
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <Vector2.h>
 
 //Forward declares
-class KunoApp;
 namespace aie { 
 	class Texture; 
 	class Input;
@@ -26,7 +26,7 @@ namespace util {
 	class TextureManager 
 	{
 	private:
-		std::map<std::string, aie::Texture*> m_textures;
+		std::unordered_map<std::string, aie::Texture*> m_textures;	//Unordered is better than map in this case ie. single element access
 
 	public:
 		TextureManager() {}

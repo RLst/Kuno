@@ -27,25 +27,21 @@ namespace ai {
 	}
 	eResult Selector::execute(Agent * agent, float deltaTime)
 	{
-		//auto child = m_runningChild;
-		//m_runningChild = nullptr;
+		for (int i = m_runningChild; i < m_childBehaviours.size(); ++i)
+		{
+			auto result = m_childBehaviours[i]->execute(agent, deltaTime);
 
-		////If there weren't any pending child from the last frame
-		//if (child == nullptr)
-		//	child = m_childBehaviours.front();
+			m_runningChild = i;
 
-		//while (child <= m_childBehaviours.back()) {
-		//	auto result = child->execute(agent, deltaTime);
-
-		//	if (result == eResult::SUCCESS)
-		//		return eResult::SUCCESS;
-		//	else if (result == eResult::FAILURE)
-		//		continue; /*++child;*/	//Next child
-		//	else if (result == eResult::RUNNING) {
-		//		m_runningChild = child;
-		//		return eResult::RUNNING;
-		//	}
-		//}
+			if (result == eResult::RUNNING) {
+				return eResult::RUNNING;
+			}
+			else if (result == eResult::SUCCESS) {
+				m_runningChild = 0;
+				return eResult::SUCCESS;
+			}
+		}
+		m_runningChild = 0;
 		return eResult::FAILURE;
 
 		//OR node; Returns SUCCESS if any child returns SUCCESS
@@ -76,8 +72,6 @@ namespace ai {
 	eResult Sequence::execute(Agent * agent, float deltaTime)
 	{
 
-		// cout << "Sequence Tick - " << children.size() << " children" << endl;
-
 		for (int i = m_runningChild; i < m_childBehaviours.size(); ++i)
 		{
 			auto result = m_childBehaviours[i]->execute(agent, deltaTime);
@@ -94,164 +88,6 @@ namespace ai {
 		}
 		m_runningChild = 0;
 		return SUCCESS;
-
-
-		//ReturnCode Sequence::tick()
-		//{
-
-		//	// cout << "Sequence Tick - " << children.size() << " children" << endl;
-
-		//	for (int i = currentChild; i < children.size(); ++i)
-		//	{
-		//		ReturnCode childstatus = children[i]->tick();
-
-		//		currentChild = i;
-
-		//		if (childstatus == ReturnCode::RUNNING)
-		//		{
-		//			return ReturnCode::RUNNING;
-		//		}
-		//		else if (childstatus == ReturnCode::FAILURE)
-		//		{
-		//			currentChild = 0;
-		//			return ReturnCode::FAILURE;
-		//		}
-		//	}
-
-		//	currentChild = 0;
-		//	return ReturnCode::SUCCESS;
-
-		//};
-
-
-
-		//auto child = m_runningChild;
-		//m_runningChild = nullptr;
-
-		////If there weren't any pending child from the last frame
-		//if (child == nullptr)
-		//	child = m_childBehaviours.front();
-
-		//while (child != m_childBehaviours.back())
-		//{
-		//	auto result = child->execute(agent, deltaTime);
-
-		//	if (result == FAILURE)
-		//		return FAILURE;
-		//	else if (result == SUCCESS)
-		//		child++; /*++child;*/	//Next child
-		//	else if (result == RUNNING) {
-		//		m_runningChild = child;
-		//		return RUNNING;
-		//	}
-
-		////}
-		//
-		//for (auto it = m_childBehaviours.begin(); it != m_childBehaviours.end(); ++it) {
-		//	auto result = (*it)->execute(agent, deltaTime);
-
-		//	if (result == FAILURE)
-		//		return FAILURE;
-		//	else if (result == SUCCESS)
-		//		++it; /*++child;*/	//Next child
-		//	else if (result == RUNNING) {
-		//		m_runningChild = *it;
-		//		return RUNNING;
-		//	}
-		//}
-
-		//return SUCCESS;
-
-
-
-
-		//class Composite : public Node
-		//{
-		//protected:
-		//	//bool resumable;
-		//	int currentChild;
-		//	vector<Node*> children;
-
-		//public:
-		//	Composite() { currentChild = 0; };
-		//	~Composite() {};
-
-		//	void addChild(Node *n) { children.push_back(n); }
-		//	virtual ReturnCode tick() {};
-		//};
-
-		//class Sequence : public Composite
-		//{
-		//public:
-		//	Sequence() {};
-		//	~Sequence() {};
-		//	ReturnCode tick();
-		//};
-
-
-
-
-
-
-
-
-		//for (auto child : m_childBehaviours) {
-		//	auto result = child->execute(agent, deltaTime);
-
-		//	if (result == FAILURE)
-		//		return FAILURE;
-		//	else if (result == SUCCESS)
-		//		continue; /*++child;*/	//Next child
-		//	else if (result == RUNNING) {
-		//		m_runningChild = child;
-		//		return RUNNING;
-		//	}
-		//}
-		//return SUCCESS;
-
-		/*
-		auto child = m_runningChild;
-		m_runningChild = nullptr;
-
-		//If there weren't any pending child from the last frame
-		if (child == nullptr)
-			child = m_childBehaviours.front();
-
-		for (auto it = m_childBehaviours.begin(); it != m_childBehaviours.end(), it++) {
-
-		}
-		*/
-
-		/*
-		for (auto child : m_childBehaviours) {
-			auto result = child->execute(agent, deltaTime);
-
-			if (result == FAILURE) return FAILURE;
-			else if (result == SUCCESS)
-				continue;	//next child?
-			else if (result == RUNNING) {
-				m_runningChild = child;
-				return RUNNING;
-			}
-		}
-		return SUCCESS;
-		*/
-
-		/*
-		while (child <= m_childBehaviours.back()) {		//BUG!!!
-			auto result = child->execute(agent, deltaTime);
-
-			if (result == FAILURE)
-				return FAILURE;
-			if (result == SUCCESS)
-				child++;	//Run next child		//POTENTIAL BUG!!!
-			if (result == RUNNING) {
-				m_runningChild = child;
-				return RUNNING;
-			}
-		} 
-		return eResult::SUCCESS;		//Right now it's just skipping straight to SUCCESS
-		*/
 
 		/*
 		//AND node; Returns SUCCESS only if ALL children return SUCCESS

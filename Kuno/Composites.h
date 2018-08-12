@@ -4,40 +4,41 @@
 
 namespace ai { namespace composite {
 
-	class FollowPathSequence : public Sequence
-	{
-	private:
-		pf::Path	m_path;		//The path the agent could be following
+	//class FollowPathSequence : public Sequence
+	//{
+	//private:
+	//	pf::Path	m_path;		//The path the agent could be following
 
-	public:
-		FollowPathSequence() = default;
-		~FollowPathSequence() = default;
-	};
+	//public:
+	//	FollowPathSequence() = default;
+	//	~FollowPathSequence() = default;
+	//};
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	class AlertSelector : public Selector
-	{
-		//add children: attack, pursue
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//class AlertSelector : public Selector
+	//{
+	//	//add children: attack, pursue
 
-	};
-	class SuspiciousSelector : public Selector {};
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	class NormalSelector : public Selector {};
+	//};
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//class SuspiciousSelector : public Selector {};
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//class NormalSelector : public Selector {};
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	class AttackSequence : public Sequence
-	{
-	private:
-		Agent *		m_target;
-		float		m_attackRange = 100;
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	//class AttackSequence : public Sequence
+	//{
+	//private:
+	//	Agent *		m_target;
+	//	float		m_attackRange = 100;
 
-	public:
-		AttackSequence() = default;
-		//AttackSequence(Agent* target, float attackRange) :
-		//	m_target(target), m_attackRange(attackRange) {}
+	//public:
+	//	AttackSequence() = default;
+	//	//AttackSequence(Agent* target, float attackRange) :
+	//	//	m_target(target), m_attackRange(attackRange) {}
 
-		//eResult		execute(Agent *agent, float deltaTime) override;
-	};
+	//	//eResult		execute(Agent *agent, float deltaTime) override;
+	//};
 
 }
 }

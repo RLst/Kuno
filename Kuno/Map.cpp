@@ -348,58 +348,46 @@ namespace pf {
 		end->G = 0;				//0 because there's no traversal yet
 		openList.push_back(end);
 
-		//Slight optimization; Stop once you get to the node you're looking for
-		//Downside: Might not always find the shortest parth
-		//for (auto it = openList.begin(); it != openList.end(); it++) {
-		//	if (currentNode == *it) {
-		//		endNode = node;
-		//		break;
-		//	}
-		//}
-
 		//While queue is not empty
 		while (!openList.empty())
 		{
 			//Sort open list based on the F score
 			openList.sort(pf::Node::compareFscore);		//Sort takes in a function object
 
+			//if (currentNode == start) break;			//Goal node found so break out
+
 			currentNode = openList.front();				//Get current work node of the end of the queue
 			openList.pop_front();						//Remove node from the queue
 			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
 
-			if (currentNode == start) break;			//Goal node found so break out
-
-			for (auto c : currentNode->connections) {		//[Loop through it's edges]
+			for (auto neighbour : currentNode->connections) {		//[Loop through it's edges]
 				
-				//if (c == nullptr) continue;			//What's the purpose of this?
+				if (neighbour == nullptr) continue;			//What's the purpose of this?
 
 				//Determine if this tile is in any of the lists
-				bool inClosedList = std::find(closedList.begin(), closedList.end(), c->target) != closedList.end();
-				bool inOpenedList = std::find(openList.begin(), openList.end(), c->target) != openList.end();
+				bool inClosedList = std::find(closedList.begin(), closedList.end(), neighbour->target) != closedList.end();
+				bool inOpenedList = std::find(openList.begin(), openList.end(), neighbour->target) != openList.end();
 
-				//Calculate scores
-				float gScore = currentNode->G + c->cost;
-				float hScore = pkr::Vector2::distance(currentNode->pos, start->pos);
-				float fScore = gScore + hScore;
+				//Ignore the neighbour that is already evaluated
+				if (inClosedList)
+					continue;
 
-				if (!inClosedList) {	//inClosedList == false; Not already traversed, set score
-					c->target->G = gScore;
-					c->target->H = hScore;
-					c->target->F = fScore;
-					c->target->parent = currentNode;
+				//The distance from start to a neighbour
+				float tentativeGscore = currentNode->G + pkr::Vector2::distance(currentNode->pos, neighbour->target->pos);
+				float hScore = pkr::Vector2::distance(neighbour->target->pos, start->pos);
+
+				//Discover a new node
+				if (!inOpenedList) {
+					openList.push_back(neighbour->target);
 				}
-				else {					//inClosedList == true; Already traversed, check if we now have a lower score
-					if (gScore < c->target->G) {
-						c->target->G = gScore;
-						c->target->H = hScore;
-						c->target->F = fScore;
-						c->target->parent = currentNode;
-					}
+				else if (tentativeGscore >= neighbour->target->G) {
+					continue;		//This is not a better path
 				}
-				if (!inOpenedList && !inClosedList) {	//If not in any lists (ie. first run), ad to priority queue
-					//Probably a fail safe
-					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
-				}
+
+				//This is the best path until now. Record it!
+				neighbour->target->parent = currentNode;
+				neighbour->target->G = tentativeGscore;
+				neighbour->target->F = neighbour->target->G + hScore;
 			}
 		}
 

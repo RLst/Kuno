@@ -105,14 +105,28 @@ namespace ai {
 
 	//TIMEOUT
 	class TimeoutDecorator : public aDecorator
-		//Executes child behaviour until timeout
+		//Repatedly executes child behaviour until timeout
 	{
 	private:
 		float m_timeout;		//Countdown time
 		float m_duration;		//Original duration
 	public:
-		TimeoutDecorator(float timeout, float duration) : m_timeout(timeout), m_duration(duration) {}
+		TimeoutDecorator(float timeout) : m_timeout(timeout), m_duration(timeout) {}
 		~TimeoutDecorator() override { delete m_child; }
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
+
+	//DELAY
+	class DelayDecorator : public aDecorator
+		//Only allows child behaviour to be executed once every set duration
+		//Executes FIRST then starts delay countdown
+	{
+	private:
+		float m_delay;			//Delay time
+		float m_duration;		//Original duration
+	public:
+		DelayDecorator(float delay) : m_delay(delay), m_duration(delay) {}
+		~DelayDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 

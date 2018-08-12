@@ -128,7 +128,19 @@ namespace ai {
 		//Returns result of child unless it times out ie: runs the child for duration set
 		return m_child->execute(agent, deltaTime);
 	}
-
-
+	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
+	{
+		//If first run
+		if (m_delay == m_duration) {
+			//Run once and then start countdown
+			return m_child->execute(agent, deltaTime);
+		}
+		m_delay -= deltaTime;
+		//If delay < 0 then reset
+		if (m_delay < 0) {
+			m_delay = m_duration;
+		}
+		return eResult::RUNNING;
+	}
 
 }

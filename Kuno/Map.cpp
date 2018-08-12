@@ -474,7 +474,7 @@ namespace pf {
 #ifdef _DEBUG
 			//// DEBUG ////
 			//Draw the paths; all the node/tile connections
-			ImGui::Begin("Path connections");
+			ImGui::Begin("Map's tile connections");
 			if (m_drawConnections) 
 			{
 				int index = 0;
@@ -513,7 +513,14 @@ namespace pf {
 
 		}
 		//Draw the test map A* pathfinding
-		ImGui::Begin("Map's Path");
+		ImGui::Begin("Map's path");
+
+		//Toggle between pathfinding algorithms
+		const char* pathalgorithm;
+		pathalgorithm = (m_useAstar) ? "A* Search" : "Dijkstra Search";
+		ImGui::TextColored({ 1,0.5f,0,1 }, pathalgorithm);	ImGui::SameLine; ImGui::Text("Press space to toggle");
+
+		//Print path waypoints
 		renderer->setRenderColour(0.90f, 0, 0);
 		if (!m_path.empty()) {
 			//Loop through all sets of waypoints and draw the path (isometrically)
@@ -526,15 +533,6 @@ namespace pf {
 		}
 		ImGui::End();
 		////////////
-		//// DEBUG ///
-		ImGui::Begin("Pathfinding Method");
-		ImGui::Text("Press space bar to toggle between methods");
-		const char* buttonText;
-		if (m_useAstar) buttonText = "A* Search";
-		else buttonText = "Dijkstra Search";
-		if (ImGui::Button(buttonText))
-			m_useAstar = !m_useAstar;
-		ImGui::End();
 #endif
 	}
 }

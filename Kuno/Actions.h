@@ -159,7 +159,40 @@ namespace ai {
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class UpdatePath : public iBehaviour
+			/*Changes the agent's path and sets it to available so the agent can start pathing
+			Requires: 
+				&KunoApp::m_map
 
+			Enemy Logic:
+			1. agent(enemy) wants to move to a position on the map
+			2. Finds the Map's equivalent tile/node using Map::findTileFromPos()
+			3. Sends this tile as the destination tile/node into Map::getAstarPath() and retrieves desired path
+			4. Desired path is then stored in Agent object, ready for agent to follow/use it
+
+			Player Logic:
+			1. User clicks on an canvas position that corresponds the an area on the map
+			2. Mouse canvas position is directly converted to a corresponding map tile/node* OR
+			Mouse canvas position is converted to world position
+			3. Pass this tile* as destination tile into Map::getAStarPath() and retrieve desired path
+			4. Desired path is then stored in Agent object, ready for agent to follow
+
+			Steps 2, 3 and 4 are basically the same and will be encapsulated in this class
+
+			Improvements:
+			Agent object should have a ptr to Path, passes the pointer into getAStarPath(), 
+			which getAstar will directly modify
+
+			//1. Where will the initial path be stored? In Map I think..
+			//2. This will take in a desired path ie. from the Map
+			*/			
+		{
+			pf::Map*		m_map;
+		public:
+			~UpdatePath() = default;
+			UpdatePath(pf::Map* map) : m_map(map) {}
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
 
 	}
 }

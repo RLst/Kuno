@@ -222,6 +222,43 @@ namespace ai {
 			agent->setLastSeenAvailable(true);
 			return eResult::SUCCESS;
 		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		eResult UpdatePath::execute(Agent * agent, float deltaTime)
+		{
+			//Get desired world position from agent
+			//agent->getDestinationTile();
+			auto desiredPos = agent->getDesiredPos();
+
+			//Find the corresponding destination tile & tile the agent is on
+			//auto endPos = m_map->clampWithinMapRetWORLD(desiredPos);
+			//auto endTile = m_map->findTileFromPos(endPos);
+			auto endTile = m_map->clampwithinMapRetTILE(desiredPos);	//Also clamp within the world map
+			auto startTile = m_map->findTileFromPos(agent->pos);
+
+			//Get the desired path
+			auto desiredPath = m_map->getAStarPath(startTile, endTile);
+
+			//Set the desired path in agent
+			agent->setPath(desiredPath);
+
+#ifdef _DEBUG
+//DEBUG
+ImGui::Begin("UpdatePath");
+ImGui::Text("desiredPos > x: %.2f, y: %.2f", desiredPos.x, desiredPos.y);
+//ImGui::Text("endPos > x: %.2f, y: %.2f", endPos.x, endPos.y);
+ImGui::Text("endTile: %p", endTile);
+ImGui::Text("startTile: %p", startTile);
+ImGui::Text("desiredPath >");
+for (int i = 0; i < desiredPath.size(); ++i) {
+	ImGui::Text("%d: x: %.2f, y: %.2f", i, desiredPath[i].x, desiredPath[i].y);
+}
+ImGui::End();
+#endif
+
+			return eResult::SUCCESS;
+		}
+
+
 
 }
 }

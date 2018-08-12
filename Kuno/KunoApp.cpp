@@ -110,11 +110,9 @@ bool KunoApp::setupUtilities()
 {
 	//// Camera ////
 	m_camera = new util::Camera(-200, -200, 2.0f);
-	//Camera = util::Camera(0, -200, 1.5f);
 
 	//// Texture Manager ////
 	m_textureManager = new util::TextureManager();
-	//TextureManager = util::TextureManager();
 
 	//// Depth Sorter ////
 	m_depthSorter = new util::DepthSorter(0.0f, 100.0f);
@@ -154,7 +152,7 @@ bool KunoApp::setupMap()
 	//m_map = new pf::Map(WORLD_WIDTH, WORLD_DEPTH, pkr::Vector2(0,0));
 
 	//// Connect tile/nodes in map ////
-	float NodeConnectRadius = 280;		//4 ways: 180, 8 ways: 200
+	float NodeConnectRadius = 220;		//4 ways: 180, 8 ways: 200
 	m_map->connectNodesByDistance(NodeConnectRadius);
 
 	return true;
@@ -194,8 +192,8 @@ bool KunoApp::setupAI()
 	//// Setup player(s) ////
 	////////////////////////
 	aie::Input* input = aie::Input::getInstance();
-	m_Player->addBehaviour(new ai::action::KeyboardControl(input, 500.0f));
-	m_MouseGent->addBehaviour(new ai::action::MouseControl(input));
+	m_Player->addBehaviour(new ai::action::tKeyboardControl(input, 500.0f));
+	m_MouseGent->addBehaviour(new ai::action::tMouseControl(input));
 
 	//Flee//
 	auto fleeSeq = new ai::Sequence();
@@ -204,21 +202,12 @@ bool KunoApp::setupAI()
 	m_FleeGent->addBehaviour(fleeSeq);
 
 	//Path follower
-	auto followPathSeq = new ai::Sequence();					//Make a FollowPathSequence
-	//FollowPathOnClick->addChild(new ai::action::MouseLeftClicked());
-	followPathSeq->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
-	m_PathFollowGent->addBehaviour(followPathSeq);				//Add FollowPath sequence to path follower
+	auto pathToMouseSeq = new ai::Sequence();					//Make a FollowPathSequence
+	pathToMouseSeq->addChild(new ai::action::tMouseSetDesiredPos());
+	pathToMouseSeq->addChild(new ai::action::UpdatePath(m_map));
+	pathToMouseSeq->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
+	m_PathFollowGent->addBehaviour(pathToMouseSeq);				//Add FollowPath sequence to path follower
 	
-																//m_PathFollowGent->addBehaviour(new ai::action::FollowPath());
-	//auto TestPath = static_cast<std::vector<pkr::Vector2>*>(&m_map->getPath());					//WTF???	
-	//m_PathFollowGent->setPath(TestPath);						//Point path follower's path to map's path
-
-																//auto TestPath = new pf::Path();
-	//TestPath->push_back(pkr::Vector2(100, 100));
-	//TestPath->push_back(pkr::Vector2(200, 100));
-	//TestPath->push_back(pkr::Vector2(300, 100));
-	//TestPath->push_back(pkr::Vector2(400, 100));
-	//TestPath->push_back(pkr::Vector2(500, 100));
 
 	/////////////////////////
 	//// Setup enemies /////
@@ -226,28 +215,23 @@ bool KunoApp::setupAI()
 	auto samurai = new ai::Selector();			//Root node for a melee samurai
 	auto samuraiBow = new ai::Selector();		//Root node for a ranged samurai
 	auto lord = new ai::Selector();
+	auto enemyTest = new ai::Sequence();
 
-	//Set critical values
+	//Set some test values
 	float meleeAttackRange = 300.0f;
 	float rangedAttackRange = 300.0f;
-	float sightDistance = 500.0f;		//The distance from which the enemy can see
-	float viewRange = 90.0f;			//View cone of the enemies
+	float sightRange = 500.0f;				//The distance from which the enemy can see
+	float FOV = 90.0f;						//View cone of the enemies
 	
-	//// Setup some core AI composites ////
-	ai::condition::WithinRange* samuraiWithinRangeCond = new ai::condition::WithinRange(m_MouseGent, sightDistance);
-	ai::action::Attack* samuraiAttack = new ai::action::Attack();
-	ai::action::SeekAndArrive* samuraiSeekAndArrive = new ai::action::SeekAndArrive(m_MouseGent, 200.0f);
-	ai::action::Seek* samuraiSeek = new ai::action::Seek(m_MouseGent, 200.f);
-
-	//Melee Samurai
-	ai::composite::AttackSequence* samuraiAttackSeq = new ai::composite::AttackSequence();
-	samuraiAttackSeq->addChild(samuraiWithinRangeCond);					//WithinRange
-	samuraiAttackSeq->addChild(samuraiSeekAndArrive);							//TEST
-	//samuraiAttackSeq->addChild(samuraiAttack);						//Attack
+	//// TEST ////
+	enemyTest->addChild(new ai::condition::WithinRange(m_PathFollowGent, 50));
+	enemyTest->addChild(new ai::action::Seek(m_PathFollowGent));
+	enemyTest->addChild(new ai::action::UpdatePath(m_map));
+	enemyTest->addChild(new ai::action::FollowPath());
 
 	for (auto e : m_enemyList)
 	{
-		e->addBehaviour(samuraiAttackSeq); 
+		e->addBehaviour(enemyTest); 
 	}
 
 	return true;
@@ -302,7 +286,7 @@ void KunoApp::draw() {
 
 	//Draw agents
 	m_Player->draw(m_2dRenderer);				//Keyboard
-	m_MouseGent->draw(m_2dRenderer);		//Mouse
+	m_MouseGent->draw(m_2dRenderer);			//Mouse
 	m_PathFollowGent->draw(m_2dRenderer);
 	m_FleeGent->draw(m_2dRenderer);
 

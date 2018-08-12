@@ -249,7 +249,7 @@ namespace pf {
 		return clampedTile;
 	}
 
-	Path Map::getDjikstraPath(Tile * startTile, Tile * endTile) const
+	Path Map::getDjikstraPath(Tile * start, Tile * end) const
 	{
 		//Inits
 		Node*		currentTile;
@@ -263,9 +263,9 @@ namespace pf {
 		}
 
 		//Clear and push start node onto open list
-		startTile->parent = nullptr;		//This will act as the root; will be used when tracing back
-		startTile->G = 0;				//0 because there's no traversal yet
-		openList.push_back(startTile);
+		end->parent = nullptr;		//This will act as the root; will be used when tracing back
+		end->G = 0;				//0 because there's no traversal yet
+		openList.push_back(end);
 
 		//Slight optimization; Stop once you get to the node you're looking for
 		//Downside: Might not always find the shortest parth
@@ -285,7 +285,7 @@ namespace pf {
 			openList.pop_front();						//Remove node from the queue
 			closedList.push_back(currentTile);			//Current node is now traversed (mark it as traversed)
 
-			if (currentTile == endTile) break;			//Goal node found so break out
+			if (currentTile == start) break;			//Goal node found so break out
 
 			for (auto c : currentTile->connections) {		//[Loop through it's edges]
 
@@ -321,7 +321,7 @@ namespace pf {
 
 		//Return the solution
 		Path DjikstraSolution;
-		auto workTile = endTile;
+		auto workTile = start;
 		while (workTile != nullptr) {
 			DjikstraSolution.push_back(workTile->pos);
 			workTile = static_cast<Tile*>(workTile->parent);
@@ -329,7 +329,7 @@ namespace pf {
 		return DjikstraSolution;
 	}
 
-	Path Map::getAStarPath(Tile * startNode, Tile * endNode) const
+	Path Map::getAStarPath(Tile * start, Tile * end) const
 	{
 		//Inits
 		Node*		currentNode;
@@ -344,9 +344,9 @@ namespace pf {
 		}
 
 		//Clear and push start node onto open list
-		startNode->parent = nullptr;		//This will act as the root; will be used when tracing back
-		startNode->G = 0;				//0 because there's no traversal yet
-		openList.push_back(startNode);
+		end->parent = nullptr;		//This will act as the root; will be used when tracing back
+		end->G = 0;				//0 because there's no traversal yet
+		openList.push_back(end);
 
 		//Slight optimization; Stop once you get to the node you're looking for
 		//Downside: Might not always find the shortest parth
@@ -367,19 +367,19 @@ namespace pf {
 			openList.pop_front();						//Remove node from the queue
 			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
 
-			if (currentNode == endNode) break;			//Goal node found so break out
+			if (currentNode == start) break;			//Goal node found so break out
 
 			for (auto c : currentNode->connections) {		//[Loop through it's edges]
 				
-				if (c == nullptr) continue;			//What's the purpose of this?
+				//if (c == nullptr) continue;			//What's the purpose of this?
 
 				//Determine if this tile is in any of the lists
 				bool inClosedList = std::find(closedList.begin(), closedList.end(), c->target) != closedList.end();
 				bool inOpenedList = std::find(openList.begin(), openList.end(), c->target) != openList.end();
 
-				//Calculate G score
+				//Calculate scores
 				float gScore = currentNode->G + c->cost;
-				float hScore = pkr::Vector2::distance(currentNode->pos, endNode->pos);
+				float hScore = pkr::Vector2::distance(currentNode->pos, start->pos);
 				float fScore = gScore + hScore;
 
 				if (!inClosedList) {	//inClosedList == false; Not already traversed, set score
@@ -396,7 +396,6 @@ namespace pf {
 						c->target->parent = currentNode;
 					}
 				}
-
 				if (!inOpenedList && !inClosedList) {	//If not in any lists (ie. first run), ad to priority queue
 					//Probably a fail safe
 					openList.push_back(static_cast<Tile*>(c->target));		//Node* -> Tile*
@@ -406,9 +405,10 @@ namespace pf {
 
 		//Return the solution
 		Path AstarSolution;
-		auto workNode = endNode;
+		auto workNode = start;
 		while (workNode != nullptr) {
-			AstarSolution.insert(AstarSolution.begin(), workNode->pos);		//Push to the front instead; FollowAgent() starts from the rear
+			AstarSolution.push_back(workNode->pos);
+			//AstarSolution.insert(AstarSolution.begin(), workNode->pos);		//If path needs to be reversed
 			workNode = static_cast<Tile*>(workNode->parent);
 		}
 		return AstarSolution;

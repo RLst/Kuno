@@ -55,21 +55,23 @@ public:
 	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 	void				buildKunoMap();									//Build game map from raw data (maybe this should be in Game.cpp)
 	//void				loadMap();	//From file? Implement later
-	//void				addTile(Tile* tile);
 
-	//Find tile
-	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = 100.f);	//Get the nearest tile using an CARTESIAN coord
-	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = 100.f);	//Get the nearest tile using an ISOMETRIC coord
+	//// Find Tile ////
+	//Get the nearest tile using a CARTESIAN coord; 
+	//Agents use this
+	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = 100.f);
+	
+	//Get the nearest tile using an ISOMETRIC coord; 
+	//Mouse uses this; use this to find the tile under the mouse cursor
+	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = 100.f);	
 	
 	//Clamps
-	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);		//Returns a clamped WORLD position 
+	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);			//Returns a clamped WORLD position 
 	Tile*				clampwithinMapRetTILE(const pkr::Vector2 &Wpos);			//Returns the nearest tile after clamping
 
 	//Pathfinding
-	Path				getDjikstraPath(Tile* startTile, Tile* endTile) const;
-	Path				getAStarPath(Tile* startTile, Tile* endTile) const;
-
-	//Accessors
+	Path				getDjikstraPath(Tile* start, Tile* end) const;
+	Path				getAStarPath(Tile* start, Tile* end) const;
 	Path				getPath() const { return m_path; }
 
 	//Core

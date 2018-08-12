@@ -38,6 +38,9 @@ namespace pf {
 
 	void Map::buildRandomMap(int width, int depth)
 	{
+		m_width = width;
+		m_depth = depth;
+
 		//Call texture manager
 		auto TM = KunoApp::Instance()->TextureManager();
 
@@ -60,7 +63,7 @@ namespace pf {
 				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
 				//// Set the base //// (The ground/floor)
-				switch (pkr::Random(0, 5))
+				switch (pkr::Random(1, 1))
 				{
 				case 0:	//Floor
 					newTile->tex = TM->getTexture("Floor");
@@ -104,18 +107,12 @@ namespace pf {
 				}
 
 				//// Add any objects that may be on this tile ////
-				int random = pkr::Random(0, 15);
-				if (random < 4) //Object will definitely be created
+				int random = pkr::Random(5, 10);
+				if (random <= 5) //Object will definitely be created
 				{
 					StaticObject* newObject = new StaticObject();		//Create empty object and set properties below
 					switch (random)
 					{
-					case 0: //HugeBlock
-						newObject->tex = TM->getTexture("HugeBlock");
-						newObject->pos = newTile->pos;
-						newObject->dsOffset = pkr::Vector2(0, 75.0f);
-						newTile->objects.push_back(newObject);				//Add onto the tile
-						break;
 					case 1: //Column
 						newObject->tex = TM->getTexture("Column");
 						newObject->pos = newTile->pos;
@@ -138,6 +135,12 @@ namespace pf {
 						newObject->tex = TM->getTexture("LargeBlock");
 						newObject->pos = newTile->pos;
 						newObject->dsOffset = pkr::Vector2(0, 39.f);
+						newTile->objects.push_back(newObject);				//Add onto the tile
+						break;
+					case 5: //HugeBlock
+						newObject->tex = TM->getTexture("HugeBlock");
+						newObject->pos = newTile->pos;
+						newObject->dsOffset = pkr::Vector2(0, 75.0f);
 						newTile->objects.push_back(newObject);				//Add onto the tile
 						break;
 						//ELSE don't add any objects
@@ -199,7 +202,7 @@ namespace pf {
 					}
 
 					//// FINALLY CONNECT THE TILES UP ////
-					pf::Node::connect(t1, t2, cost);	//This should also connect tiles both ways
+					pf::Node::connect(t1, t2, cost);	//!!!This should also connect tiles both ways
 				}
 
 			}
@@ -233,8 +236,8 @@ namespace pf {
 		auto clamped = pos;
 
 		//// Simple clamp ////
-		clamped.x = pkr::Clamp(pos.x, 0.0f, static_cast<float>(m_width * WORLD_WIDTH));
-		clamped.y = pkr::Clamp(pos.y, 0.0f, static_cast<float>(m_depth * WORLD_DEPTH));
+		clamped.x = pkr::Clamp(clamped.x, 0.0f, static_cast<float>(CART_TILE_WIDTH * (m_width-1)));		//BUGGY
+		clamped.y = pkr::Clamp(clamped.y, 0.0f, static_cast<float>(CART_TILE_HEIGHT * (m_depth-1)));	//BUGGY		
 
 		return clamped;
 	}

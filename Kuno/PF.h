@@ -65,8 +65,8 @@ namespace pf {
 		using	std::vector<pkr::Vector2>::vector;			//Use the constructor from std::vector
 
 	public:
-		size_t		index = 0;		//Important that this is init to 0!!!
-		float		radius = 5.0f;								//Custom parameter
+		size_t		index = 0;			//Important that this is init to 0!!!
+		float		radius = 5.0f;		//Custom parameter
 
 	public:
 		bool		isAvailable() const { return !empty(); }
@@ -81,7 +81,7 @@ namespace pf {
 			this->clear();
 		}
 
-		bool		endReached() const { return index > this->size(); }
+		bool		endReached() const { return index > this->size()-1; }
 
 		//Range checked overrides
 		pkr::Vector2& operator[](size_t i) { return std::vector<pkr::Vector2>::at(i); }

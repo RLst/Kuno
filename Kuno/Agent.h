@@ -9,6 +9,7 @@
 #include <pkr/Vector2.h>
 #include <pkr/Vector3.h>
 #include "PF.h"
+#include "AI.h"
 
 namespace aie {
 	class Texture;
@@ -18,45 +19,43 @@ namespace ai {
 
 	class iBehaviour;
 
-	//enum class eEnemyState
-	//{
-	//	PATROL,
-	//	SUSPICIOUS,
-	//	ALERT
-	//};
-
-	//enum class ePlayerState 
-	//{
-	//	NORMAL,
-	//	STEALTH
-	//};
-
 	////Agents
 	class Agent
 	{
 	private:
 		friend class		iBehaviour;
 
+		//Base Agent ie. if nothing inherits this, default sprite of agent is a circle
+		float				m_size;
+		pkr::Vector3		m_colour;
+
 	protected:
 		std::vector<iBehaviour*> m_behaviours;
 
 		pkr::Vector2		m_cPos;				//px; CANVAS (Isometric)
+
+		//Damage
+		float				m_health = 100;		
+		float				m_attack;			//The amount of damage this agent
+
 		//pkr::Vector2		m_force;
 		//pkr::Vector2		m_accel;
 		//pkr::Vector2		m_vel;
-		float				m_health = 10;
+		float				m_facing = 0;		//Where the agent is looking at
 
-		//// PATHFINDING ////
-		int					m_currentWaypointID;	//???Is this right?
+		//Speeds
+		float				m_sneakSpeed =	100;
+		float				m_walkSpeed =	200;
+		float				m_runSpeed =	300;
+		float				m_maxSpeed =	400;
+
+		//Last seen enemy's position
+		pkr::Vector2		m_lastSeenPos;
+		bool				m_lastSeenAvail = false;
+
+		//Pathfinding
 		pf::Path			m_path;
-		float				m_pathRadius = 5.0f;
-
-		//Circle agent only (if nothing inherits this, will default to a circle being drawn)
-		float				m_size;
-		pkr::Vector3		m_colour;
-
-		//Flags
-		bool				m_lastSeenAvailable = false;		//NOT IDEAL
+		pkr::Vector2		m_desiredPos = pkr::Vector2();	//UpdatePath will use this to create a path
 
 	public:
 		enum class eState
@@ -68,48 +67,55 @@ namespace ai {
 			ALERT,
 		};
 
-		eState				state;
+		eState				state = eState::ALERT;
 		pkr::Vector2		pos;				//WORLD
-		float				m_facing = 0;		//Where the agent is looking at
-		float				m_maxSpeed = 400;
 
 	public:
 		//Agent(const Agent &other);	//Copy
-		virtual ~Agent();				//Destructor 
+		virtual ~Agent();				//Destructor 			
 		Agent(float circleSize = 25.0f, const pkr::Vector3 &colour = { 0.75f, 0.75f, 0.75f }, const pkr::Vector2 &startingPos = { 300, 300 });
 
 		//Behaviours
 		void				addBehaviour(iBehaviour* behaviour);
 
 		//Translation
-		void				move(const pkr::Vector2 &speed, float deltaTime);				//Make this private later; Move in world coordinates
-		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//Move in pixels on the canvas itself
+		void				move(const pkr::Vector2 &speed, float deltaTime);				//For debug; Move in world coordinates
+		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//For debug; Move on the canvas itself
 		void				seek(const pkr::Vector2 &target, float deltaTime);
 
-		//Accessors
-		//pkr::Vector2		getPos() const { return m_pos; }			//Get world position
-		//pkr::Vector2		getCpos() const { return m_cPos; }			//Get canvas position
-		//float				getMaxSpeed() const { return m_maxSpeed; }
-		//STATE				getState() const { return m_state; }
-		float				getHealth() const { return m_health; }
-		void				takeDamage(float damage) { m_health -= damage; }
-		bool				isLastSeenAvailable() const { return m_lastSeenAvailable; }
-		void				setLastSeenAvailable(bool set) { m_lastSeenAvailable = set; }
+		//// Accessors ////
+		//Speed
+		void				setSneakSpeed(float sneakSpeed) { m_sneakSpeed = sneakSpeed; }
+		void				setWalkSpeed(float walkSpeed) { m_walkSpeed = walkSpeed; }
+		void				setRunSpeed(float runSpeed) { m_runSpeed = runSpeed; }
+		float				getSpeed() const;
 
-		////Pathfinding
-		bool				moveByPath(const pf::Path &path, float deltaTime);		//Returns true if reached the end of the path?
-		bool				followPath(float deltaTime);
-		void				setPath(pf::Path path) { m_path = path;	}
+		//Health & Attack
+		float				getHealth() const { return m_health; }
+		void				takeDamage(float attack) { m_health -= attack; }
+		float				getAttack() const { return m_attack; }
+		bool				isAlive() { return m_health > 0; }
+
+		//Last seen
+		bool				isLastSeenAvailable() const { return m_lastSeenAvail; }
+		void				setLastSeen(pkr::Vector2 lastSeenPos);
+		void				clearLastSeen() { m_lastSeenAvail = false; }
+
+		//Pathfinding
+		eResult				followPath(float deltaTime);						
+		void				setPath(const pf::Path path) { m_path = path; }
 		pf::Path			getPath() const { return m_path; }
+		pkr::Vector2		getDesiredPos() const { return m_desiredPos; }
+		void				setDesiredPos(pkr::Vector2 desiredPos) { m_desiredPos = desiredPos; }
 
 		//Core
 		virtual void		update(float deltaTime);
 		virtual void		draw(aie::Renderer2D* renderer);		//Agent drawn as a circle; this only runs if a sprite object does not override
-	
 	};
 
 
-	class Character : public Agent
+	class Avatar : public Agent
+		//Gives the agent a sprite or animation (from spritesheets)
 	{
 	private:
 		//Textures

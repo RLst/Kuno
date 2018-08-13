@@ -18,19 +18,11 @@ namespace ai {
 	Agent::~Agent()
 	{
 		//Behaviours
-		//for (auto behaviour : m_behaviours) {
-		//	if (behaviour != nullptr)
-		//		delete behaviour;			//Do the behaviours have to be deleted?
-		//	//behaviour = nullptr;
-		//}
-
-		/*
-		//Path
-		for (auto &point : m_currentPath) {
-			delete point;
-			point = nullptr;
+		for (auto behaviour : m_behaviours) {
+			if (behaviour != nullptr)
+				delete behaviour;			//Do the behaviours have to be deleted?
+			//behaviour = nullptr;
 		}
-		*/
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)
@@ -54,51 +46,79 @@ namespace ai {
 
 	void Agent::seek(const pkr::Vector2 & target, float deltaTime)
 	{
-		auto seek = pkr::Vector2::normalise(target - pos) * m_maxSpeed;
-		move(seek, deltaTime);
+		auto seekVec = pkr::Vector2::normalise(target - pos) * getSpeed();		//Get speed auto adjusts for agent's state ie. NORMAL = walk, ALERT = run
+		move(seekVec, deltaTime);
 	}
 
-	/*
-	pkr::Vector2 Agent::followPath()
+	eResult Agent::followPath(float deltaTime)
 	{
-		//Clear target way point
-		auto targetPoint = pkr::Vector2();
-
 		//If there is an available path
-		if (!m_path->empty()) {
+		if (m_path.isAvailable()) 
+		{
+			////// ONLY THE FIRST WAYPOINT ////
+			//if (m_path.index == 0 && m_path.size() > 1) {
+			//	//Skip the first waypoint and go directly to the second waypoint
+			//	//that way the agent doesn't return back to the centre of the it's on
+			//	//because that looks jerky
+			//	//PROBLEM1: If the agent goes through a unconnected zone it gets stuck
+			//	//TRY: 
+			//	m_path.next();
+			//	//seek(m_path[1], deltaTime);
+			//	return SUCCESS;
+			//}
 
-			targetPoint = m_path->at(m_currentWaypointIndex);
-
-			//If agent has arrived at a waypoint
-			if (pkr::Vector2::distance(m_pos, targetPoint) <= m_waypointSearchRadius) 
+			//// END OF PATH REACHED ////
+			if (m_path.endReached())
 			{
-				if (m_isPatrolling) {
-					
-				}
-				else {
-					++m_currentWaypointIndex;
-					//Stop if reached the end
-					if (m_currentWaypointIndex > m_path->size())
-						m_currentWaypointIndex = m_path->size() - 1;
-				}
+				//Reset and return success
+				m_path.reset();
+				return SUCCESS;
+			}
 
-				++m_currentWaypointIndex;
-				if (m_currentWaypointIndex >= m_path->size()) {
-					m_currentWaypointIndex = workingPath.size() - 1;
-				}
+			//// A WAYPOINT REACHED ////
+			if (pkr::Vector2::distance(pos, m_path.getWaypoint()) < m_path.radius)
+			{
+				//Increment current waypoint index and return running
+				m_path.next();
+				return SUCCESS;
+				//return RUNNING;
+			}
+			else
+			{
+				//The agent is in between waypoints (PROBABLY)
+				//so move agent towards next waypoint
+				seek(m_path.getWaypoint(), deltaTime);
+				return SUCCESS;
+				//return RUNNING;
 			}
 		}
-
-		//NOT FINISHED!!!
-		return pkr::Vector2();		//Return NULL
+		//Path not available
+		return FAILURE;
 	}
-	*/
 
 
-	bool Agent::followPath(float deltaTime)
+	float Agent::getSpeed() const
 	{
+		switch (state) {
+		case eState::NORMAL:
+			return m_walkSpeed; break;
+		case eState::STEALTH:
+			return m_sneakSpeed; break;
+		case eState::PATROL:
+			return m_walkSpeed; break;
+		case eState::SUSPICIOUS:
+			return m_walkSpeed; break;
+		case eState::ALERT:
+			return m_runSpeed; break;
+		default:
+			return m_maxSpeed; //Temp
+		}
+	}
 
-		return false;
+	void Agent::setLastSeen(pkr::Vector2 lastSeenPos)
+	{
+		m_lastSeenPos = lastSeenPos;
+		m_lastSeenAvail = true;		//Automatically sets last seen flag
 	}
 
 	void Agent::update(float deltaTime)

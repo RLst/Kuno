@@ -159,7 +159,7 @@ namespace ai {
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		class UpdatePath : public iBehaviour
+		class CalculatePath : public iBehaviour
 			/*Changes the agent's path and sets it to available so the agent can start pathing
 			Requires: 
 				&KunoApp::m_map
@@ -189,8 +189,8 @@ namespace ai {
 		{
 			pf::Map*		m_map;
 		public:
-			~UpdatePath() = default;
-			UpdatePath(pf::Map* map) : m_map(map) {}
+			~CalculatePath() = default;
+			CalculatePath(pf::Map* map) : m_map(map) {}
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 

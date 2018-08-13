@@ -315,61 +315,69 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	pkr::Vector2 fpsPos = m_coordConverter->ViewportToCanvas(0, 0);		//Stick to the bottom left hand corner of screen
 	m_2dRenderer->setRenderColour(0.1f, 0.1f, 0.1f);
 	m_2dRenderer->drawText(m_font, fps, fpsPos.x, fpsPos.y);
-
-	//// Camera ////
-	ImGui::Begin("Camera");
-	ImGui::Text("x: %.0f, y: %.0f", m_camera->x, m_camera->y);
-	ImGui::Text("Zoom: %.3f", m_camera->zoom);
-	ImGui::Text("lastScrollPos: %.3f", m_camera->m_lastScrollPos);
-	ImGui::End();
-
-	//// Coord converter ////
+	
+	//// IMGUI STUFF ////
 	pkr::Vector2 view = { (float)input->getMouseX(), (float)input->getMouseY() };			//Get Viewport coords
 	pkr::Vector2 canvas = m_coordConverter->ViewportToCanvas(view);							//Convert from Viewport to Canvas
 	pkr::Vector2 world = m_coordConverter->CanvasToWorld(canvas);							//Convert from Canvas to World
 	pkr::Vector2 world2canvas = m_coordConverter->WorldToCanvas(world);						//Convert from World BACK to Canvas
 
-	ImGui::Begin("Coord Converter");
-	ImGui::Text("Viewport > x: %.0f, y: %.0f", view.x, view.y);
-	renderer->setRenderColour(1, 0, 0);
-	renderer->drawText(m_font, "VIEW", view.x, view.y);
+	ImGui::Begin("DEBUG");
 
-	ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
-	renderer->setRenderColour(0, 1, 0);
-	renderer->drawText(m_font, "CANVAS", canvas.x, canvas.y);
-
-	ImGui::Text("World > x: %.2f, y: %.2f", world.x, world.y);
-	renderer->setRenderColour(0, 0, 1);
-	renderer->drawText(m_font, "WORLD", world.x, world.y, m_depthSorter->getSortDepth(world.y));
-
-	ImGui::Text("World2Canvas > x: %.2f, y: %.2f", world2canvas.x, world2canvas.y);
-	renderer->setRenderColour(0, 0, 0);
-	renderer->drawText(m_font, "W2C", world2canvas.x, world2canvas.y, m_depthSorter->getSortDepth(world2canvas.y));
-	ImGui::End();
-
-	//// Depth Sorter ////
+	//// Camera ////
+	if (ImGui::CollapsingHeader("Camera"))
 	{
-		// An orange circle will locate where the cursor is should be depth sorted by the sorter
-		pkr::Vector2 view = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
-		pkr::Vector2 circCanvas = m_coordConverter->ViewportToCanvas(view.x, view.y);
-		float depth = m_depthSorter->getSortDepth(circCanvas.y);
-		m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
-		m_2dRenderer->drawCircle(circCanvas.x, circCanvas.y, 5.0f, depth);
-		ImGui::Begin("Depth Sorter");
-		ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
-		ImGui::Text("Viewport > x: %.2f, y: %.2f", view.x, view.y);
-		ImGui::Text("Canvas > x: %.2f, y: %.2f", circCanvas.x, circCanvas.y);
-		ImGui::Text("Depth (Cursor): %.2f", depth);
-		ImGui::Text("Depth Iterator: %f", m_depthSorter->m_depthIterator);
-		ImGui::End();
+		ImGui::Text("x: %.0f, y: %.0f", m_camera->x, m_camera->y);
+		ImGui::Text("Zoom: %.3f", m_camera->zoom);
+		//ImGui::Text("lastScrollPos: %.3f", m_camera->m_lastScrollPos);
 	}
 
-	//////////////
-	////m_graph->draw(m_2dRenderer);
-	////// DEBUG: Check the time it takes to draw the map ////
-	//ImGui::Begin("Graph Draw Duration");
-	//ImGui::Text("%f", mapDrawEndTime - mapDrawStartTime);
-	//ImGui::End();
-	////////////
+	//// Coord converter ////
+	if (ImGui::CollapsingHeader("Coord Converter"))
+	{
+		ImGui::Text("Viewport > x: %.0f, y: %.0f", view.x, view.y);
+		renderer->setRenderColour(1, 0, 0);
+		renderer->drawText(m_font, "VIEW", view.x, view.y);
 
+		ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
+		renderer->setRenderColour(0, 1, 0);
+		renderer->drawText(m_font, "CANVAS", canvas.x, canvas.y);
+
+		ImGui::Text("World > x: %.2f, y: %.2f", world.x, world.y);
+		renderer->setRenderColour(0, 0, 1);
+		renderer->drawText(m_font, "WORLD", world.x, world.y, m_depthSorter->getSortDepth(world.y));
+
+		ImGui::Text("World2Canvas > x: %.2f, y: %.2f", world2canvas.x, world2canvas.y);
+		renderer->setRenderColour(0, 0, 0);
+		renderer->drawText(m_font, "W2C", world2canvas.x, world2canvas.y, m_depthSorter->getSortDepth(world2canvas.y));
+	}
+
+	//// Depth Sorter ////
+	// An orange circle will locate where the cursor is should be depth sorted by the sorter
+	//pkr::Vector2 view = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
+	//pkr::Vector2 circCanvas = m_coordConverter->ViewportToCanvas(view);
+	if (ImGui::CollapsingHeader("Depth Sorter"))
+	{
+		float depth = m_depthSorter->getSortDepth(canvas.y);
+		m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
+		m_2dRenderer->drawCircle(canvas.x, canvas.y, 5.0f, depth);
+		ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
+		ImGui::Text("Viewport > x: %.2f, y: %.2f", view.x, view.y);
+		ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
+		ImGui::Text("Depth (Cursor): %.2f", depth);
+		ImGui::Text("Depth Iterator: %f", m_depthSorter->m_depthIterator);
+	}
+
+	//// Tile Address ////
+	if (ImGui::CollapsingHeader("Tile Address"))
+	{
+		auto tileUnderMouse = m_map->findTileFromCanvasPos(canvas);
+		ImGui::Text("& of Tile at cursor: %p", tileUnderMouse);
+		if (tileUnderMouse != nullptr)
+		{
+			ImGui::Text("Position > x: %.2f, y: %.2f", tileUnderMouse->pos.x, tileUnderMouse->pos.y);
+		}
+	}
+
+	ImGui::End();
 }

@@ -130,7 +130,17 @@ namespace ai {
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
+	//RETURN SUCCESS
+	class ReturnSuccess : public aDecorator
+		//Always return success
+	{
+	public:
+		ReturnSuccess() = default;
+		~ReturnSuccess() = default;
+		eResult execute(Agent* agent, float deltaTime) override;
+	};
 }
+
 
 /*Behaviour tree logic 'pseudocode'
 

@@ -128,6 +128,7 @@ namespace ai {
 		//Returns result of child unless it times out ie: runs the child for duration set
 		return m_child->execute(agent, deltaTime);
 	}
+
 	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
 	{
 		//If first run
@@ -141,6 +142,12 @@ namespace ai {
 			m_delay = m_duration;
 		}
 		return eResult::RUNNING;
+	}
+
+	eResult ReturnSuccess::execute(Agent * agent, float deltaTime)
+	{
+		m_child->execute(agent, deltaTime);
+		return eResult::SUCCESS;	//ALWAYS RETURN SUCCESS!
 	}
 
 }

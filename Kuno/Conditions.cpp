@@ -37,6 +37,14 @@ namespace ai {
 				return FAILURE;
 		}
 
+		eResult CheckNotMoving::execute(Agent * agent, float deltaTime)
+		{
+			if (agent->m_isMoving)
+				return eResult::FAILURE;
+			else
+				return eResult::SUCCESS;
+		}
+
 	}
 
 }

@@ -53,6 +53,15 @@ namespace ai {
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class CheckNotMoving : public iBehaviour
+		{
+		public:
+			CheckNotMoving() = default;
+			~CheckNotMoving() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+
+		};
+
 
 	}
 }

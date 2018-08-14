@@ -236,8 +236,8 @@ namespace pf {
 		auto clamped = pos;
 
 		//// Simple clamp ////
-		clamped.x = pkr::Clamp(clamped.x, 0.0f, static_cast<float>(CART_TILE_WIDTH * (m_width-1)));		//BUGGY
-		clamped.y = pkr::Clamp(clamped.y, 0.0f, static_cast<float>(CART_TILE_HEIGHT * (m_depth-1)));	//BUGGY		
+		clamped.x = pkr::Clamp(clamped.x, 0.0f, static_cast<float>(CART_TILE_WIDTH * (m_width - 1)));		//BUGGY
+		clamped.y = pkr::Clamp(clamped.y, 0.0f, static_cast<float>(CART_TILE_HEIGHT * (m_depth - 1)));	//BUGGY		
 
 		return clamped;
 	}

@@ -8,6 +8,8 @@
 #include "AI.h"
 #include "KunoApp.h"
 
+#include "imgui.h"
+
 namespace ai {
 
 	Agent::Agent(float circleSize, const pkr::Vector3 & colour, const pkr::Vector2 & startingPos) :
@@ -137,6 +139,17 @@ namespace ai {
 
 		renderer->setRenderColour(m_colour.r, m_colour.g, m_colour.b);
 		renderer->drawCircle(m_cPos.x, m_cPos.y + m_size, m_size, depth);	//By default draw agent as a coloured circle
+
+#ifdef _DEBUG
+		ImGui::Begin("DEBUG: Agent");
+		ImGui::Text("pos > x:%.2f, y:%.2f", pos.x, pos.y);
+		ImGui::Text("health > %.0f", m_health);
+		ImGui::Text("lastSeen > x:%.0f, y:%.0f", m_lastSeenPos.x, m_lastSeenPos.y);
+		ImGui::Text("desiredPos > x:%.2f, y:%.2f", m_desiredPos.x, m_desiredPos.y);
+		ImGui::Text("state > ", state);
+		ImGui::End();
+#endif // _DEBUG
+
 	}
 
 }

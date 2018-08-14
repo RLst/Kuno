@@ -66,7 +66,7 @@ namespace pf {
 
 	public:
 		size_t		index = 0;			//Important that this is init to 0!!!
-		float		radius = 5.0f;		//Custom parameter
+		float		radius = 10.0f;		//Custom parameter
 
 	public:
 		bool		isAvailable() const { return !empty(); }

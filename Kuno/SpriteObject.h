@@ -22,6 +22,7 @@ protected:
 	//std::vector<aie::Texture*>	m_animation;
 
 public:
+	SpriteObject() = default;
 	SpriteObject(aie::Texture* texture);		//Texture is the first frame
 	virtual ~SpriteObject();
 

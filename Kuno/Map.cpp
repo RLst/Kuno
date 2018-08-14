@@ -63,14 +63,14 @@ namespace pf {
 				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
 				//// Set the base //// (The ground/floor)
-				switch (pkr::Random(1, 1))
+				switch (pkr::Random(0, 5))
 				{
 				case 0:	//Floor
 					newTile->tex = TM->getTexture("Floor");
 					newTile->dsOffset = pkr::Vector2(0, 75.0f);
 					newTile->terrain = SMOOTH_FLOOR;
 					newTile->access = TRAVERSABLE;
-					break;					
+					break;
 				case 1:	//Grass
 					newTile->tex = TM->getTexture("Floor");
 					newTile->dsOffset = pkr::Vector2(0, 75.0f);
@@ -211,11 +211,11 @@ namespace pf {
 	}
 
 
-	Tile * Map::findTileFromPos(const pkr::Vector2 & cPos, float searchRadius)
+	Tile * Map::findTileFromPos(const pkr::Vector2 & pos, float searchRadius)
 	{
 		for (auto t : m_tiles) {
 			//Return tile that is within range of search position
-			if (pkr::Vector2::distance(t->pos, cPos) < searchRadius)
+			if (pkr::Vector2::distance(t->pos, pos) < searchRadius)
 				return t;
 		}
 		return nullptr;		//Tile not found; return null
@@ -337,7 +337,7 @@ namespace pf {
 		NodeList	closedList;
 
 		//Set all parents to null and G scores to infinity
-		for (auto t : m_tiles ) {
+		for (auto t : m_tiles) {
 			t->parent = nullptr;
 			t->G = INFINITY;
 			t->F = INFINITY;
@@ -361,7 +361,7 @@ namespace pf {
 			closedList.push_back(currentNode);			//Current node is now traversed (mark it as traversed)
 
 			for (auto neighbour : currentNode->connections) {		//[Loop through it's edges]
-				
+
 				if (neighbour == nullptr) continue;			//What's the purpose of this?
 
 				//Determine if this tile is in any of the lists
@@ -450,7 +450,7 @@ namespace pf {
 	{
 		auto app = KunoApp::Instance();
 
-		for (auto t : m_tiles) 
+		for (auto t : m_tiles)
 		{
 			//Convert cartesian to isometric, readying the sprite for drawing
 			t->cPos = app->CoordConverter()->WorldToCanvas(t->pos);
@@ -475,11 +475,12 @@ namespace pf {
 			//// DEBUG ////
 			//Draw the paths; all the node/tile connections
 			ImGui::Begin("Map's tile connections");
-			if (m_drawConnections) 
+			if (m_drawConnections)
 			{
 				int index = 0;
-				for (auto c : t->connections) 
-				{	{
+				for (auto c : t->connections)
+				{
+					{
 						//Canvas coords
 						pkr::Vector2 start = t->cPos;
 						pkr::Vector2 end = c->target->cPos;
@@ -507,11 +508,15 @@ namespace pf {
 
 						//Print debugs
 						ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
-				} ++index; 	}
+					} ++index;
+				}
 			}
 			ImGui::End();
+#endif
 
 		}
+
+#ifdef _DEBUG
 		//Draw the test map A* pathfinding
 		ImGui::Begin("Map's path");
 
@@ -532,7 +537,6 @@ namespace pf {
 			}
 		}
 		ImGui::End();
-		////////////
-#endif
+#endif // _DEBUG
 	}
 }

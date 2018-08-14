@@ -55,7 +55,7 @@ protected:
 	aie::Font*					m_font;
 
 	//Agents
-	ai::Agent*					m_Player;
+	ai::Agent*					m_KeyboardGent;
 	ai::Agent*					m_MouseGent;
 	ai::Agent*					m_PathFollowGent;
 	ai::Agent*					m_FleeGent;
@@ -74,10 +74,10 @@ private:
 	//static util::TextureManager		TextureManager;
 	//static util::DepthSorter		DepthSorter;
 	//static util::CoordConverter		CoordConverter;
-	util::Camera*			m_camera;
-	util::TextureManager*	m_textureManager;
-	util::DepthSorter*		m_depthSorter;
-	util::CoordConverter*	m_coordConverter;
+	util::Camera*				m_camera;
+	util::TextureManager*		m_textureManager;
+	util::DepthSorter*			m_depthSorter;
+	util::CoordConverter*		m_coordConverter;
 
 public:
 	static KunoApp*				Instance();			//MODERN SINGLETON PATTERN

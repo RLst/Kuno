@@ -5,6 +5,7 @@
 
 #pragma once
 #include "AI.h"
+#include "Agent.h"
 
 namespace pf {
 	class Map;
@@ -12,7 +13,7 @@ namespace pf {
 
 namespace ai {
 	class Agent;
-	class Character;
+	class Avatar;
 
 	namespace condition {
 		//////////////////////////////////////////////////////////////////////////////////////////////////

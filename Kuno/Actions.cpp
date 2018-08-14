@@ -24,10 +24,6 @@ namespace ai {
 
 		eResult tKeyboardControl::execute(Agent * agent, float deltaTime)
 		{
-			//Mouse controls
-			//int mouseX = input->getMouseX();
-			//int mouseY = input->getMouseY();
-
 			//Keyboard controls
 			if (m_input->isKeyDown(aie::INPUT_KEY_UP))
 			{
@@ -51,7 +47,6 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		tMouseControl::tMouseControl(aie::Input * input, float maxForce) :
 			m_input(input), m_maxSpeed(maxForce) {}
-
 		eResult tMouseControl::execute(Agent * agent, float deltaTime)	//MESSY
 		{
 			//Get GameApp
@@ -78,12 +73,10 @@ namespace ai {
 			else {
 				return eResult::SUCCESS;
 			}
-
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		tMouseSetDesiredPos::tMouseSetDesiredPos(aie::Input * input) :
-			m_input(input)
-		{}
+			m_input(input) 	{}
 		eResult tMouseSetDesiredPos::execute(Agent * agent, float deltaTime)
 		{
 			auto cc = KunoApp::Instance()->CoordConverter();
@@ -106,45 +99,34 @@ namespace ai {
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Seek::Seek(Agent * target, float arriveRadius) :
-			m_target(target), m_arriveRadius(arriveRadius)
-		{}
-
+			m_target(target), m_arriveRadius(arriveRadius)	{}
 		eResult Seek::execute(Agent * agent, float deltaTime)
 		{	//Seek vector = Target position - Agent position
-			//GOAL: Set agent->desiredPos for UpdatePath to process?
 
-			/*
-			Agent at 0,0
-			SeekTarget at 100, 100
-			DesiredPos = 100,100			
-			*/
-
-			//Find the normalised seek vector towards target
-			//auto seekVec = pkr::Vector2::normalise(m_target->pos - agent->pos);
-
-			////Find the desired position the agent needs to go to
-			//auto seekPos = m_target->pos + seekVec * agent->getSpeed();
-
-			//Set the agent's desired position
-			agent->m_isMoving = true;		//set to moving
-			agent->setDesiredPos(m_target->pos);
-
-			//Apply max force towards target
-			//agent->move(seekVec * m_maxSpeed, deltaTime);
-			//agent->move(nrmSeekVector - agent.getVel() * m_maxLspeed, deltaTime);
+			//TRY implementing CheckNotMoving behaviour inside 
+			//the move behaviours to simplify it a bit
+			if (agent->m_isMoving)
+			{
+				//If the agent is moving then let the agent move/followPath
+				return eResult::FAILURE;	//Should branch out to Pathfinding branch
+			}
+			else {
+				//Set the agent's desired position
+				agent->m_isMoving = true;		//set to moving
+				agent->setDesiredPos(m_target->pos);
+				return eResult::SUCCESS;
+			}
 
 #ifdef _DEBUG
-			ImGui::Begin("Seek");
-			ImGui::Text("setDesiredPos > x:%.2f, y:%.2f", m_target->pos.x, m_target->pos.y);
-			ImGui::End();
+			//ImGui::Begin("Seek");
+			//ImGui::Text("setDesiredPos > x:%.2f, y:%.2f", m_target->pos.x, m_target->pos.y);
+			//ImGui::End();
 #endif // _DEBUG
 			return eResult::SUCCESS;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Idle::Idle(float minIdleTime, float maxIdleTime) :
-			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_duration(0)
-		{}
-
+			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_duration(0)	{}
 		eResult Idle::execute(Agent * agent, float deltaTime)
 		{
 			//If the current idle time is 0 then start timing
@@ -180,67 +162,15 @@ namespace ai {
 			return agent->followPath(deltaTime);
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		Flee::Flee(Agent * target, pf::Map * map, float fleeRange) :
-			m_target(target), m_map(map), m_fleeRange(fleeRange)
-		{}
-
+		Flee::Flee(Agent * target, float fleeRange) :
+			m_target(target), m_fleeRange(fleeRange) {}
 		eResult Flee::execute(Agent * agent, float deltaTime)
 		{
 			//Set the desired path to where the target is.... but reversed
-			auto fleeVec = pkr::Vector2::normalise(agent->pos - m_target->pos) * agent->getSpeed();
+			auto fleeVec = pkr::Vector2::normalise(agent->pos - m_target->pos) /** agent->getSpeed()*/;
 			auto fleePos = agent->pos + fleeVec;
 			agent->setDesiredPos(fleePos);
 			return eResult::SUCCESS;
-
-
-			/*
-			if (pkr::Vector2::distance(m_target->pos, agent->pos) < m_fleeRange) {
-				//Within flee range so flee from target
-				auto flee = pkr::Vector2::normalise(agent->pos - m_target->pos);
-				agent->move(flee * agent->getSpeed(), deltaTime);
-				//agent->seek(-flee, deltaTime);
-				return eResult::SUCCESS;
-			}
-			else
-				return eResult::FAILURE;
-			*/
-
-			/*
-			//If within target range then find new flee position and path
-			if (pkr::Vector2::distance(m_target->getPos(), agent->getPos()) < m_fleeRange) {
-
-				//// FLEE pos/path will keep updating unless out of range from player ////
-				//Get flee position
-				auto fleePos = agent->getPos() + pkr::Vector2::normalise(agent->getPos() - m_target->getPos()) * agent->getMaxSpeed();
-				
-				//Get the actual flee path on the map
-				pf::Tile* tileStart = m_map->findTileFromPos(agent->getPos());	//The tile the agent is on
-				pf::Tile* tileEnd = m_map->findTileFromPos(fleePos);
-				auto fleePath = m_map->getAStarPath(tileStart, tileEnd);
-
-				//Set agent's path
-				return (agent->pathTo(fleePath)) ? eResult::SUCCESS : eResult::RUNNING;
-			}
-			else
-				return eResult::FAILURE;
-			*/
-		}
-
-		void Flee::getPath(Agent* agent, pkr::Vector2 destination)
-		{
-			//Get destination WORLD position
-			destination;
-
-			//Clamp within the map's WORLD position AND convert to tile coordinates
-			auto destTile = m_map->clampwithinMapRetTILE(destination);
-
-			//Get tile the agent is on
-			auto startTile = m_map->findTileFromPos(agent->pos);
-
-			//Pathfind from agent to destination tile
-			m_path = m_map->getAStarPath(startTile, destTile);
-
-			//Set agents path as the new path
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateState::execute(Agent * agent, float deltaTime)
@@ -277,7 +207,7 @@ namespace ai {
 			while (!endTile->objects.empty()) {
 				endTile = m_map->findTileFromPos(desiredPos, searchRadius);
 				searchRadius += 20.0f;
-				if (searchRadius > 1000.0f)
+				if (searchRadius > 2000.0f)
 					assert(false);		//Search area getting too large;
 			}
 
@@ -290,7 +220,7 @@ namespace ai {
 				do 	{
 					startTile = m_map->findTileFromPos(agent->pos, searchRadius);
 					searchRadius += 20.0f;
-					if (searchRadius > 1000.0f)
+					if (searchRadius > 2000.0f)
 						assert(false);		//Search area getting too large;
 				} while (!startTile->objects.empty());
 				//The path should move the agent out from the untraversable tile
@@ -302,33 +232,6 @@ namespace ai {
 				//it doesn't move back to the tile centre
 				desiredPath[0] = agent->pos;
 			}
-
-			/*
-			if (!startTile->access == pf::eTileTraversable::TRAVERSABLE) {
-				//If the nearest tile is a untraversable tile ie. a tile with objects on it,
-				//Expand the search
-				
-				//If a tile nearby was not found ie. the player is 
-				//stuck inbetween a hole in the map nodes...
-
-				//Expand the search
-				float searchRadius = 120.f;
-				while (!startTile->objects.empty() && searchRadius < 500.0f) {
-					startTile = m_map->findTileFromPos(agent->pos, searchRadius);
-					searchRadius += 20.0f;
-					//if (searchRadius < 500.0f)
-					//	break;
-				}
-				//The desired path should move the player out where ever it's stuck
-				desiredPath = m_map->getAStarPath(startTile, endTile);
-			}
-			else { 
-				//If a tile was found, get the path but replace the first waypoint
-				//with the agent's position
-				desiredPath = m_map->getAStarPath(startTile, endTile);
-				desiredPath[0] = agent->pos;
-			}
-			*/
 
 			//Set the agent's path
 			agent->setPath(desiredPath);
@@ -351,6 +254,17 @@ namespace ai {
 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

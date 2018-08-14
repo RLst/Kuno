@@ -100,17 +100,13 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		class Flee : public iBehaviour
 		{
-		protected:
-			pf::Map*	m_map = nullptr;
-			pf::Path	m_path;
+		private:
 			Agent *		m_target = nullptr;
 			float		m_fleeRange;
 		public:
-			Flee() = default;
-			Flee(Agent* target, pf::Map* map, float fleeRange = 400);
-			//Flee(Agent* target, float fleeRange);
+			~Flee() = default;
+			Flee(Agent* target, float fleeRange = 400);
 			eResult		execute(Agent *agent, float deltaTime) override;
-			void		getPath(Agent* agent, pkr::Vector2 destination);
 		};
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		class FollowPath : public iBehaviour

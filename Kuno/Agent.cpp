@@ -20,11 +20,11 @@ namespace ai {
 	Agent::~Agent()
 	{
 		//Behaviours
-		for (auto behaviour : m_behaviours) {
-			if (behaviour != nullptr)
-				delete behaviour;			//Do the behaviours have to be deleted?
-			//behaviour = nullptr;
-		}
+		//for (auto behaviour : m_behaviours) {
+		//	if (behaviour != nullptr)
+		//		delete behaviour;			//Do the behaviours have to be deleted?
+		//	//behaviour = nullptr;
+		//}
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)
@@ -73,6 +73,7 @@ namespace ai {
 			if (m_path.endReached())
 			{
 				//Reset and return success
+				this->m_isMoving = false;
 				m_path.reset();
 				return SUCCESS;
 			}

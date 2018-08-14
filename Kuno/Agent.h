@@ -58,6 +58,9 @@ namespace ai {
 		pkr::Vector2		m_desiredPos = pkr::Vector2();	//UpdatePath will use this to create a path
 
 	public:
+		bool				m_isMoving = false;	//Flag that states whether or not the desired position is currently being seeked to or not
+
+
 		enum class eState
 		{
 			NORMAL,

@@ -11,15 +11,18 @@
 #include "KunoApp.h"
 #include "Tile.h"
 #include "Map.h"
+#include <Input.h>
+
+#include "imgui.h"
 
 namespace ai {
 	namespace action {
-
-		KeyboardControl::KeyboardControl(aie::Input * input, float lSpeedMax) :
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		tKeyboardControl::tKeyboardControl(aie::Input * input, float lSpeedMax) :
 			m_input(input), m_maxForce(lSpeedMax)
 		{}
 
-		eResult KeyboardControl::execute(Agent * agent, float deltaTime)
+		eResult tKeyboardControl::execute(Agent * agent, float deltaTime)
 		{
 			//Mouse controls
 			//int mouseX = input->getMouseX();
@@ -45,47 +48,17 @@ namespace ai {
 
 			return eResult::SUCCESS;
 		}
-
-		//// Seek ////
-		Seek::Seek(Agent * target, float maxForce) :
-			m_target(target), m_maxSpeed(maxForce)
-		{
-			m_dest = m_target->pos;
-		}
-
-		Seek::Seek(pkr::Vector2 destination, float maxSpeed) :
-			m_dest(destination), m_maxSpeed(maxSpeed) {}
-
-		eResult Seek::execute(Agent * agent, float deltaTime)
-		{	//Seek vector = Target position - Agent position
-			//Find the normalised seek vector towards target
-
-			pkr::Vector2 seekVec = pkr::Vector2::normalise(m_dest - agent->pos);
-
-			//Apply max force towards target
-			agent->move(seekVec * m_maxSpeed, deltaTime);
-			//agent->move(nrmSeekVector - agent.getVel() * m_maxLspeed, deltaTime);
-
-			return eResult::SUCCESS;
-		}
-
-		//// Idle ////
-		eResult Idle::execute(Agent * agent, float deltaTime)
-		{
-			return eResult();	//Do nothing!
-		}
-
-		//// Mouse Controller ////
-		MouseControl::MouseControl(aie::Input * input, float maxForce) :
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		tMouseControl::tMouseControl(aie::Input * input, float maxForce) :
 			m_input(input), m_maxSpeed(maxForce) {}
 
-		eResult MouseControl::execute(Agent * agent, float deltaTime)	//MESSY
+		eResult tMouseControl::execute(Agent * agent, float deltaTime)	//MESSY
 		{
 			//Get GameApp
 			auto app = KunoApp::Instance();
 
 			//Get current cartesian mouse position
-			auto mView = pkr::Vector2(m_input->getMouseX(), m_input->getMouseY());
+			auto mView = pkr::Vector2((float)m_input->getMouseX(), (float)m_input->getMouseY());
 			auto mCanvas = app->CoordConverter()->ViewportToCanvas(mView);
 			auto mWorld = app->CoordConverter()->CanvasToWorld(mCanvas);
 
@@ -99,97 +72,158 @@ namespace ai {
 				//(ACTION) Seek towards target
 				auto seek = pkr::Vector2::normalise(m_dest - agent->pos) * m_maxSpeed;
 				agent->move(seek, deltaTime);
-				return RUNNING;
+				return eResult::RUNNING;
 			}
 			//Else; Agent has arrived, stop moving. Success
 			else {
-				return SUCCESS;
+				return eResult::SUCCESS;
 			}
 
 		}
-
-		eResult Attack::execute(Agent * agent, float deltaTime)
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		tMouseSetDesiredPos::tMouseSetDesiredPos(aie::Input * input) :
+			m_input(input)
+		{}
+		eResult tMouseSetDesiredPos::execute(Agent * agent, float deltaTime)
 		{
-			return eResult();
-		}
+			auto cc = KunoApp::Instance()->CoordConverter();
+				//Set agent desired pos to where the mouse is clicked
+				auto mView = pkr::Vector2((float)m_input->getMouseX(), (float)m_input->getMouseY());
+				auto mCanvas = cc->ViewportToCanvas(mView);
+				auto desiredPos = cc->CanvasToWorld(mCanvas);
 
-		FollowPath::FollowPath(float pathRadius) :
-			m_currentWaypoint(0), m_pathRadius(pathRadius)
+#ifdef _DEBUG
+//ImGui::Begin("tMouseSetDesiredPos");
+//ImGui::Text("desiredPos> x: %.2f, y: %.2f", desiredPos.x, desiredPos.y);
+//ImGui::End();
+#endif // _DEBUG
+
+			if (m_input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
+				agent->setDesiredPos(desiredPos);
+				return eResult::SUCCESS;
+			}
+			return FAILURE;
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		Seek::Seek(Agent * target, float arriveRadius) :
+			m_target(target), m_arriveRadius(arriveRadius)
 		{}
 
+		eResult Seek::execute(Agent * agent, float deltaTime)
+		{	//Seek vector = Target position - Agent position
+			//GOAL: Set agent->desiredPos for UpdatePath to process?
+
+			/*
+			Agent at 0,0
+			SeekTarget at 100, 100
+			DesiredPos = 100,100			
+			*/
+
+			//Find the normalised seek vector towards target
+			//auto seekVec = pkr::Vector2::normalise(m_target->pos - agent->pos);
+
+			////Find the desired position the agent needs to go to
+			//auto seekPos = m_target->pos + seekVec * agent->getSpeed();
+
+			//Set the agent's desired position
+			agent->m_isMoving = true;		//set to moving
+			agent->setDesiredPos(m_target->pos);
+
+			//Apply max force towards target
+			//agent->move(seekVec * m_maxSpeed, deltaTime);
+			//agent->move(nrmSeekVector - agent.getVel() * m_maxLspeed, deltaTime);
+
+#ifdef _DEBUG
+			ImGui::Begin("Seek");
+			ImGui::Text("setDesiredPos > x:%.2f, y:%.2f", m_target->pos.x, m_target->pos.y);
+			ImGui::End();
+#endif // _DEBUG
+			return eResult::SUCCESS;
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		Idle::Idle(float minIdleTime, float maxIdleTime) :
+			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_duration(0)
+		{}
+
+		eResult Idle::execute(Agent * agent, float deltaTime)
+		{
+			//If the current idle time is 0 then start timing
+			if (m_duration <= 0) {
+				//Set random finished time
+				m_timeout = pkr::Random(m_minTime, m_maxTime);
+				m_duration += deltaTime;
+				return RUNNING;		//Return running
+			}
+			//If the current idle time is past max idle time
+			else if (m_duration > m_maxTime) {
+				//Reset and return success
+				m_duration = NULL;
+				m_timeout = NULL;
+				return SUCCESS;
+			}
+			else {
+				//Still counting down
+				return RUNNING;
+			}
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		eResult Attack::execute(Agent * agent, float deltaTime)
+		{
+			//This agent attacks the target agent
+			m_target->takeDamage(agent->getAttack());
+			return eResult::SUCCESS;
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult FollowPath::execute(Agent * agent, float deltaTime)
 		{
-			//Try using the agent's member path
-			//How do you get a path from here?
-			auto map = KunoApp::Instance()->getMap();
-			agent->setPath(map->getPath());
-
-			//If there is an available path
-			if (!agent->getPath().empty()) {
-				//If the agent has reached the end of the path
-				if (m_currentWaypoint > agent->getPath().size() - 1) {
-					//m_currentWaypoint = agent->getPath().size();	//Stop following path
-					m_currentWaypoint = 0;	//Reset waypoint??
-					return eResult::SUCCESS;
-				}
-				else {
-					auto waypoint = agent->getPath()[m_currentWaypoint];	//Get target waypoint
-
-					//Seek towards it
-					if (pkr::Vector2::distance(waypoint, agent->pos) > m_pathRadius) {
-						agent->seek(waypoint, deltaTime);
-						return eResult::RUNNING;
-					}
-					else { //Target reached, next waypoint
-						++m_currentWaypoint;
-						return eResult::RUNNING;
-					}
-				}
-
-			}
-			else	//Path unavailable; FAIL!
-				return eResult::FAILURE;
+			//If a path exists then follow it, return running/success?
+			return agent->followPath(deltaTime);
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Flee::Flee(Agent * target, pf::Map * map, float fleeRange) :
 			m_target(target), m_map(map), m_fleeRange(fleeRange)
 		{}
 
-		//Flee::Flee(Agent * target, float fleeRange) :
-		//	m_target(target), m_fleeRange(fleeRange)
-		//{}
-
 		eResult Flee::execute(Agent * agent, float deltaTime)
 		{
-			//If within target range then find new flee position and path
-			//if (pkr::Vector2::distance(m_target->getPos(), agent->getPos()) < m_fleeRange) {
-
-			//	//// FLEE pos/path will keep updating unless out of range from player ////
-			//	//Get flee position
-			//	auto fleePos = agent->getPos() + pkr::Vector2::normalise(agent->getPos() - m_target->getPos()) * agent->getMaxSpeed();
-			//	
-			//	//Get the actual flee path on the map
-			//	pf::Tile* tileStart = m_map->findTileFromPos(agent->getPos());	//The tile the agent is on
-			//	pf::Tile* tileEnd = m_map->findTileFromPos(fleePos);
-			//	auto fleePath = m_map->getAStarPath(tileStart, tileEnd);
-
-			//	//Set agent's path
-			//	return (agent->pathTo(fleePath)) ? eResult::SUCCESS : eResult::RUNNING;
-			//}
-			//else
-			//	return eResult::FAILURE;
+			//Set the desired path to where the target is.... but reversed
+			auto fleeVec = pkr::Vector2::normalise(agent->pos - m_target->pos) * agent->getSpeed();
+			auto fleePos = agent->pos + fleeVec;
+			agent->setDesiredPos(fleePos);
+			return eResult::SUCCESS;
 
 
-
+			/*
 			if (pkr::Vector2::distance(m_target->pos, agent->pos) < m_fleeRange) {
 				//Within flee range so flee from target
 				auto flee = pkr::Vector2::normalise(agent->pos - m_target->pos);
-				agent->move(flee * agent->m_maxSpeed, deltaTime);
+				agent->move(flee * agent->getSpeed(), deltaTime);
 				//agent->seek(-flee, deltaTime);
 				return eResult::SUCCESS;
 			}
 			else
 				return eResult::FAILURE;
+			*/
+
+			/*
+			//If within target range then find new flee position and path
+			if (pkr::Vector2::distance(m_target->getPos(), agent->getPos()) < m_fleeRange) {
+
+				//// FLEE pos/path will keep updating unless out of range from player ////
+				//Get flee position
+				auto fleePos = agent->getPos() + pkr::Vector2::normalise(agent->getPos() - m_target->getPos()) * agent->getMaxSpeed();
+				
+				//Get the actual flee path on the map
+				pf::Tile* tileStart = m_map->findTileFromPos(agent->getPos());	//The tile the agent is on
+				pf::Tile* tileEnd = m_map->findTileFromPos(fleePos);
+				auto fleePath = m_map->getAStarPath(tileStart, tileEnd);
+
+				//Set agent's path
+				return (agent->pathTo(fleePath)) ? eResult::SUCCESS : eResult::RUNNING;
+			}
+			else
+				return eResult::FAILURE;
+			*/
 		}
 
 		void Flee::getPath(Agent* agent, pkr::Vector2 destination)
@@ -208,18 +242,23 @@ namespace ai {
 
 			//Set agents path as the new path
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateState::execute(Agent * agent, float deltaTime)
 		{
 			//Just change the agent's state to the desired state
 			agent->state = m_desiredState;
-			return eResult::SUCCESS;		//Should always return success
+			return eResult::SUCCESS;
 		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateLastSeen::execute(Agent * agent, float deltaTime)
+		{		
+			agent->setLastSeen(m_target->pos);
+			return eResult::SUCCESS;
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		eResult ClearLastSeen::execute(Agent * agent, float deltaTime)
 		{
-			m_lastSeen = agent->pos;			//Get last seen from agent and store in the Action
-			agent->setLastSeenAvailable(true);
+			agent->clearLastSeen();
 			return eResult::SUCCESS;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +277,7 @@ namespace ai {
 			while (!endTile->objects.empty()) {
 				endTile = m_map->findTileFromPos(desiredPos, searchRadius);
 				searchRadius += 20.0f;
-				if (searchRadius > 500.0f)
+				if (searchRadius > 1000.0f)
 					assert(false);		//Search area getting too large;
 			}
 
@@ -251,7 +290,7 @@ namespace ai {
 				do 	{
 					startTile = m_map->findTileFromPos(agent->pos, searchRadius);
 					searchRadius += 20.0f;
-					if (searchRadius > 500.0f)
+					if (searchRadius > 1000.0f)
 						assert(false);		//Search area getting too large;
 				} while (!startTile->objects.empty());
 				//The path should move the agent out from the untraversable tile

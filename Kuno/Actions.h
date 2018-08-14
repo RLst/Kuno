@@ -20,20 +20,20 @@ namespace ai {
 	class iBehaviour;
 
 	namespace action {
-
-		//// TEST ////
-		class KeyboardControl : public iBehaviour	//DEBUG
+		//// TEST BEHAVIOURS ////
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		class tKeyboardControl : public iBehaviour	//DEBUG
 		{
 		private:
 			aie::Input*		m_input;
 			float			m_maxForce;
 		public:
-			KeyboardControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 200.0f);
+			tKeyboardControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 200.0f);
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
-		class MouseControl : public iBehaviour		//DEBUG
+		class tMouseControl : public iBehaviour		//DEBUG
 		{
 		private:
 			aie::Input*		m_input;
@@ -41,11 +41,23 @@ namespace ai {
 			pkr::Vector2	m_dest;								//WORLD
 			float			m_arriveThreshold = 5.0f;			//Raw inits; adjust accordingly
 		public:
-			MouseControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 500.0f);
+			tMouseControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 500.0f);
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		class MouseLeftClicked : public iBehaviour	//DEBUG
+		class tMouseSetDesiredPos : public iBehaviour
+		{
+		private:
+			aie::Input*		m_input;
+		public:
+			~tMouseSetDesiredPos() = default;
+			tMouseSetDesiredPos(aie::Input* input = aie::Input::getInstance());
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		class MouseLeftClicked : public iBehaviour
 		{
 			aie::Input*		m_input;
 		public:
@@ -54,28 +66,34 @@ namespace ai {
 			eResult execute(Agent* agent, float deltaTime) override
 			{
 				if (m_input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-					return SUCCESS;
+					return eResult::SUCCESS;
 				}
 				else
-					return FAILURE;
+					return eResult::FAILURE;
 			}
 		};
-
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		class Attack : public iBehaviour
 		{
 		private:
 			Agent * m_target;
 		public:
+			Attack(Agent* target) : m_target(target) {}
+			~Attack() = default;
 			eResult	execute(Agent *agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		class Idle : public iBehaviour
+			//MAYBE THIS SHOULD BE HEADED BY A TIMEOUT DECORATOR
+			//Agent idles; for basic implementation, do nothing
 		{
 		private:
-			Agent * m_agent;
+			float		m_minTime;
+			float		m_maxTime;
+			float		m_duration = 0;
+			float		m_timeout;
 		public:
-			Idle() = default;
+			Idle(float minIdleTime, float maxIdleTime);
 			~Idle() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
@@ -83,9 +101,9 @@ namespace ai {
 		class Flee : public iBehaviour
 		{
 		protected:
-			pf::Map*	m_map;
+			pf::Map*	m_map = nullptr;
 			pf::Path	m_path;
-			Agent *		m_target;
+			Agent *		m_target = nullptr;
 			float		m_fleeRange;
 		public:
 			Flee() = default;
@@ -96,47 +114,57 @@ namespace ai {
 		};
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		class FollowPath : public iBehaviour
+			//HOW TO UTILISE:
+			//- Add this behaviour LAST to the main selector
+			//It will return SUCCESS unless there's no path, 
+			//that way it won't be saved as a pending child and can be interrupted
 		{
-		private:
-			pf::Path*		m_path;
-			int				m_currentWaypoint = 0;			//std::vector index; -1 means pathfollowing has not started yet
-			float			m_pathRadius;					//Should make a class Path and put this together; To smoooth the pathfinding a bit
 		public:
-			FollowPath(float pathRadius = 10.0f);
+			FollowPath() = default;
 			~FollowPath() = default;
-
 			eResult			execute(Agent *agent, float deltaTime) override;
-
-			//Test
-			void			setPath(pf::Path* path) { m_path = path; }
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		class Seek : public iBehaviour
 		{
-			//This needs to take in a target agent
+			/*Requirements:
+			1. target agent*, where/what to seek
+			1a. target path*?, where to seek
+			2. agent speed can be access in agent
+			3. arriveRadius.. some default value, can be customized thru constructor... no big deal
+			*/
 		private:
-			Agent * m_target = nullptr;
-			pkr::Vector2	m_dest;										//WORLD
-			float			m_maxSpeed;
-			float			m_arriveRadius = 20.0f;					//Raw inits; adjust accordingly
+			Agent *		m_target = nullptr;
+			float		m_maxSpeed;
+			float		m_arriveRadius;						//Raw inits; adjust accordingly
 		public:
 			~Seek() = default;											//Destructor
-			Seek(Agent* target, float maxSpeed = 200.0f);				//Point based if target agent not specified
-			Seek(pkr::Vector2 destination, float maxSpeed = 200.0f);
+			Seek(Agent* target, float arriveRadius = 20.0f);
+			eResult execute(Agent* agent, float deltaTime) override;
 
 			//Modify
-			void			setTarget(Agent* agent) { m_target = agent; }
-			void			setDestination(pkr::Vector2 destination) { m_dest = destination; }
-			void			setMaxSpeed(float maxSpeed) { m_maxSpeed = maxSpeed; }
-			void			setArriveRadius(float arriveRadius) { m_arriveRadius = arriveRadius; }
-
-			//Core
+			//void			setTarget(Agent* agent) { m_target = agent; }
+			//void			setDestination(pkr::Vector2 destination) { m_dest = destination; }
+			//void			setMaxSpeed(float maxSpeed) { m_maxSpeed = maxSpeed; }
+			//void			setArriveRadius(float arriveRadius) { m_arriveRadius = arriveRadius; }
+		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class Pursue : public iBehaviour
+			//This can't really be implemented unless the agents are moving using linear motion
+			//Need the agent's current speed to be able to pursue
+			//Use Seek instead
+		{
+		private:
+			Agent * m_target = nullptr;
+		public:
+			Pursue(Agent* target);
+			~Pursue() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		class UpdateState : public iBehaviour
 		{
-			//Changes the state of the agent to a set state
+			//Changes the state of the agent to a desired state stored in this behaviour node
 		private:
 			ai::Agent::eState		m_desiredState;
 
@@ -148,14 +176,20 @@ namespace ai {
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 		class UpdateLastSeen : public iBehaviour
 		{
-			//Stores the last seen position of target agent
+			//Sets the last position the agent had seen the target agent
 		private:
-			pkr::Vector2	m_lastSeen;
-			bool			m_isAvailable;		//Last seen exist; NOT SURE IF THIS IS NEEDED
-
+			Agent *			m_target = nullptr;
 		public:
-			UpdateLastSeen() = default;
+			UpdateLastSeen(Agent* target) : m_target(target) {}
 			~UpdateLastSeen() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class ClearLastSeen : public iBehaviour
+		{
+		public:
+			ClearLastSeen() = default;
+			~ClearLastSeen() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,11 +228,23 @@ namespace ai {
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 
+
 	}
 }
 
 
+
+
+
+
+
 /*
+BRAINSTORM:
+Transform/move behaviours constructors
+To allow ie. a Seek behaviour to not only seek an agent but also a path object etc
+Move(Agent* targetAgent)	//Setup behaviour that uses another agent
+Move(Path* anAgentsPath)	//Setup behaviour that uses a path
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 class PatrolPath : public iBehaviour		//MAYBE THIS NEEDS TO BE A COMPOSITE???
 {

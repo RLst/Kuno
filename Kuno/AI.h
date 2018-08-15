@@ -139,8 +139,9 @@ namespace ai {
 		//Always return success
 	{
 	public:
-		ReturnSuccess() = default;
 		~ReturnSuccess() = default;
+		ReturnSuccess() = default;
+		ReturnSuccess(iBehaviour* child) { setChild(child); }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 }

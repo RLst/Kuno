@@ -134,8 +134,7 @@ namespace ai {
 		m_timeout -= deltaTime;
 		if (m_timeout > 0) {
 			m_timeout = m_reset;		//Resets the timeout
-			return eResult::RUNNING;
-			//return eResult::FAILURE;
+			return eResult::FAILURE;
 		}
 		//Returns result of child unless it times out ie: runs the child for duration set
 		return m_child->execute(agent, deltaTime);

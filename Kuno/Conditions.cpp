@@ -39,13 +39,18 @@ namespace ai {
 
 		eResult CheckNotMoving::execute(Agent * agent, float deltaTime)
 		{
-			return (agent->m_isMoving) ? FAILURE : SUCCESS;
+			return (agent->isMoving()) ? FAILURE : SUCCESS;
 		}
 
 		eResult CheckPathAvailable::execute(Agent * agent, float deltaTime)
 		{
 			return (agent->getPath().isAvailable()) ? SUCCESS : FAILURE;
 
+		}
+
+		eResult LastSeenAvailable::execute(Agent * agent, float deltaTime)
+		{
+			return (agent->isLastSeenAvailable()) ? SUCCESS : FAILURE;
 		}
 
 	}

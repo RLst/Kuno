@@ -32,6 +32,11 @@ namespace ai {
 		m_behaviours.push_back(behaviour);
 	}
 
+	//void Agent::addForce(const pkr::Vector2 & force, float deltaTime)
+	//{
+	//	m_force += force * deltaTime;
+	//}
+
 	void Agent::move(const pkr::Vector2 & speed, float deltaTime)
 	{
 		//accel = force / mass;
@@ -49,6 +54,7 @@ namespace ai {
 	void Agent::seek(const pkr::Vector2 & target, float deltaTime)
 	{
 		auto seekVec = pkr::Vector2::normalise(target - pos) * getSpeed();		//Get speed auto adjusts for agent's state ie. NORMAL = walk, ALERT = run
+		//addForce(seekVec, deltaTime);
 		move(seekVec, deltaTime);
 	}
 
@@ -136,6 +142,16 @@ namespace ai {
 		for (auto behaviour : m_behaviours) {
 			behaviour->execute(this, deltaTime);
 		}
+
+		////Calculate transformations
+		//addForce(-m_vel * m_dragCoeff, deltaTime);		//Drag
+		//m_accel = m_force;
+		//m_vel += m_accel * deltaTime;
+		//pos += m_vel * deltaTime;
+
+		////Resets
+		//m_force = pkr::Vector2();
+		//m_accel = pkr::Vector2();
 	}
 
 	void Agent::draw(aie::Renderer2D * renderer)
@@ -149,9 +165,13 @@ namespace ai {
 
 #ifdef _DEBUG
 		ImGui::Begin("DEBUG: Agent");
+		ImGui::Spacing();
+		ImGui::Text("&: %p", this);
 		ImGui::Text("pos > x:%.2f, y:%.2f", pos.x, pos.y);
 		ImGui::Text("health > %.0f", m_health);
+		ImGui::Text("lastSeenAvail: %d", m_lastSeenAvail);
 		ImGui::Text("lastSeen > x:%.0f, y:%.0f", m_lastSeenPos.x, m_lastSeenPos.y);
+		ImGui::Text("isMoving > %d", m_isMoving);
 		ImGui::Text("desiredPos > x:%.2f, y:%.2f", m_desiredPos.x, m_desiredPos.y);
 		ImGui::Text("state > %d", (int)state);
 		ImGui::End();

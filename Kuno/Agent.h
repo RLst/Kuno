@@ -37,13 +37,13 @@ namespace ai {
 		//Damage
 		float				m_health = 100;		
 		float				m_attack;			//The amount of damage this agent
-
-		//pkr::Vector2		m_force;
-		//pkr::Vector2		m_accel;
-		//pkr::Vector2		m_vel;
 		float				m_facing = 0;		//Where the agent is looking at
 
 		//Speeds
+		//float				m_dragCoeff;
+		//pkr::Vector2		m_force;
+		//pkr::Vector2		m_accel;
+		//pkr::Vector2		m_vel;
 		float				m_sneakSpeed =	100;
 		float				m_walkSpeed =	200;
 		float				m_runSpeed =	300;
@@ -57,14 +57,14 @@ namespace ai {
 		pf::Path			m_path;
 		pf::Path			m_patrolPath;		//Only add one waypoint to set as a guard, +1 for patrolling
 		pkr::Vector2		m_desiredPos = pkr::Vector2();		//UpdatePath will use this to create a path
-
-	public:
 		/////////////////////////////////////////////
 		//// CRAP AND CLUNKY: WRITE BETTER CODE ////
 		///////////////////////////////////////////
 		//Flag that states whether or not the desired position is currently being seeked to or not
 		bool				m_isMoving = false;
 		/////////////////////////////////////////
+
+	public:
 
 		enum class eState
 		{
@@ -88,6 +88,7 @@ namespace ai {
 		void				addBehaviour(iBehaviour* behaviour);
 
 		//Translation
+		//void				addForce(const pkr::Vector2 & force, float deltaTime);
 		void				move(const pkr::Vector2 &speed, float deltaTime);				//For debug; Move in world coordinates
 		void				moveOnCanvas(const pkr::Vector2 &speed, float deltaTime);		//For debug; Move on the canvas itself
 		void				seek(const pkr::Vector2 &target, float deltaTime);
@@ -109,9 +110,12 @@ namespace ai {
 		//Last seen
 		bool				isLastSeenAvailable() const { return m_lastSeenAvail; }
 		void				setLastSeen(pkr::Vector2 lastSeenPos);
+		pkr::Vector2		getLastSeen() const { return m_lastSeenPos; }
 		void				clearLastSeen() { m_lastSeenAvail = false; }
 
 		//Pathfinding
+		bool				isMoving() const { return m_isMoving; }
+
 		eResult				followPath(float deltaTime);						
 		void				setPath(const pf::Path path) { m_path = path; }
 		pf::Path			getPath() const { return m_path; }

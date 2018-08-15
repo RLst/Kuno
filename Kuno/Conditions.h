@@ -69,8 +69,14 @@ namespace ai {
 			~CheckPathAvailable() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
-
-
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class LastSeenAvailable : public iBehaviour
+		{
+		public:
+			~LastSeenAvailable() = default;
+			LastSeenAvailable() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
 	}
 }
 

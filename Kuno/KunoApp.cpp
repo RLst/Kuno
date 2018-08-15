@@ -271,93 +271,115 @@ bool KunoApp::setupAI()
 //#endif // _DEBUG
 
 
-	//// Set some test values ////
-	//Samurai swordsman
+	////////////////////////
+	//// SETUP ENEMIES ////
+	//////////////////////
+
 	struct {	//Temp?
+		//Core
 		float size = 35.0f;
 		pkr::Vector3 colour = { 0.9f, 0.2f, 0 };
+		//Attacks
 		float attack = 20.0f;
+		float attackSpeed = 1.0f;			//seconds; delay between attacks
+		float lowHealthThres = 20.0f;		//Triggers flee if health goes below this
+		//Ranges
 		float attackRange = 50.0f;			//The distance from which the enemy can attack
-		float alertRange = 300.0f;			//The distance from which the enemy can clearly see
-		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
-		float attackSpeed = 1.5f;			//seconds; delay between attacks
+		float sightRange = 300.0f;			//The distance from which the enemy can clearly see
+		//float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
 		float FOV = 90.0f;					//View cone of the enemy
+		//Speeds
+		float walkSpeed = 100.0f;
+		float runSpeed = 300.0f;
 	} swordsman;
+
+	//// Initialise ////
+	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 700, 700 });
+	//m_Enemy->patrolPath().push_back({ 600,600 });			//Set guard post
+	m_Enemy->setAttack(swordsman.attack);
+	m_Enemy->setWalkSpeed(swordsman.walkSpeed);
+	m_Enemy->setRunSpeed(swordsman.runSpeed);
 
 	//// THIS IS IT! Set up enemy AI////
 	//'Constant' behaviours
-	auto UpdateLastSeen = new ai::action::UpdateLastSeen(m_Yuna);
-	auto CalculatePath = new ai::action::CalculatePath(m_map);
-	auto FollowPath = new ai::action::FollowPath();
-	auto Attack = new ai::action::Attack(m_Yuna);
-	auto Seek = new ai::action::Seek(m_Yuna);
+	//auto UpdateLastSeen = new ai::action::UpdateLastSeen(m_Yuna);
+	//auto CalculatePath = new ai::action::CalculatePath(m_map);
+	//auto FollowPath = new ai::action::FollowPath();
+	//auto Attack = new ai::action::Attack(m_Yuna);
+	//auto Seek = new ai::action::Seek(m_Yuna);
 
+		//// ActionSelector
+		auto ActionSel = new ai::Selector();
+	
+			//Attack Sequence
+			auto AttackSeq = new ai::Sequence();
+			AttackSeq->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.attackRange));
+			AttackSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
+			AttackSeq->addChild(new ai::action::UpdateLastSeen(m_Yuna));		//Constant
+				auto AttackDec = new ai::DelayDecorator(new ai::action::Attack(m_Yuna), swordsman.attackSpeed);
+			AttackSeq->addChild(AttackDec);
+		ActionSel->addChild(AttackSeq);
 
-	//// Samurai Swordsman ////
-	auto ActionSel = new ai::Selector();
-		//Attack Sequence
-		auto AttackSequence = new ai::Sequence();
-		AttackSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.attackRange));
-		AttackSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
-		AttackSequence->addChild(new ai::action::UpdateLastSeen(m_Yuna));		//Constant
-			auto AttackDecor = new ai::DelayDecorator(swordsman.attack);
-			AttackDecor->setChild(new ai::action::Attack(m_Yuna));
-		AttackSequence->addChild(AttackDecor);
-	ActionSel->addChild(AttackSequence);
+			//Flee or Pursue Sequence
+			auto FleeOrPursueSeq = new ai::Sequence();
+			FleeOrPursueSeq->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.sightRange));
+			FleeOrPursueSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
+			FleeOrPursueSeq->addChild(new ai::action::UpdateLastSeen(m_Yuna));		//Constant
+				auto FleeOrPursueSel = new ai::Selector();
+					auto FleeSeq = new ai::Sequence();
+					FleeSeq->addChild(new ai::condition::CheckHealth(swordsman.lowHealthThres));
+					
+					FleeSeq->addChild(new ai::action::Flee(m_Yuna));
+					//FleeSeq->addChild(new ai::action::CalculatePath(m_map));
+					//FleeSeq->addChild(new ai::action::FollowPath());
+				FleeOrPursueSel->addChild(FleeSeq);
+				
+				FleeOrPursueSel->addChild(new ai::action::Seek(m_Yuna));
+				//FleeOrPursueSel->addChild(new ai::action::CalculatePath(m_map));
+				//FleeOrPursueSel->addChild(new ai::action::FollowPath());
 
-	//	//Flee or Pursue Sequence
-	//	auto FleeOrPursueSequence = new ai::Sequence();
-	//	FleeOrPursueSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.alertRange));
-	//	FleeOrPursueSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
-	//	FleeOrPursueSequence->addChild(UpdateLastSeen);
-	//		auto FleeOrPursueSelector = new ai::Selector();
-	//			auto FleeSequence = new ai::Sequence();
-	//			FleeSequence->addChild(new ai::condition::CheckHealth());
-	//			FleeSequence->addChild(new ai::action::Flee(m_Yuna));
-	//		FleeOrPursueSelector->addChild(FleeSequence);
-	//		FleeOrPursueSelector->addChild(Seek);
-	//	FleeOrPursueSequence->addChild(FleeOrPursueSelector);
-	//ActionSel->addChild(FleeOrPursueSequence);
+			FleeOrPursueSeq->addChild(FleeOrPursueSel);
+		ActionSel->addChild(FleeOrPursueSeq);
 
-
-		//Seek
-		auto SeekSequence = new ai::Sequence();
-		SeekSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.suspiciousRange));
-		//	auto UpdateStateSeq(new ai::Sequence());
-		//		auto NotAlertState = new ai::NotDecorator(new ai::condition::CheckState(ai::Agent::eState::ALERT));
-		//	UpdateStateSeq->addChild(NotAlertState);
-		//	UpdateStateSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
-		//SeekSequence->addChild(UpdateStateSeq);
-		//SeekSequence->addChild(UpdateLastSeen);
-		SeekSequence->addChild(Seek);
-			//auto TimeoutDecorator = new ai::TimeoutDecorator(new ai::action::Seek(m_Yuna), 1.0f);
-		SeekSequence->addChild(CalculatePath);		//calculate path is required right after a maneuvre behaviour
-		//SeekSequence->addChild(TimeoutDecorator);
-		SeekSequence->addChild(new ai::action::ClearLastSeen());
-		SeekSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
-	ActionSel->addChild(SeekSequence);
-
-		//Pathfinding
-		auto PathfindingSequence = new ai::Sequence();
-		//PathfindingSequence->addChild(new ai::condition::CheckPathAvailable());
-			//auto Guard = new ai::Sequence();
-			//Guard->addChild(new ai::condition::CheckState(ai::Agent::eState::GUARD));
-			//Guard->addChild(new ai::action::ReturnToPost());
-		//PathfindingSequence->addChild(CalculatePath);		//This shouldn't be here
-		PathfindingSequence->addChild(FollowPath);
-
-	//Root
-	auto SwordsmanRoot = new ai::Sequence();
-		auto AlwaysSuccess = new ai::ReturnSuccess();
-		AlwaysSuccess->setChild(ActionSel);
-	SwordsmanRoot->addChild(AlwaysSuccess);
-	SwordsmanRoot->addChild(PathfindingSequence);
+			//Inspect
+			auto InspectSeq = new ai::Sequence();
+			InspectSeq->addChild(new ai::condition::LastSeenAvailable());
+				auto UpdateStateSeq(new ai::Sequence());
+					auto NotAlertState = new ai::NotDecorator(new ai::condition::CheckState(ai::Agent::eState::ALERT));
+				UpdateStateSeq->addChild(NotAlertState);
+				UpdateStateSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
+			InspectSeq->addChild(UpdateStateSeq);
 			
-	//// SETUP THE ACTUAL SWORDSMAN ////
-	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 700, 700 });
-	m_Enemy->patrolPath().push_back({ 600,600 });
+			InspectSeq->addChild(new ai::action::Inspect());		//Constant? Inspects what's at agent.desiredPos
+			//InspectSeq->addChild(new ai::action::CalculatePath(m_map));
+			//InspectSeq->addChild(new ai::action::FollowPath());
+
+			//InspectSeq->addChild(new ai::action::Idle(3.0f, 5.0f));
+			InspectSeq->addChild(new ai::action::ClearLastSeen());		//Constant
+			InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
+		ActionSel->addChild(InspectSeq);
+			//InspectSeq->addChild(new ai::TimeoutDecorator(new ai::action::Idle(), 7.5f));
+
+		//ELSE; Just set to guard; failsafe
+		ActionSel->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
+
+		//Move
+		auto MoveSeq = new ai::Sequence();
+		//	auto GuardSeq = new ai::Sequence();
+		//	GuardSeq->addChild(new ai::condition::CheckState(ai::Agent::eState::GUARD));
+		//	GuardSeq->addChild(new ai::action::ReturnToPost());		//Constant
+		//MoveSeq->addChild(GuardSeq);
+		MoveSeq->addChild(new ai::condition::CheckPathAvailable());	//Constant
+		MoveSeq->addChild(new ai::action::CalculatePath(m_map));	//Constant
+		MoveSeq->addChild(new ai::action::FollowPath());			//Constant
+
+	//ROOT
+	auto SwordsmanRoot = new ai::Sequence();
+		auto AlwaysSuccess = new ai::ReturnSuccess(ActionSel);
+	SwordsmanRoot->addChild(AlwaysSuccess);
+	SwordsmanRoot->addChild(MoveSeq);
+			
 	m_Enemy->addBehaviour(SwordsmanRoot);
-	m_Enemy->setAttack(swordsman.attack);
 
 	//Delete ai stuff
 

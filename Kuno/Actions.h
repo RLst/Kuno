@@ -232,6 +232,17 @@ namespace ai {
 			ReturnToPost() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class Inspect : public iBehaviour
+			//Essentially a seek/pursue to last seen position
+			//Will walk/run based on state
+		{
+			Agent* m_agent;
+		public:
+			~Inspect() = default;
+			Inspect() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
 
 	}
 }

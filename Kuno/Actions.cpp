@@ -105,7 +105,7 @@ namespace ai {
 
 			//TRY implementing CheckNotMoving behaviour inside 
 			//the move behaviours to simplify it a bit
-			if (agent->m_isMoving)
+			if (agent->isMoving())
 			{
 				//If the agent is moving then let the agent move/followPath
 				return eResult::FAILURE;	//Should branch out to Pathfinding branch
@@ -121,7 +121,7 @@ namespace ai {
 			m_target(target){}
 		eResult Flee::execute(Agent * agent, float deltaTime)
 		{
-			if (agent->m_isMoving)	{
+			if (agent->isMoving())	{
 				//If the agent is moving then let the agent move/followPath
 				return eResult::FAILURE;	//Should branch out to Pathfinding branch
 			}
@@ -192,47 +192,54 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult CalculatePath::execute(Agent * agent, float deltaTime)
 		{
-			//Get desired world position from agent
-			auto desiredPos = agent->getDesiredPos();
+			if (agent->isMoving()) {
 
-			//// Find the correct destination and starting tiles ////
-			//DESTINATION TILE
-			desiredPos = m_map->clampWithinMapRetWORLD(desiredPos);		//Restrict desiredPos within the bounds of the map
-			auto endTile = m_map->findTileFromPos(desiredPos);
+				//Get desired world position from agent
+				auto desiredPos = agent->getDesiredPos();
 
-			//This ensures endTile will be valid ie. NOT a untraversable tile
-			float searchRadius = 120.f; 
-			while (!endTile->objects.empty()) {
-				endTile = m_map->findTileFromPos(desiredPos, searchRadius);
-				searchRadius += 20.0f;
-				if (searchRadius > 2000.0f)
-					assert(false);		//Search area getting too large;
-			}
+				//// Find the correct destination and starting tiles ////
+				//DESTINATION TILE
+				desiredPos = m_map->clampWithinMapRetWORLD(desiredPos);		//Restrict desiredPos within the bounds of the map
+				auto endTile = m_map->findTileFromPos(desiredPos);
 
-			//START TILE
-			pf::Path desiredPath;
-			pf::Tile* startTile = m_map->findTileFromPos(agent->pos);
-			if (!startTile->objects.empty()) {	//If agent is on an untraversable tile
-				//Expand the search until a traversable tile is found
-				float searchRadius = 120.f;
-				do 	{
-					startTile = m_map->findTileFromPos(agent->pos, searchRadius);
+				//This ensures endTile will be valid ie. NOT a untraversable tile
+				float searchRadius = 120.f; 
+				while (!endTile->objects.empty()) {
+					endTile = m_map->findTileFromPos(desiredPos, searchRadius);
 					searchRadius += 20.0f;
 					if (searchRadius > 2000.0f)
 						assert(false);		//Search area getting too large;
-				} while (!startTile->objects.empty());
-				//The path should move the agent out from the untraversable tile
-				desiredPath = m_map->getAStarPath(startTile, endTile);
-			}
-			else { //Else the agent is on a traversable tile
-				desiredPath = m_map->getAStarPath(startTile, endTile);
-				//Set the first waypoint to the agent's current position so that
-				//it doesn't move back to the tile centre
-				desiredPath[0] = agent->pos;
-			}
+				}
 
-			//Set the agent's path
-			agent->setPath(desiredPath);
+				//START TILE
+				pf::Path desiredPath;
+				pf::Tile* startTile = m_map->findTileFromPos(agent->pos);
+				if (!startTile->objects.empty()) {	//If agent is on an untraversable tile
+					//Expand the search until a traversable tile is found
+					float searchRadius = 120.f;
+					do 	{
+						startTile = m_map->findTileFromPos(agent->pos, searchRadius);
+						searchRadius += 20.0f;
+						if (searchRadius > 2000.0f)
+							assert(false);		//Search area getting too large;
+					} while (!startTile->objects.empty());
+					//The path should move the agent out from the untraversable tile
+					desiredPath = m_map->getAStarPath(startTile, endTile);
+				}
+				else { //Else the agent is on a traversable tile
+					desiredPath = m_map->getAStarPath(startTile, endTile);
+					//Set the first waypoint to the agent's current position so that
+					//it doesn't move back to the tile centre
+					desiredPath[0] = agent->pos;
+				}
+
+				//Set the agent's path
+				agent->setPath(desiredPath);
+				return SUCCESS;
+			}
+			else {
+				return FAILURE;
+			}
 
 #ifdef _DEBUG
 ////DEBUG
@@ -253,14 +260,33 @@ namespace ai {
 		eResult ReturnToPost::execute(Agent * agent, float deltaTime)
 		{
 			//If patrol path is empty return failure
-			if (agent->m_isMoving) {
-				if (agent->patrolPath().isAvailable()) {
-					agent->setDesiredPos(agent->patrolPath().at(0));
-					return SUCCESS;
-				}
+			if (agent->isMoving()) {
+				//Exit branch so that pathfinding can run?
+				//1. Path can be calculated
+				//2. Path can be followed
+				return FAILURE;
 			}
 			else {
+				//if (agent->patrolPath().isAvailable()) {	//Extra check
+					agent->setDesiredPos(agent->patrolPath().at(0));
+					return SUCCESS;
+				//}
+				//return FAILURE;
+			}
+		}
+
+		eResult Inspect::execute(Agent * agent, float deltaTime)
+		{
+			if (agent->isMoving()) {
+				//Exit branch so that:
+				//1. Path can be calculated
+				//2. Path can be followed
 				return FAILURE;
+			}
+			else {
+				//Move and set desired pos
+				agent->setDesiredPos(agent->getLastSeen());
+				return SUCCESS;
 			}
 		}
 

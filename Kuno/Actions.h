@@ -223,7 +223,15 @@ namespace ai {
 			CalculatePath(pf::Map* map) : m_map(map) {}
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
-
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class ReturnToPost : public iBehaviour
+			//Simply returns to the first waypoint in patrol path
+		{
+		public:
+			~ReturnToPost() = default;
+			ReturnToPost() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
+		};
 
 	}
 }

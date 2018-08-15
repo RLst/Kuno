@@ -251,7 +251,21 @@ namespace ai {
 			return eResult::SUCCESS;
 		}
 
-	}
+		eResult ReturnToPost::execute(Agent * agent, float deltaTime)
+		{
+			//If patrol path is empty return failure
+			if (agent->m_isMoving) {
+				if (agent->patrolPath().isAvailable()) {
+					agent->setDesiredPos(agent->patrolPath().at(0));
+					return SUCCESS;
+				}
+			}
+			else {
+				return FAILURE;
+			}
+		}
+
+}
 }
 
 

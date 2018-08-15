@@ -63,6 +63,9 @@ protected:
 	ai::Agent*					m_AttackGent;
 	ai::Agent*					m_PatrolGent;
 
+
+	ai::Agent*					m_Enemy;
+
 	//ai::Agent*					m_KeyboardGent;
 	//ai::Agent*					m_MouseGent;
 	//std::vector<ai::Agent*>		m_enemyList;

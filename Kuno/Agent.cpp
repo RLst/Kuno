@@ -124,6 +124,12 @@ namespace ai {
 		m_lastSeenAvail = true;		//Automatically sets last seen flag
 	}
 
+	void Agent::setDesiredPos(pkr::Vector2 desiredPos)
+	{
+		m_isMoving = true;
+		m_desiredPos = desiredPos;
+	}
+
 	void Agent::update(float deltaTime)
 	{
 		//Execute all behaviours

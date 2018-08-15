@@ -55,11 +55,22 @@ protected:
 	aie::Font*					m_font;
 
 	//Agents
-	ai::Agent*					m_KeyboardGent;
-	ai::Agent*					m_MouseGent;
-	ai::Agent*					m_PathFollowGent;
+	ai::Agent*					m_Yuna;
+
+//#ifdef _DEBUG
+	ai::Agent*					m_SeekGent;
 	ai::Agent*					m_FleeGent;
-	std::vector<ai::Agent*>		m_enemyList;
+	ai::Agent*					m_AttackGent;
+	ai::Agent*					m_PatrolGent;
+
+	//ai::Agent*					m_KeyboardGent;
+	//ai::Agent*					m_MouseGent;
+	//std::vector<ai::Agent*>		m_enemyList;
+//#elif NDEBUG
+	std::vector<ai::Agent*>		m_Swordsman;
+	std::vector<ai::Agent*>		m_Bowmen;
+	ai::Agent*					m_Lord;
+//#endif // _DEBUG
 
 	//Map and pathfinding
 	pf::Map*					m_map;

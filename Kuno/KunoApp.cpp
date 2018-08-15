@@ -91,9 +91,17 @@ void KunoApp::shutdown() {
 	delete m_font;
 
 	//Agents
-	delete m_KeyboardGent;
-	for (auto enemy : m_enemyList)
-		delete enemy;
+	delete m_Yuna;
+#ifdef _DEBUG
+	delete m_SeekGent;
+	delete m_FleeGent;
+	delete m_AttackGent;
+	delete m_PatrolGent;
+#endif // _DEBUG
+
+	//delete m_KeyboardGent;
+	//for (auto enemy : m_enemyList)
+	//	delete enemy;
 
 	//Map
 	delete m_map;
@@ -160,7 +168,7 @@ bool KunoApp::setupMap()
 
 bool KunoApp::setupPlayer()
 {
-	m_PathFollowGent = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.9f, 0));
+	m_Yuna = new ai::Agent(40.f, pkr::Vector3(0.2f, 0.4f, 0.75f));
 	//m_KeyboardGent = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.75f, 0));
 	//m_MouseGent = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.05f, 0.75f));
 	//m_FleeGent = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.4f, 0.4f));
@@ -170,14 +178,33 @@ bool KunoApp::setupPlayer()
 
 bool KunoApp::setupEnemies()
 {
-	static int numOfEnemies = 2;
+	typedef pkr::Vector3 Color;
 
+//#ifdef _DEBUG
+	//Seek
+	Color seekcol = {0.2f, 0.9f, 0.3f};		//Green
+	m_SeekGent = new ai::Agent(35.0f, seekcol, { 200, 200 });
+
+	//Flee
+	Color fleecol = { 0.85f, 0.85f, 0 };	//Yellow
+	m_FleeGent = new ai::Agent(35.0f, fleecol, { 200, 800 });
+
+	//Attack
+	Color attackcol = { 0.85f, 0.2f, 0 };	//Red
+	m_AttackGent = new ai::Agent(35.0f, attackcol, { 800, 200 });
+
+	//Patrol
+	Color patrolcol = { 0, 0.2f, 0.9f };	//Blue
+	m_PatrolGent = new ai::Agent(35.0f, patrolcol, { 800, 800 });
+
+//#endif // _DEBUG
+
+	//static int numOfEnemies = 2;
 	//Load in a bunch of blue seekers
-	pkr::Vector3 enemyColour = pkr::Vector3(0.75f, 0.25f, 0);	//Dark redish
-
-	for (int i = 0; i < numOfEnemies; ++i) {
-		m_enemyList.push_back(new ai::Agent(40.0f, enemyColour, pkr::Vector2(i * 100.0f, i * 100.0f)));
-	}
+	//pkr::Vector3 enemyColour = pkr::Vector3(0.75f, 0.25f, 0);	//Dark redish
+	//for (int i = 0; i < numOfEnemies; ++i) {
+	//	m_enemyList.push_back(new ai::Agent(40.0f, enemyColour, pkr::Vector2(i * 100.0f, i * 100.0f)));
+	//}
 
 	return true;
 }
@@ -191,115 +218,128 @@ bool KunoApp::setupAI()
 	//// Setup player(s) ////
 	////////////////////////
 	aie::Input* input = aie::Input::getInstance();
-	//m_KeyboardGent->addBehaviour(new ai::action::tKeyboardControl(input, 500.0f));
-	////m_MouseGent->addBehaviour(new ai::action::tMouseControl(input));
 
-	////Flee//
-	//auto fleeSeq = new ai::Sequence();
-	////fleeSeq->addChild(new ai::condition::CheckHealth(m_FleeGent, lowHealth));
-	//fleeSeq->addChild(new ai::action::Flee(m_KeyboardGent, m_map));
-	//m_FleeGent->addBehaviour(fleeSeq);
 
 	//Path follower
 	auto slTest1 = new ai::Selector();
 		auto sqPathToMouse = new ai::Sequence();					//Make a FollowPathSequence
-		sqPathToMouse->addChild(new ai::action::tMouseSetDesiredPos());
+		sqPathToMouse->addChild(new ai::action::tMouseSetDesiredPos(input));
 		sqPathToMouse->addChild(new ai::action::CalculatePath(m_map));
 	slTest1->addChild(sqPathToMouse);
 	slTest1->addChild(new ai::action::FollowPath());
 
 	//sqPathToMouse->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
-	m_PathFollowGent->addBehaviour(slTest1);				//Add FollowPath sequence to path follower
+	m_Yuna->addBehaviour(slTest1);				//Add FollowPath sequence to path follower
 	
-
+//#ifdef _DEBUG
 	/////////////////////////
 	//// Setup enemies /////
 	///////////////////////
-	auto samurai = new ai::Selector();			//Root node for a melee samurai
-	auto samuraiBow = new ai::Selector();		//Root node for a ranged samurai
-	auto lord = new ai::Selector();
+	struct {
+		float attackRange = 50.0f;			//The distance from which the enemy can attack
+		float alertRange = 300.0f;			//The distance from which the enemy can clearly see
+		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
+		float attackSpeed = 2.0f;			//seconds; delay between attacks
+		float FOV = 90.0f;					//View cone of the enemy
+	} enemyAI;
+
+	auto Flee = new ai::Selector();
+	auto AttackGent = new ai::Selector();
+	auto PatrolGent = new ai::Selector();
+
+	//// SEEK ////
+	auto SeekROOT = new ai::Selector();
+		auto sqSeekAction = new ai::Sequence();
+		sqSeekAction->addChild(new ai::condition::WithinRange(m_Yuna, enemyAI.suspiciousRange));
+		sqSeekAction->addChild(new ai::action::Seek(m_Yuna));
+		sqSeekAction->addChild(new ai::action::CalculatePath(m_map));
+	SeekROOT->addChild(sqSeekAction);
+	SeekROOT->addChild(new ai::action::FollowPath());
+	m_SeekGent->addBehaviour(SeekROOT);
+
+	//// FLEE ////
+	auto FleeROOT = new ai::Selector();
+		auto sqFleeAction = new ai::Sequence();
+		sqFleeAction->addChild(new ai::condition::WithinRange(m_Yuna, 1000.0f));
+		sqFleeAction->addChild(new ai::action::Flee(m_Yuna));
+		sqFleeAction->addChild(new ai::action::CalculatePath(m_map));
+	FleeROOT->addChild(sqFleeAction);
+	FleeROOT->addChild(new ai::action::FollowPath());
+	m_FleeGent->addBehaviour(FleeROOT);
+
+//#endif // _DEBUG
+
 
 	//// Set some test values ////
 	//Samurai swordsman
 	struct {	//Temp?
-		float attackRange = 30.0f;			//The distance from which the enemy can attack
+		float attackRange = 50.0f;			//The distance from which the enemy can attack
 		float alertRange = 300.0f;			//The distance from which the enemy can clearly see
 		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
 		float attackSpeed = 2.0f;			//seconds; delay between attacks
 		float FOV = 90.0f;					//View cone of the enemy
 	} swordsman;
-	
 
-	//// TEST ////
-	auto EnemyRoot = new ai::Selector();
-		//auto decSuccess = new ai::ReturnSuccess();
-			auto sqEnemyAction = new ai::Sequence();
-			sqEnemyAction->addChild(new ai::condition::WithinRange(m_PathFollowGent, 300));
-			sqEnemyAction->addChild(new ai::condition::CheckNotMoving());
-			sqEnemyAction->addChild(new ai::action::Seek(m_PathFollowGent));
-			sqEnemyAction->addChild(new ai::action::CalculatePath(m_map));
-		//decSuccess->setChild(sqEnemyAction);
-	EnemyRoot->addChild(sqEnemyAction);
-		auto sqPathFinding = new ai::Sequence();
-		//sqPathFinding->addChild(new ai::action::CalculatePath(m_map));
-		sqPathFinding->addChild(new ai::action::FollowPath());
-	EnemyRoot->addChild(sqPathFinding);
+	//// THIS IS IT! Set up enemy AI////
+	//'Constant' behaviours
+	auto UpdateLastSeen = new ai::action::UpdateLastSeen(m_Yuna);
+	auto UpdatePath = new ai::action::CalculatePath(m_map);
+	auto FollowPath = new ai::action::FollowPath();
+	auto Attack = new ai::action::Attack(m_Yuna);
 
+
+	////Samurai Swordsman
+	//Attack Sequence
+	auto AttackSequence = new ai::Sequence();
+		AttackSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.attackRange));
+		AttackSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
+		AttackSequence->addChild(UpdateLastSeen);
+			auto AttackDecor = new ai::DelayDecorator(swordsman.attackSpeed);
+				AttackDecor->setChild(Attack);
+		AttackSequence->addChild(AttackDecor);
+
+	//Flee or Pursue Sequence
+	auto FleeOrPursueSequence = new ai::Sequence();
+	FleeOrPursueSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.alertRange));
+	FleeOrPursueSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
+	FleeOrPursueSequence->addChild(UpdateLastSeen);
+		auto FleeOrPursueSelector = new ai::Selector();
+			auto FleeSequence = new ai::Sequence();
+			FleeSequence->addChild(new ai::condition::CheckHealth());
+			FleeSequence->addChild(new ai::action::Flee(m_Yuna));
+			//FleeSequence->addChild(UpdatePath);
+		FleeOrPursueSelector->addChild(FleeSequence);
+		FleeOrPursueSelector->addChild(new ai::action::Seek(m_Yuna));
+		//FleeOrPursueSelector->addChild(UpdatePath);
+	FleeOrPursueSequence->addChild(FleeOrPursueSelector);
+
+	//Seek
+	auto SeekSequence = new ai::Sequence();
+	SeekSequence->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.suspiciousRange));
+	auto UpdateStateSeq(new ai::Sequence());
+		auto NotDecorator = new ai::NotDecorator();
+
+	SeekSequence->addChild(new ai::)
+
+	//Action
+	auto ActionSel = new ai::Selector();
+	ActionSel->addChild(AttackSequence);
+	ActionSel->addChild(FleeOrPursueSequence);
+
+	//Path
+	auto PathAvailable = new ai::Selector();
+	PathAvailable->addChild(new ai::action::FollowPath());
+
+	//FINAL SETUP
+	//Root
+	auto SwordsmanRoot = new ai::Sequence();
+	SwordsmanRoot->addChild(ActionSel);
+	SwordsmanRoot->addChild(PathAvailable);
+			
 	for (auto e : m_enemyList)
 	{
-		e->addBehaviour(EnemyRoot);
+		e->addBehaviour(SwordsmanRoot); 
 	}
-
-
-	////// THIS IS IT! Set up enemy AI////
-	////Constant behaviours
-	//auto UpdateLastSeen = new ai::action::UpdateLastSeen(m_KeyboardGent);
-	//auto UpdatePath = new ai::action::CalculatePath(m_map);
-
-	//////Samurai Swordsman
-	////Attack Sequence
-	//auto AttackSequence = new ai::Sequence();
-	//	AttackSequence->addChild(new ai::condition::WithinRange(m_KeyboardGent, swordsman.attackRange));
-	//	AttackSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
-	//	AttackSequence->addChild(new ai::action::UpdateLastSeen(m_KeyboardGent));
-	//		auto AttackDecorator = new ai::DelayDecorator(swordsman.attackSpeed);
-	//			AttackDecorator->setChild(new ai::action::Attack(m_KeyboardGent));
-	//	AttackSequence->addChild(AttackDecorator);
-
-	////Flee or Pursue Sequence
-	//auto FleeOrPursueSequence = new ai::Sequence();
-	//FleeOrPursueSequence->addChild(new ai::condition::WithinRange(m_KeyboardGent, swordsman.alertRange));
-	//FleeOrPursueSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
-	//FleeOrPursueSequence->addChild(UpdateLastSeen);
-	//	auto FleeOrPursueSelector = new ai::Selector();
-	//		auto FleeSequence = new ai::Sequence();
-	//		FleeSequence->addChild(new ai::condition::CheckHealth());
-	//		FleeSequence->addChild(new ai::action::Flee());
-	//		FleeSequence->addChild(UpdatePath);
-	//	FleeOrPursueSelector->addChild(FleeSequence);
-	//	FleeOrPursueSelector->addChild(new ai::action::Seek(m_KeyboardGent));
-	//	FleeOrPursueSelector->addChild(UpdatePath);
-	//FleeOrPursueSequence->addChild(FleeOrPursueSelector);
-
-	////Action
-	//auto ActionSel = new ai::Selector();
-	//ActionSel->addChild(AttackSequence);
-	//ActionSel->addChild(FleeOrPursueSequence);
-
-	////Path
-	//auto PathAvailable = new ai::Selector();
-	//PathAvailable->addChild(new ai::action::FollowPath());
-
-	////FINAL SETUP
-	////Root
-	//auto SwordsmanRoot = new ai::Sequence();
-	//SwordsmanRoot->addChild(ActionSel);
-	//SwordsmanRoot->addChild(PathAvailable);
-	//		
-	//for (auto e : m_enemyList)
-	//{
-	//	e->addBehaviour(SwordsmanRoot); 
-	//}
 
 	//Delete ai stuff
 
@@ -321,13 +361,20 @@ void KunoApp::update(float deltaTime) {
 	m_map->update(deltaTime);		//Handle the tile tinting
 	
 	//Update the agents
-	m_PathFollowGent->update(deltaTime);
+	m_Yuna->update(deltaTime);
+
+//#ifdef _DEBUG
+	//Update DEBUG agents
+	m_SeekGent->update(deltaTime);
+	m_FleeGent->update(deltaTime);
+//#endif
+
 	//m_KeyboardGent->update(deltaTime);
 	//m_MouseGent->update(deltaTime);
 	//m_FleeGent->update(deltaTime);
 
-	for (auto enemy : m_enemyList)
-		enemy->update(deltaTime);
+	//for (auto enemy : m_enemyList)
+	//	enemy->update(deltaTime);
 
 	//Update GUI
 
@@ -355,20 +402,15 @@ void KunoApp::draw() {
 	//float mapDrawEndTime = KunoApp::Instance()->getTime();
 
 	//Draw agents
-	m_PathFollowGent->draw(m_2dRenderer);
-	//m_KeyboardGent->draw(m_2dRenderer);				//Keyboard
-	//m_MouseGent->draw(m_2dRenderer);			//Mouse
-	//m_FleeGent->draw(m_2dRenderer);
+	m_Yuna->draw(m_2dRenderer);
 
-	for (auto enemy : m_enemyList) {			//Enemies
-		enemy->draw(m_2dRenderer);
-	}
+//#ifdef _DEBUG
+	//Draw DEBUG agents
+	m_SeekGent->draw(m_2dRenderer);
+	m_FleeGent->draw(m_2dRenderer);
 
-//// DEBUGS ////
-#ifdef _DEBUG
 DEBUG(m_2dRenderer);
-#endif
-///////////////
+//#endif // _DEBUG
 
 	m_2dRenderer->end();
 	//// END DRAW ////

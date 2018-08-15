@@ -55,7 +55,8 @@ namespace ai {
 
 		//Pathfinding
 		pf::Path			m_path;
-		pkr::Vector2		m_desiredPos = pkr::Vector2();	//UpdatePath will use this to create a path
+		pf::Path			m_patrolPath;		//Only add one waypoint to set as a guard, +1 for patrolling
+		pkr::Vector2		m_desiredPos = pkr::Vector2();		//UpdatePath will use this to create a path
 
 	public:
 		/////////////////////////////////////////////
@@ -70,6 +71,7 @@ namespace ai {
 			NORMAL,
 			STEALTH,
 			PATROL,
+			GUARD,
 			SUSPICIOUS,
 			ALERT,
 		};
@@ -101,6 +103,7 @@ namespace ai {
 		float				getHealth() const { return m_health; }
 		void				takeDamage(float attack) { m_health -= attack; }
 		float				getAttack() const { return m_attack; }
+		void				setAttack(const float attack) { m_attack = attack; }
 		bool				isAlive() { return m_health > 0; }
 
 		//Last seen
@@ -112,8 +115,18 @@ namespace ai {
 		eResult				followPath(float deltaTime);						
 		void				setPath(const pf::Path path) { m_path = path; }
 		pf::Path			getPath() const { return m_path; }
+
+		pf::Path			patrolPath() const { return m_patrolPath; }
+		pf::Path&			patrolPath() { return m_patrolPath; }
+		void				setPatrolPath(const pf::Path patrolPath) { m_patrolPath = patrolPath; }
+
+		//bool				isGuardPostAvailable() const { return m_patrolPath.isAvailable(); }
+		//pkr::Vector2		getPostPos() const { if (m_patrolPath.isAvailable()) return m_patrolPath[0]; }		//Need refinement ie. const and reference etc
+		//void				setPostPos(const pkr::Vector2 guardPostPos) { if (m_patrolPath.isAvailable()) m_patrolPath[0] = guardPostPos; }
+
 		pkr::Vector2		getDesiredPos() const { return m_desiredPos; }
-		void				setDesiredPos(pkr::Vector2 desiredPos) { m_desiredPos = desiredPos; }
+		void				setDesiredPos(pkr::Vector2 desiredPos);		//Also sets the isMoving flag
+
 
 		//Core
 		virtual void		update(float deltaTime);

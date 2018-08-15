@@ -153,7 +153,7 @@ namespace ai {
 		ImGui::Text("health > %.0f", m_health);
 		ImGui::Text("lastSeen > x:%.0f, y:%.0f", m_lastSeenPos.x, m_lastSeenPos.y);
 		ImGui::Text("desiredPos > x:%.2f, y:%.2f", m_desiredPos.x, m_desiredPos.y);
-		ImGui::Text("state > ", state);
+		ImGui::Text("state > %d", (int)state);
 		ImGui::End();
 #endif // _DEBUG
 

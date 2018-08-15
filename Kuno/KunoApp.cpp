@@ -221,16 +221,17 @@ bool KunoApp::setupAI()
 	aie::Input* input = aie::Input::getInstance();
 
 
-	//Path follower
-	auto slTest1 = new ai::Selector();
-		auto sqPathToMouse = new ai::Sequence();					//Make a FollowPathSequence
-		sqPathToMouse->addChild(new ai::action::tMouseSetDesiredPos(input));
-		sqPathToMouse->addChild(new ai::action::CalculatePath(m_map));
-	slTest1->addChild(sqPathToMouse);
-	slTest1->addChild(new ai::action::FollowPath());
+	//Player
+	//auto slTest1 = new ai::Selector();
+	//	auto sqPathToMouse = new ai::Sequence();					//Make a FollowPathSequence
+	//	sqPathToMouse->addChild(new ai::action::tMouseSetDesiredPos(input));
+	//	sqPathToMouse->addChild(new ai::action::CalculatePath(m_map));
+	//slTest1->addChild(sqPathToMouse);
+	//slTest1->addChild(new ai::action::FollowPath());
 
-	//sqPathToMouse->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
-	m_Yuna->addBehaviour(slTest1);				//Add FollowPath sequence to path follower
+	////sqPathToMouse->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
+	//m_Yuna->addBehaviour(slTest1);				//Add FollowPath sequence to path follower
+	m_Yuna->addBehaviour(new ai::action::tKeyboardControl());
 	
 //#ifdef _DEBUG
 	/////////////////////////
@@ -294,7 +295,7 @@ bool KunoApp::setupAI()
 	} swordsman;
 
 	//// Initialise ////
-	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 700, 700 });
+	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 750, 750 });
 	//m_Enemy->patrolPath().push_back({ 600,600 });			//Set guard post
 	m_Enemy->setAttack(swordsman.attack);
 	m_Enemy->setWalkSpeed(swordsman.walkSpeed);
@@ -354,7 +355,7 @@ bool KunoApp::setupAI()
 			//InspectSeq->addChild(new ai::action::CalculatePath(m_map));
 			//InspectSeq->addChild(new ai::action::FollowPath());
 
-			//InspectSeq->addChild(new ai::action::Idle(3.0f, 5.0f));
+			InspectSeq->addChild(new ai::action::Idle(3.0f, 5.0f));
 			InspectSeq->addChild(new ai::action::ClearLastSeen());		//Constant
 			InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
 		ActionSel->addChild(InspectSeq);
@@ -375,8 +376,9 @@ bool KunoApp::setupAI()
 
 	//ROOT
 	auto SwordsmanRoot = new ai::Sequence();
-		auto AlwaysSuccess = new ai::ReturnSuccess(ActionSel);
-	SwordsmanRoot->addChild(AlwaysSuccess);
+		//auto AlwaysSuccess = new ai::ReturnSuccess(ActionSel);
+	//SwordsmanRoot->addChild(AlwaysSuccess);
+	SwordsmanRoot->addChild(ActionSel);
 	SwordsmanRoot->addChild(MoveSeq);
 			
 	m_Enemy->addBehaviour(SwordsmanRoot);
@@ -411,8 +413,8 @@ std::cout << test << std::endl;
 
 //#ifdef _DEBUG
 	//Update DEBUG agents
-	m_SeekGent->update(deltaTime);
-	m_FleeGent->update(deltaTime);
+	//m_SeekGent->update(deltaTime);
+	//m_FleeGent->update(deltaTime);
 //#endif
 
 	m_Enemy->update(deltaTime);

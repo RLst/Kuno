@@ -117,6 +117,22 @@ namespace ai {
 				return eResult::SUCCESS;
 			}
 		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		Flee::Flee(Agent * target) :
+			m_target(target){}
+		eResult Flee::execute(Agent * agent, float deltaTime)
+		{
+			if (agent->m_isMoving)	{
+				//If the agent is moving then let the agent move/followPath
+				return eResult::FAILURE;	//Should branch out to Pathfinding branch
+			}
+			else {
+				//Set the desired path to where the target is.... but reversed
+				auto fleeVec = pkr::Vector2::normalise(agent->pos - m_target->pos) * agent->getSpeed();
+				auto fleePos = agent->pos + fleeVec;
+				agent->setDesiredPos(fleePos);
+				return eResult::SUCCESS;
+			}
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Idle::Idle(float minIdleTime, float maxIdleTime) :
@@ -154,17 +170,6 @@ namespace ai {
 		{
 			//If a path exists then follow it, return running/success?
 			return agent->followPath(deltaTime);
-		}
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		Flee::Flee(Agent * target, float fleeRange) :
-			m_target(target), m_fleeRange(fleeRange) {}
-		eResult Flee::execute(Agent * agent, float deltaTime)
-		{
-			//Set the desired path to where the target is.... but reversed
-			auto fleeVec = pkr::Vector2::normalise(agent->pos - m_target->pos) /** agent->getSpeed()*/;
-			auto fleePos = agent->pos + fleeVec;
-			agent->setDesiredPos(fleePos);
-			return eResult::SUCCESS;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateState::execute(Agent * agent, float deltaTime)

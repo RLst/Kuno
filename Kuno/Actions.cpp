@@ -112,7 +112,6 @@ namespace ai {
 			}
 			else {
 				//Set the agent's desired position
-				//agent->m_isMoving = true;		//set to moving/// THIS IS NOW AUTOMATICALLY SET IN DESIRED POS
 				agent->setDesiredPos(m_target->pos);
 				return eResult::SUCCESS;
 			}

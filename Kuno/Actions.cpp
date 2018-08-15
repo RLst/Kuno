@@ -116,13 +116,7 @@ namespace ai {
 				agent->setDesiredPos(m_target->pos);
 				return eResult::SUCCESS;
 			}
-
-#ifdef _DEBUG
-			//ImGui::Begin("Seek");
-			//ImGui::Text("setDesiredPos > x:%.2f, y:%.2f", m_target->pos.x, m_target->pos.y);
-			//ImGui::End();
-#endif // _DEBUG
-			return eResult::SUCCESS;
+		}
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Idle::Idle(float minIdleTime, float maxIdleTime) :

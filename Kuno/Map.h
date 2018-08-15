@@ -17,9 +17,6 @@ namespace pf {
 class Tile;
 class StaticObject;
 
-//typedef std::vector<Tile*> TileList;
-//typedef std::vector<pkr::Vector2*> PointList;		//More accurate list of waypoints
-
 class Map
 {
 	//A map contains a grid of tiles

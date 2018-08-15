@@ -102,10 +102,10 @@ namespace ai {
 		{
 		private:
 			Agent *		m_target = nullptr;
-			float		m_fleeRange;
+			//float		m_fleeRange;
 		public:
 			~Flee() = default;
-			Flee(Agent* target, float fleeRange = 400);
+			Flee(Agent* target);
 			eResult		execute(Agent *agent, float deltaTime) override;
 		};
 		/////////////////////////////////////////////////////////////////////////////////////////////////

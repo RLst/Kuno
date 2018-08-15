@@ -107,7 +107,7 @@ namespace pf {
 				}
 
 				//// Add any objects that may be on this tile ////
-				int random = pkr::Random(5, 10);
+				int random = pkr::Random(4, 20);
 				if (random <= 5) //Object will definitely be created
 				{
 					StaticObject* newObject = new StaticObject();		//Create empty object and set properties below

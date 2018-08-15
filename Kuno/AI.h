@@ -100,6 +100,8 @@ namespace ai {
 		//Inverts SUCCESS or FAILURE
 	{
 	public:
+		NotDecorator() = default;
+		NotDecorator(iBehaviour* child);
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 
@@ -109,9 +111,10 @@ namespace ai {
 	{
 	private:
 		float m_timeout;		//Countdown time
-		float m_duration;		//Original duration
+		float m_reset;		//Original duration
 	public:
-		TimeoutDecorator(float timeout) : m_timeout(timeout), m_duration(timeout) {}
+		TimeoutDecorator(float timeout) : m_timeout(timeout), m_reset(timeout) {}
+		TimeoutDecorator(iBehaviour* child, float timeout);
 		~TimeoutDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
@@ -123,9 +126,10 @@ namespace ai {
 	{
 	private:
 		float m_delay;			//Delay time
-		float m_duration;		//Original duration
+		float m_reset;		//Original duration
 	public:
-		DelayDecorator(float delay) : m_delay(delay), m_duration(delay) {}
+		DelayDecorator(float delay) : m_delay(delay), m_reset(delay) {}
+		DelayDecorator(iBehaviour* child, float delay);
 		~DelayDecorator() override { delete m_child; }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};

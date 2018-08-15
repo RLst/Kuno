@@ -100,6 +100,12 @@ namespace ai {
 		*/
 	}
 
+	NotDecorator::NotDecorator(iBehaviour * childBehaviour)
+	{
+		//Constructor directly takes in a child behaviour
+		setChild(childBehaviour);
+	}
+
 	//Decorators
 	eResult NotDecorator::execute(Agent * agent, float deltaTime)
 	{
@@ -117,11 +123,17 @@ namespace ai {
 		}
 	}
 
+	TimeoutDecorator::TimeoutDecorator(iBehaviour * child, float timeout) :
+		m_timeout(timeout)
+	{
+		setChild(child);
+	}
+
 	eResult TimeoutDecorator::execute(Agent * agent, float deltaTime)
 	{
 		m_timeout -= deltaTime;
 		if (m_timeout > 0) {
-			m_timeout = m_duration;		//Resets the timeout
+			m_timeout = m_reset;		//Resets the timeout
 			return eResult::RUNNING;
 			//return eResult::FAILURE;
 		}
@@ -129,19 +141,26 @@ namespace ai {
 		return m_child->execute(agent, deltaTime);
 	}
 
+	DelayDecorator::DelayDecorator(iBehaviour * child, float delay) :
+		m_delay(delay)
+	{
+		setChild(child);
+	}
+
 	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
 	{
 		//If first run
-		if (m_delay == m_duration) {
+		if (m_delay == m_reset) {
 			//Run once and then start countdown
+			m_delay -= deltaTime;
 			return m_child->execute(agent, deltaTime);
 		}
 		m_delay -= deltaTime;
 		//If delay < 0 then reset
 		if (m_delay < 0) {
-			m_delay = m_duration;
+			m_delay = m_reset;
 		}
-		return eResult::RUNNING;
+		return eResult::FAILURE;
 	}
 
 	eResult ReturnSuccess::execute(Agent * agent, float deltaTime)

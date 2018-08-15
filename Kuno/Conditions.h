@@ -60,12 +60,24 @@ namespace ai {
 			CheckNotMoving() = default;
 			~CheckNotMoving() = default;
 			eResult execute(Agent* agent, float deltaTime) override;
-
+		};
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		class CheckPathAvailable : public iBehaviour
+		{
+		public:
+			CheckPathAvailable() = default;
+			~CheckPathAvailable() = default;
+			eResult execute(Agent* agent, float deltaTime) override;
 		};
 
 
 	}
 }
+
+
+
+
+
 
 	
 /*

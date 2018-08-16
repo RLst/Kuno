@@ -50,6 +50,26 @@ class KunoApp : public aie::Application
 private:
 	KunoApp() = default;					//MODERN SINGLETON PATTERN
 	virtual ~KunoApp() = default;			//Destructor not required; use shutdown() instead
+
+	//Character setup properties
+	struct {
+		//Core
+		float size = 35.0f;
+		pkr::Vector3 colour = { 0.9f, 0.2f, 0 };
+		//Attacks
+		float attack = 20.0f;
+		float attackSpeed = 1.0f;			//seconds; delay between attacks
+		float lowHealthThres = 20.0f;		//Triggers flee if health goes below this
+											//Ranges
+		float attackRange = 75.0f;			//The distance from which the enemy can attack
+		float sightRange = 300.0f;			//The distance from which the enemy can clearly see
+		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
+		float FOV = 90.0f;					//View cone of the enemy
+											//Speeds
+		float walkSpeed = 100.0f;
+		float runSpeed = 300.0f;
+	} guard;
+
 protected:
 	aie::Renderer2D*			m_2dRenderer;
 	aie::Font*					m_font;
@@ -59,7 +79,6 @@ protected:
 	//Player
 	ai::Agent*					m_Yuna;
 
-//#ifdef _DEBUG
 	//Enemies
 	ai::Agent*					m_SeekGent;
 	ai::Agent*					m_FleeGent;
@@ -68,12 +87,9 @@ protected:
 	ai::Agent*					m_Enemy;
 	std::vector<ai::Agent*>		m_EnemyList;
 
-//#elif NDEBUG
 	//std::vector<ai::Agent*>		m_Swordsman;
 	//std::vector<ai::Agent*>		m_Bowmen;
 	//ai::Agent*					m_Lord;
-
-//#endif // _DEBUG
 
 	//Map and pathfinding
 	pf::Map*					m_map;

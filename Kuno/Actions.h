@@ -90,8 +90,8 @@ namespace ai {
 		private:
 			float		m_minTime;
 			float		m_maxTime;
-			float		m_duration = 0;
-			float		m_timeout;
+			float		m_idleTime = 0;
+			float		m_reset;
 		public:
 			Idle(float minIdleTime, float maxIdleTime);
 			~Idle() = default;

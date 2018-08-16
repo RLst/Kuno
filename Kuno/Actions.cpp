@@ -139,27 +139,28 @@ namespace ai {
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		Idle::Idle(float minIdleTime, float maxIdleTime) :
-			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_duration(0)	{}
+			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_idleTime(0)	{}
 		eResult Idle::execute(Agent * agent, float deltaTime)
 		{
-			std::cout << "Idle" << std::endl;
+			std::cout << "Idle: " << std::endl;
 
-			//If the current idle time is 0 then start timing
-			if (m_duration <= 0) {
+			//If first run then setup
+			if (m_idleTime <= 0) {
 				//Set random finished time
-				m_timeout = pkr::Random(m_minTime, m_maxTime);
-				m_duration += deltaTime;
+				m_reset = pkr::Random(m_minTime, m_maxTime);
+				m_idleTime += deltaTime;
 				return RUNNING;		//Return running
 			}
 			//If the current idle time is past max idle time
-			else if (m_duration > m_maxTime) {
+			else if (m_idleTime > m_reset) {
 				//Reset and return success
-				m_duration = NULL;
-				m_timeout = NULL;
+				m_idleTime = 0;
 				return SUCCESS;
 			}
 			else {
 				//Still counting down
+				m_idleTime += deltaTime;
+				std::cout << m_idleTime << " / " << m_reset << std::endl;
 				return RUNNING;
 			}
 		}

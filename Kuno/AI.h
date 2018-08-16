@@ -135,13 +135,13 @@ namespace ai {
 	};
 
 	//RETURN SUCCESS
-	class ReturnSuccess : public aDecorator
+	class SuccessDecorator : public aDecorator
 		//Always return success
 	{
 	public:
-		~ReturnSuccess() = default;
-		ReturnSuccess() = default;
-		ReturnSuccess(iBehaviour* child) { setChild(child); }
+		~SuccessDecorator() = default;
+		SuccessDecorator() = default;
+		SuccessDecorator(iBehaviour* child) { setChild(child); }
 		eResult execute(Agent* agent, float deltaTime) override;
 	};
 }

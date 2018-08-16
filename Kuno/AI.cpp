@@ -173,7 +173,7 @@ namespace ai {
 		return eResult::FAILURE;
 	}
 
-	eResult ReturnSuccess::execute(Agent * agent, float deltaTime)
+	eResult SuccessDecorator::execute(Agent * agent, float deltaTime)
 	{
 		std::cout << "SuccessDecorator" << std::endl;
 

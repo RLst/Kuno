@@ -22,7 +22,9 @@ namespace pkr {
 	float Random(float min, float max)
 	{
 		//C
-		return (float)rand() / (float)RAND_MAX;
+		float multiplier = (float)rand() / (float)RAND_MAX;
+		float diff = max - min;
+		return min + multiplier * diff;
 
 		//C++
 		//std::default_random_engine DRE;

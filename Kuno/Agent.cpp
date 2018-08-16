@@ -89,16 +89,16 @@ namespace ai {
 			{
 				//Increment current waypoint index and return running
 				m_path.next();
-				return SUCCESS;
-				//return RUNNING;
+				//return SUCCESS;
+				return RUNNING;
 			}
 			else
 			{
 				//The agent is in between waypoints (PROBABLY)
 				//so move agent towards next waypoint
 				seek(m_path.getWaypoint(), deltaTime);
-				return SUCCESS;
-				//return RUNNING;
+				//return SUCCESS;
+				return RUNNING;
 			}
 		}
 		//Path not available

@@ -28,7 +28,7 @@ namespace ai {
 			aie::Input*		m_input;
 			float			m_maxForce;
 		public:
-			tKeyboardControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 200.0f);
+			tKeyboardControl(aie::Input * input = aie::Input::getInstance(), float maxForce = 600.0f);
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 

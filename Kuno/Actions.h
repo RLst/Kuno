@@ -227,9 +227,11 @@ namespace ai {
 		class ReturnToPost : public iBehaviour
 			//Simply returns to the first waypoint in patrol path
 		{
+		private:
+			float		m_postRadius;
 		public:
 			~ReturnToPost() = default;
-			ReturnToPost() = default;
+			ReturnToPost(float postRadius = 20.0f) : m_postRadius(postRadius) {}
 			eResult execute(Agent* agent, float deltaTime) override;
 		};
 		//////////////////////////////////////////////////////////////////////////////////////////////////

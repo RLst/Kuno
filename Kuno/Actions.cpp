@@ -290,10 +290,14 @@ namespace ai {
 				return FAILURE;
 			}
 			else {
-				if (agent->patrolPath().isAvailable()) {	//Extra check
-					agent->setDesiredPos(agent->patrolPath().at(0));
-					std::cout << "SUCCESS" << std::endl;
-					return SUCCESS;
+				if (agent->patrolPath().isAvailable()) {	//Failsafe check
+
+					//If the agent is already back at his post then don't pathfind (MESSY/CLUNKY)
+					if (pkr::Vector2::distance(agent->pos, agent->patrolPath().at(0)) > m_postRadius) {		//If not yet at the post 
+						agent->setDesiredPos(agent->patrolPath().at(0));	//Move towards it
+						std::cout << "SUCCESS" << std::endl;
+						return SUCCESS;
+					}
 				}
 				//assert(false);
 				std::cout << "FAILURE: No patrol route/guard" << std::endl;

@@ -10,6 +10,8 @@
 #include <Renderer2D.h>
 #include "GameDefines.h"
 
+#include <iostream>
+
 namespace ai {
 
 	//Composites
@@ -112,13 +114,18 @@ namespace ai {
 		//Get result of child...
 		eResult result = m_child->execute(agent, deltaTime);
 
+		std::cout << "NotDecorator";
+
 		//Invert
 		switch (result) {
 		case eResult::SUCCESS:
+			std::cout << "SUCCESS > FAILURE" << std::endl;
 			return FAILURE; break;
 		case eResult::FAILURE:
+			std::cout << "FAILURE > SUCCESS" << std::endl;
 			return SUCCESS; break;
 		default:	//Else return whatever result is
+			std::cout << "OTHER" << std::endl;
 			return result;
 		}
 	}
@@ -131,6 +138,8 @@ namespace ai {
 
 	eResult TimeoutDecorator::execute(Agent * agent, float deltaTime)
 	{
+		std::cout << "TimeoutDecorator: " << m_timeout << std::endl;
+
 		m_timeout -= deltaTime;
 		if (m_timeout > 0) {
 			m_timeout = m_reset;		//Resets the timeout
@@ -148,6 +157,8 @@ namespace ai {
 
 	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
 	{
+		std::cout << "DelayDecorator: " << m_delay << std::endl;
+
 		//If first run
 		if (m_delay == m_reset) {
 			//Run once and then start countdown
@@ -164,6 +175,8 @@ namespace ai {
 
 	eResult ReturnSuccess::execute(Agent * agent, float deltaTime)
 	{
+		std::cout << "SuccessDecorator" << std::endl;
+
 		m_child->execute(agent, deltaTime);
 		return eResult::SUCCESS;	//ALWAYS RETURN SUCCESS!
 	}

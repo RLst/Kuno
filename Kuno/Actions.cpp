@@ -14,6 +14,7 @@
 #include <Input.h>
 
 #include "imgui.h"
+#include <iostream>
 
 namespace ai {
 	namespace action {
@@ -102,6 +103,7 @@ namespace ai {
 			m_target(target), m_arriveRadius(arriveRadius)	{}
 		eResult Seek::execute(Agent * agent, float deltaTime)
 		{	//Seek vector = Target position - Agent position
+			std::cout << "Seek" << std::endl;
 
 			//TRY implementing CheckNotMoving behaviour inside 
 			//the move behaviours to simplify it a bit
@@ -121,6 +123,8 @@ namespace ai {
 			m_target(target){}
 		eResult Flee::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "Flee" << std::endl;
+
 			if (agent->isMoving())	{
 				//If the agent is moving then let the agent move/followPath
 				return eResult::FAILURE;	//Should branch out to Pathfinding branch
@@ -138,6 +142,8 @@ namespace ai {
 			m_minTime(minIdleTime), m_maxTime(maxIdleTime), m_duration(0)	{}
 		eResult Idle::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "Idle" << std::endl;
+
 			//If the current idle time is 0 then start timing
 			if (m_duration <= 0) {
 				//Set random finished time
@@ -160,6 +166,8 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult Attack::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "Attack" << std::endl;
+
 			//This agent attacks the target agent
 			m_target->takeDamage(agent->getAttack());
 			return eResult::SUCCESS;
@@ -167,12 +175,16 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult FollowPath::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "FollowPath: ";
+
 			//If a path exists then follow it, return running/success?
-			return agent->followPath(deltaTime);
+			return agent->followPath(deltaTime);	//eResult RETURNED HERE
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateState::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "UpdateState: " << static_cast<int>(m_desiredState) << std::endl;
+
 			//Just change the agent's state to the desired state
 			agent->state = m_desiredState;
 			return eResult::SUCCESS;
@@ -180,18 +192,23 @@ namespace ai {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult UpdateLastSeen::execute(Agent * agent, float deltaTime)
 		{		
+			std::cout << "SetLastSeen > x: " << m_target->pos.x << ",y: " << m_target->pos.y << std::endl;
+			
 			agent->setLastSeen(m_target->pos);
 			return eResult::SUCCESS;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult ClearLastSeen::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "ClearLastSeen" << std::endl;
 			agent->clearLastSeen();
 			return eResult::SUCCESS;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		eResult CalculatePath::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "CalculatePath: ";
+
 			if (agent->isMoving()) {
 
 				//Get desired world position from agent
@@ -235,9 +252,11 @@ namespace ai {
 
 				//Set the agent's path
 				agent->setPath(desiredPath);
+				std::cout << "SUCCESS" << std::endl;
 				return SUCCESS;
 			}
 			else {
+				std::cout << "FAILURE" << std::endl;
 				return FAILURE;
 			}
 
@@ -259,33 +278,43 @@ namespace ai {
 
 		eResult ReturnToPost::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "ReturnToPost: ";
+
 			//If patrol path is empty return failure
 			if (agent->isMoving()) {
 				//Exit branch so that pathfinding can run?
 				//1. Path can be calculated
 				//2. Path can be followed
+				std::cout << "FAILURE" << std::endl;
 				return FAILURE;
 			}
 			else {
-				//if (agent->patrolPath().isAvailable()) {	//Extra check
+				if (agent->patrolPath().isAvailable()) {	//Extra check
 					agent->setDesiredPos(agent->patrolPath().at(0));
+					std::cout << "SUCCESS" << std::endl;
 					return SUCCESS;
-				//}
-				//return FAILURE;
+				}
+				//assert(false);
+				std::cout << "FAILURE: No patrol route/guard" << std::endl;
+				return FAILURE;
 			}
 		}
 
 		eResult Inspect::execute(Agent * agent, float deltaTime)
 		{
+			std::cout << "Inspect: ";
+
 			if (agent->isMoving()) {
 				//Exit branch so that:
 				//1. Path can be calculated
 				//2. Path can be followed
+				std::cout << "FAILURE" << std::endl;
 				return FAILURE;
 			}
 			else {
 				//Move and set desired pos
 				agent->setDesiredPos(agent->getLastSeen());
+				std::cout << "SUCCESS" << std::endl;
 				return SUCCESS;
 			}
 		}

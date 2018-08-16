@@ -9,6 +9,7 @@
 #include "KunoApp.h"
 
 #include "imgui.h"
+#include <iostream>
 
 namespace ai {
 
@@ -81,6 +82,7 @@ namespace ai {
 				//Reset and return success
 				this->m_isMoving = false;
 				m_path.reset();
+				std::cout << "SUCCESS" << std::endl;
 				return SUCCESS;
 			}
 
@@ -89,6 +91,7 @@ namespace ai {
 			{
 				//Increment current waypoint index and return running
 				m_path.next();
+				std::cout << "NEXT index: " << m_path.index << std::endl;
 				//return SUCCESS;
 				return RUNNING;
 			}
@@ -97,11 +100,13 @@ namespace ai {
 				//The agent is in between waypoints (PROBABLY)
 				//so move agent towards next waypoint
 				seek(m_path.getWaypoint(), deltaTime);
+				std::cout << "RUNNING" << std::endl;
 				//return SUCCESS;
 				return RUNNING;
 			}
 		}
 		//Path not available
+		std::cout << "FAILURE" << std::endl;
 		return FAILURE;
 	}
 

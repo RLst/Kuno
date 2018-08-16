@@ -158,6 +158,7 @@ namespace ai {
 	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
 	{
 		std::cout << "DelayDecorator: " << m_delay << std::endl;
+		//BUGGY: This needs to be rewritten
 
 		//If first run
 		if (m_delay == m_reset) {

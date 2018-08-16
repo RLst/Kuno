@@ -92,8 +92,8 @@ namespace ai {
 				//Increment current waypoint index and return running
 				m_path.next();
 				std::cout << "NEXT index: " << m_path.index << std::endl;
-				//return SUCCESS;
 				return RUNNING;
+				//return SUCCESS;
 			}
 			else
 			{
@@ -101,8 +101,8 @@ namespace ai {
 				//so move agent towards next waypoint
 				seek(m_path.getWaypoint(), deltaTime);
 				std::cout << "RUNNING" << std::endl;
-				//return SUCCESS;
 				return RUNNING;
+				//return SUCCESS;
 			}
 		}
 		//Path not available

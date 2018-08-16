@@ -49,8 +49,8 @@ public:
 
 	//Create maps
 	void				buildRandomMap(int width, int depth);
-	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 	void				buildKunoMap();									//Build game map from raw data (maybe this should be in Game.cpp)
+	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 	//void				loadMap();	//From file? Implement later
 
 	//// Find Tile ////

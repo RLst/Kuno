@@ -154,6 +154,9 @@ namespace pf {
 
 	}
 
+	void Map::buildKunoMap()
+	{
+	}
 
 	void Map::connectNodesByDistance(float connectRadius)
 	{
@@ -209,7 +212,6 @@ namespace pf {
 		}
 
 	}
-
 
 	Tile * Map::findTileFromPos(const pkr::Vector2 & pos, float searchRadius)
 	{

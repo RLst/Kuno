@@ -54,25 +54,25 @@ protected:
 	aie::Renderer2D*			m_2dRenderer;
 	aie::Font*					m_font;
 
-	//Agents
+	//// Agents ////
+
+	//Player
 	ai::Agent*					m_Yuna;
 
 //#ifdef _DEBUG
+	//Enemies
 	ai::Agent*					m_SeekGent;
 	ai::Agent*					m_FleeGent;
-	ai::Agent*					m_AttackGent;
-	ai::Agent*					m_PatrolGent;
-
-
+	//ai::Agent*					m_AttackGent;
+	//ai::Agent*					m_PatrolGent;
 	ai::Agent*					m_Enemy;
+	std::vector<ai::Agent*>		m_EnemyList;
 
-	//ai::Agent*					m_KeyboardGent;
-	//ai::Agent*					m_MouseGent;
-	//std::vector<ai::Agent*>		m_enemyList;
 //#elif NDEBUG
-	std::vector<ai::Agent*>		m_Swordsman;
-	std::vector<ai::Agent*>		m_Bowmen;
-	ai::Agent*					m_Lord;
+	//std::vector<ai::Agent*>		m_Swordsman;
+	//std::vector<ai::Agent*>		m_Bowmen;
+	//ai::Agent*					m_Lord;
+
 //#endif // _DEBUG
 
 	//Map and pathfinding

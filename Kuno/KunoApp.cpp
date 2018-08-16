@@ -13,10 +13,10 @@
 #include "Input.h"
 
 //For debugs
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include "imgui.h"
 #include <iostream>
-#endif // _DEBUG
+//#endif // _DEBUG
 
 
 //Utils
@@ -101,8 +101,8 @@ void KunoApp::shutdown() {
 #ifdef _DEBUG
 	delete m_SeekGent;
 	delete m_FleeGent;
-	delete m_AttackGent;
-	delete m_PatrolGent;
+	//delete m_AttackGent;
+	//delete m_PatrolGent;
 #endif // _DEBUG
 
 	//delete m_KeyboardGent;
@@ -190,10 +190,6 @@ bool KunoApp::setupPlayer()
 	m_Yuna->setWalkSpeed(player.walkSpeed);
 	m_Yuna->setRunSpeed(player.runSpeed);
 
-	//m_KeyboardGent = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.75f, 0));
-	//m_MouseGent = new ai::Agent(40.f, pkr::Vector3(0.25f, 0.05f, 0.75f));
-	//m_FleeGent = new ai::Agent(40.f, pkr::Vector3(0.9f, 0.4f, 0.4f));
-
 	return true;
 }
 
@@ -210,13 +206,13 @@ bool KunoApp::setupEnemies()
 	Color fleecol = { 0.85f, 0.85f, 0 };	//Yellow
 	m_FleeGent = new ai::Agent(35.0f, fleecol, { 200, 800 });
 
-	//Attack
-	Color attackcol = { 0.85f, 0.2f, 0 };	//Red
-	m_AttackGent = new ai::Agent(35.0f, attackcol, { 800, 200 });
+	////Attack
+	//Color attackcol = { 0.85f, 0.2f, 0 };	//Red
+	//m_AttackGent = new ai::Agent(35.0f, attackcol, { 800, 200 });
 
-	//Patrol
-	Color patrolcol = { 0, 0.2f, 0.9f };	//Blue
-	m_PatrolGent = new ai::Agent(35.0f, patrolcol, { 800, 800 });
+	////Patrol
+	//Color patrolcol = { 0, 0.2f, 0.9f };	//Blue
+	//m_PatrolGent = new ai::Agent(35.0f, patrolcol, { 800, 800 });
 
 //#endif // _DEBUG
 
@@ -238,15 +234,15 @@ bool KunoApp::setupAI()
 
 
 	//Player
-	auto slTest1 = new ai::Selector();
+	auto PlayerROOT = new ai::Selector();
 		auto sqPathToMouse = new ai::Sequence();					//Make a FollowPathSequence
 		sqPathToMouse->addChild(new ai::action::tMouseSetDesiredPos(input));
 		sqPathToMouse->addChild(new ai::action::CalculatePath(m_map));
-	slTest1->addChild(sqPathToMouse);
-	slTest1->addChild(new ai::action::FollowPath());
+	PlayerROOT->addChild(sqPathToMouse);
+	PlayerROOT->addChild(new ai::action::FollowPath());
+	m_Yuna->addBehaviour(PlayerROOT);				//Add FollowPath sequence to path follower
 
-	//sqPathToMouse->addChild(new ai::action::FollowPath());		//Add a FollowPath action leaf to it
-	m_Yuna->addBehaviour(slTest1);				//Add FollowPath sequence to path follower
+	//DEBUG: KeyboardBehaviour
 	//m_Yuna->addBehaviour(new ai::action::tKeyboardControl());
 	
 //#ifdef _DEBUG
@@ -302,7 +298,7 @@ bool KunoApp::setupAI()
 		//Ranges
 		float attackRange = 75.0f;			//The distance from which the enemy can attack
 		float sightRange = 300.0f;			//The distance from which the enemy can clearly see
-		//float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
+		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
 		float FOV = 90.0f;					//View cone of the enemy
 		//Speeds
 		float walkSpeed = 100.0f;
@@ -310,8 +306,12 @@ bool KunoApp::setupAI()
 	} swordsman;
 
 	//// Initialise ////
-	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 750, 750 });
-	m_Enemy->patrolPath().push_back({ 600,600 });			//Set guard post
+	m_Enemy = new ai::Agent(swordsman.size, swordsman.colour, { 600, 600 });
+
+	m_Enemy->patrolPath().push_back({ 600,600 });	//Set guard post position
+	m_Enemy->patrolPath().push_back({ 1200,600 });	//>1: set patrol route
+	m_Enemy->patrolPath().push_back({ 1200,1200 });	//>1: set patrol route
+
 	m_Enemy->setAttack(swordsman.attack);
 	m_Enemy->setWalkSpeed(swordsman.walkSpeed);
 	m_Enemy->setRunSpeed(swordsman.runSpeed);
@@ -352,30 +352,37 @@ bool KunoApp::setupAI()
 
 			//Inspect
 			auto InspectSeq = new ai::Sequence();
+			//InspectSeq->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.suspiciousRange));
+			//InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
+			//InspectSeq->addChild(new ai::action::UpdateLastSeen(m_Yuna));		//Constant
 			InspectSeq->addChild(new ai::condition::LastSeenAvailable());
 				auto UpdateStateSeq(new ai::Sequence());
 					auto NotAlertState = new ai::NotDecorator(new ai::condition::CheckState(ai::Agent::eState::ALERT));
 				UpdateStateSeq->addChild(NotAlertState);
 				UpdateStateSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
-			InspectSeq->addChild(UpdateStateSeq);
-			InspectSeq->addChild(new ai::action::Inspect());		//Constant? Inspects what's at agent.desiredPos
-			InspectSeq->addChild(new ai::action::Idle(3.0f, 5.0f));
-			InspectSeq->addChild(new ai::action::ClearLastSeen());		//Constant
+			InspectSeq->addChild(new ai::SuccessDecorator(UpdateStateSeq));
+			InspectSeq->addChild(new ai::action::Inspect());					//Constant? Inspects what's at agent.lastSeen
+			InspectSeq->addChild(new ai::action::Idle(2.0f, 3.0f));				//Idle between 3-4s
+			InspectSeq->addChild(new ai::action::ClearLastSeen());				//Constant
 			InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
 		ActionSel->addChild(InspectSeq);
 			//InspectSeq->addChild(new ai::TimeoutDecorator(new ai::action::Idle(), 7.5f));
 
-		//ELSE; Just set to guard; failsafe
+			//Guard
 			auto GuardSeq = new ai::Sequence();
 			GuardSeq->addChild(new ai::condition::CheckState(ai::Agent::eState::GUARD));
 			GuardSeq->addChild(new ai::action::ReturnToPost());		//Constant
 		ActionSel->addChild(GuardSeq);
-		//ActionSel->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
+
+		//	//Patrol
+		//	auto PatrolSeq = new ai::Sequence();
+		//	PatrolSeq->addChild(new ai::condition::CheckState(ai::Agent::eState::GUARD));
+		//	PatrolSeq->addChild(new ai::action::ReturnToPost());		//Constant
+		//ActionSel->addChild(PatrolSeq);
+
 
 		//Move
 		auto MoveSeq = new ai::Sequence();
-		//MoveSeq->addChild(GuardSeq);
-		//MoveSeq->addChild(new ai::condition::CheckPathAvailable());	//Constant
 		MoveSeq->addChild(new ai::action::CalculatePath(m_map));	//Constant
 		MoveSeq->addChild(new ai::action::FollowPath());			//Constant
 
@@ -418,15 +425,8 @@ void KunoApp::update(float deltaTime) {
 	std::cout << "ENEMY: BEGIN" << std::endl;
 	m_Enemy->update(deltaTime);
 	std::cout << "ENEMY: END" << std::endl;
-	for (auto swordsman : m_Swordsman)
-		swordsman->update(deltaTime);
-
-	//m_KeyboardGent->update(deltaTime);
-	//m_MouseGent->update(deltaTime);
-	//m_FleeGent->update(deltaTime);
-
-	//for (auto enemy : m_enemyList)
-	//	enemy->update(deltaTime);
+	for (auto Enemy : m_EnemyList)
+		Enemy->update(deltaTime);
 
 	//Update GUI
 
@@ -456,17 +456,17 @@ void KunoApp::draw() {
 	//Draw agents
 	m_Yuna->draw(m_2dRenderer);
 
-//#ifdef _DEBUG
 	//Draw DEBUG agents
 	m_SeekGent->draw(m_2dRenderer);
 	m_FleeGent->draw(m_2dRenderer);
 
 	m_Enemy->draw(m_2dRenderer);
-	for (auto swordsman : m_Swordsman)
-		swordsman->draw(m_2dRenderer);
+	for (auto Enemy : m_EnemyList)
+		Enemy->draw(m_2dRenderer);
 
+#ifdef _DEBUG
 DEBUG(m_2dRenderer);
-//#endif // _DEBUG
+#endif // _DEBUG
 
 	m_2dRenderer->end();
 	//// END DRAW ////

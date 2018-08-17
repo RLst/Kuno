@@ -114,7 +114,9 @@ namespace ai {
 		//Get result of child...
 		eResult result = m_child->execute(agent, deltaTime);
 
+#ifdef _DEBUG
 		std::cout << "NotDecorator";
+#endif // DEBUG
 
 		//Invert
 		switch (result) {
@@ -138,7 +140,9 @@ namespace ai {
 
 	eResult TimeoutDecorator::execute(Agent * agent, float deltaTime)
 	{
+#ifdef _DEBUG
 		std::cout << "TimeoutDecorator: " << m_timeout << std::endl;
+#endif // DEBUG
 
 		m_timeout -= deltaTime;
 		if (m_timeout > 0) {
@@ -157,7 +161,10 @@ namespace ai {
 
 	eResult DelayDecorator::execute(Agent * agent, float deltaTime)
 	{
+#ifdef _DEBUG
 		std::cout << "DelayDecorator: " << m_delay << std::endl;
+#endif // DEBUG
+		
 		//BUGGY: This needs to be rewritten
 
 		//If first run
@@ -176,8 +183,10 @@ namespace ai {
 
 	eResult SuccessDecorator::execute(Agent * agent, float deltaTime)
 	{
+#ifdef _DEBUG
 		std::cout << "SuccessDecorator" << std::endl;
-
+#endif // DEBUG
+		
 		m_child->execute(agent, deltaTime);
 		return eResult::SUCCESS;	//ALWAYS RETURN SUCCESS!
 	}

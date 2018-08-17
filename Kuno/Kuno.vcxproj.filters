@@ -33,9 +33,6 @@
     <ClCompile Include="Map.cpp">
       <Filter>PF\src</Filter>
     </ClCompile>
-    <ClCompile Include="Path.cpp">
-      <Filter>PF\src</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Util\src</Filter>
     </ClCompile>
@@ -71,9 +68,6 @@
     <ClCompile Include="Conditions.cpp">
       <Filter>AI\src</Filter>
     </ClCompile>
-    <ClCompile Include="Composites.cpp">
-      <Filter>AI\src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PF.h">
@@ -107,9 +101,6 @@
     <ClInclude Include="CoordConverter.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="GameDefines.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="StaticObject.h">
       <Filter>PF</Filter>
     </ClInclude>
@@ -119,9 +110,7 @@
     <ClInclude Include="Conditions.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="Composites.h">
-      <Filter>AI</Filter>
-    </ClInclude>
+    <ClInclude Include="GameDefines.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\bin\textures\prototype_iso\blockHuge_N.png">

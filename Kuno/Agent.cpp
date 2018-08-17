@@ -20,12 +20,13 @@ namespace ai {
 
 	Agent::~Agent()
 	{
+		//// NOTE: Having problems cleaning up the behaviours ////
 		//Behaviours
 		//for (auto behaviour : m_behaviours) {
 		//	if (behaviour != nullptr)
 		//		delete behaviour;			//Do the behaviours have to be deleted?
 		//	//behaviour = nullptr;
-		//}
+		//}		
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)
@@ -64,17 +65,6 @@ namespace ai {
 		//If there is an available path
 		if (m_path.isAvailable()) 
 		{
-			////// ONLY THE FIRST WAYPOINT ////
-			//if (m_path.index == 0 && m_path.size() > 1) {
-			//	//Skip the first waypoint and go directly to the second waypoint
-			//	//that way the agent doesn't return back to the centre of the it's on
-			//	//because that looks jerky
-			//	//PROBLEM1: If the agent goes through a unconnected zone it gets stuck
-			//	//TRY: 
-			//	m_path.next();
-			//	//seek(m_path[1], deltaTime);
-			//	return SUCCESS;
-			//}
 
 			//// END OF PATH REACHED ////
 			if (m_path.endReached())

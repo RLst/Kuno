@@ -168,7 +168,6 @@
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Composites.cpp" />
     <ClCompile Include="Conditions.cpp" />
     <ClCompile Include="CoordConverter.cpp" />
     <ClCompile Include="DepthSorter.cpp" />
@@ -176,7 +175,6 @@
     <ClCompile Include="KunoApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Path.cpp" />
     <ClCompile Include="PF.cpp" />
     <ClCompile Include="SpriteObject.cpp" />
     <ClCompile Include="StaticObject.cpp" />
@@ -188,7 +186,6 @@
     <ClInclude Include="Agent.h" />
     <ClInclude Include="AI.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Composites.h" />
     <ClInclude Include="Conditions.h" />
     <ClInclude Include="CoordConverter.h" />
     <ClInclude Include="DepthSorter.h" />

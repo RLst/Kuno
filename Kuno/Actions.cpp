@@ -86,12 +86,6 @@ namespace ai {
 				auto mCanvas = cc->ViewportToCanvas(mView);
 				auto desiredPos = cc->CanvasToWorld(mCanvas);
 
-#ifdef _DEBUG
-//ImGui::Begin("tMouseSetDesiredPos");
-//ImGui::Text("desiredPos> x: %.2f, y: %.2f", desiredPos.x, desiredPos.y);
-//ImGui::End();
-#endif // _DEBUG
-
 			if (m_input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
 				agent->setDesiredPos(desiredPos);
 				return eResult::SUCCESS;
@@ -220,13 +214,15 @@ namespace ai {
 				desiredPos = m_map->clampWithinMapRetWORLD(desiredPos);		//Restrict desiredPos within the bounds of the map
 				auto endTile = m_map->findTileFromPos(desiredPos);
 
-				//This ensures endTile will be valid ie. NOT a untraversable tile
+				//This (somewhat) ensures endTile will be valid ie. NOT a untraversable tile
 				float searchRadius = FIND_TILE_SEARCH_RADIUS; 
-				while (!endTile->objects.empty()) {
+				while (!endTile->objects.empty()) {									//// THIS IS CAUSING MAJOR ERRORS ////
 					endTile = m_map->findTileFromPos(desiredPos, searchRadius);
 					searchRadius += 10.0f;
-					if (searchRadius > 500.0f)
-						assert(false);		//Search area getting too large;
+					if (searchRadius > 500.0f) {
+						//assert(false);		//Search area getting too large;
+						break;		//endTile = nullptr;
+					}
 				}
 
 				//START TILE
@@ -238,7 +234,7 @@ namespace ai {
 					do 	{
 						startTile = m_map->findTileFromPos(agent->pos, searchRadius);
 						searchRadius += 10.0f;
-						if (searchRadius > 500.0f)
+						if (searchRadius > 1000.0f)
 							assert(false);		//Search area getting too large;
 					} while (!startTile->objects.empty());
 					//The path should move the agent out from the untraversable tile
@@ -260,20 +256,6 @@ namespace ai {
 				std::cout << "FAILURE" << std::endl;
 				return FAILURE;
 			}
-
-#ifdef _DEBUG
-////DEBUG
-//ImGui::Begin("UpdatePath");
-//ImGui::Text("desiredPos > x: %.2f, y: %.2f", desiredPos.x, desiredPos.y);
-////ImGui::Text("endPos > x: %.2f, y: %.2f", endPos.x, endPos.y);
-//ImGui::Text("endTile: %p", endTile);
-//ImGui::Text("startTile: %p", startTile);
-//ImGui::Text("desiredPath >");
-//for (int i = 0; i < desiredPath.size(); ++i) {
-//	ImGui::Text("%d: x: %.2f, y: %.2f", i, desiredPath[i].x, desiredPath[i].y);
-//}
-//ImGui::End();
-#endif
 			return eResult::SUCCESS;
 		}
 
@@ -328,70 +310,3 @@ namespace ai {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-//// Patrol ////
-PatrolPath::PatrolPath(Agent * pathObject, float maxForce)
-{
-//SeekAction* pathFollower = new SeekAction(pathObject);
-}
-
-eResult PatrolPath::execute(Agent * agent, float deltaTime)
-{
-Seek* followPath = new Seek(agent, m_maxForce);
-
-//Get a new point from path agent/object
-
-
-//Seek towards the new point
-
-return eResult();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-SeekAndArrive::SeekAndArrive(Agent * target, float maxSpeed) :
-m_target(target), m_maxSpeed(maxSpeed)
-{
-m_dest = m_target->getPos();
-}
-
-SeekAndArrive::SeekAndArrive(pkr::Vector2 destination, float maxSpeed) :
-m_dest(destination), m_maxSpeed(maxSpeed) {}
-
-eResult SeekAndArrive::execute(Agent * agent, float deltaTime)
-{
-//Get current seek destination if target agent is set
-if (m_target != nullptr)
-m_dest = m_target->getPos();
-
-//auto seek = m_dest - agent->getPos();				//Get the seek vector
-//auto distance = pkr::Vector2::magnitude(seek);		//Get the distance from destination
-//seek.normalise();
-//seek *= m_maxSpeed;
-auto seek = pkr::Vector2::normalise(m_dest - agent->getPos());
-auto distance = pkr::Vector2::distance(m_dest, agent->getPos());
-
-//If within arrive zone...
-if (distance < m_slowZone) {
-agent->move(seek * (distance / m_slowZone), deltaTime);		//Slow down accordingly
-return RUNNING;
-}
-else {
-agent->move(seek * m_maxSpeed, deltaTime);					//Otherwise go full speed
-return RUNNING;
-}
-if (distance <= m_arriveZone) {
-return SUCCESS;
-}
-}
-*/

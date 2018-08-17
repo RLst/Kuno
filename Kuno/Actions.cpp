@@ -221,11 +221,11 @@ namespace ai {
 				auto endTile = m_map->findTileFromPos(desiredPos);
 
 				//This ensures endTile will be valid ie. NOT a untraversable tile
-				float searchRadius = 120.f; 
+				float searchRadius = FIND_TILE_SEARCH_RADIUS; 
 				while (!endTile->objects.empty()) {
 					endTile = m_map->findTileFromPos(desiredPos, searchRadius);
-					searchRadius += 20.0f;
-					if (searchRadius > 2000.0f)
+					searchRadius += 10.0f;
+					if (searchRadius > 500.0f)
 						assert(false);		//Search area getting too large;
 				}
 
@@ -234,11 +234,11 @@ namespace ai {
 				pf::Tile* startTile = m_map->findTileFromPos(agent->pos);
 				if (!startTile->objects.empty()) {	//If agent is on an untraversable tile
 					//Expand the search until a traversable tile is found
-					float searchRadius = 120.f;
+					float searchRadius = FIND_TILE_SEARCH_RADIUS;
 					do 	{
 						startTile = m_map->findTileFromPos(agent->pos, searchRadius);
-						searchRadius += 20.0f;
-						if (searchRadius > 2000.0f)
+						searchRadius += 10.0f;
+						if (searchRadius > 500.0f)
 							assert(false);		//Search area getting too large;
 					} while (!startTile->objects.empty());
 					//The path should move the agent out from the untraversable tile

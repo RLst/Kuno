@@ -7,6 +7,7 @@
 #include <vector>
 #include <pkr\Vector3.h>
 #include "PF.h"
+#include "GameDefines.h"
 
 namespace aie {
 	class Renderer2D;
@@ -40,6 +41,7 @@ private:
 	Tile*				m_pathStart = nullptr;
 	Tile*				m_pathEnd = nullptr;
 
+
 public:
 
 	Map() = default;
@@ -56,11 +58,11 @@ public:
 	//// Find Tile ////
 	//Get the nearest tile using a CARTESIAN coord; 
 	//Agents use this
-	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = 100.f);
+	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = FIND_TILE_SEARCH_RADIUS);
 	
 	//Get the nearest tile using an ISOMETRIC coord; 
 	//Mouse uses this; use this to find the tile under the mouse cursor
-	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = 100.f);	
+	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = FIND_TILE_SEARCH_RADIUS);	
 	
 	//Clamps
 	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);			//Returns a clamped WORLD position 

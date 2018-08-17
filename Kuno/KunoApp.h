@@ -53,22 +53,32 @@ private:
 
 	//Character setup properties
 	struct {
+		float attack = 15.0f;
+		float stealthAttack = 110.0f;
+		float attackSpeed = 1.0f;		//Seconds
+		float attackRange = 50.0f;
+		float sneakSpeed = 50.0f;
+		float walkSpeed = 100.0f;
+		float runSpeed = 200;
+	} playerStat;
+
+	struct {
 		//Core
-		float size = 35.0f;
+		float size = 20.0f;
 		pkr::Vector3 colour = { 0.9f, 0.2f, 0 };
 		//Attacks
 		float attack = 20.0f;
 		float attackSpeed = 1.0f;			//seconds; delay between attacks
 		float lowHealthThres = 20.0f;		//Triggers flee if health goes below this
 											//Ranges
-		float attackRange = 75.0f;			//The distance from which the enemy can attack
-		float sightRange = 300.0f;			//The distance from which the enemy can clearly see
-		float suspiciousRange = 500.0f;		//The distance from which the enemy can somewhat see
-		float FOV = 90.0f;					//View cone of the enemy
+		float attackRange = 40.0f;			//The distance from which the enemy can attack
+		float sightRange = 150.0f;			//The distance from which the enemy can clearly see
+		float suspiciousRange = 300.0f;		//The distance from which the enemy can somewhat see
+		//float FOV = 90.0f;					//View cone of the enemy
 											//Speeds
-		float walkSpeed = 100.0f;
-		float runSpeed = 300.0f;
-	} guard;
+		float walkSpeed = 50.0f;
+		float runSpeed = 150.0f;
+	} enemyStat;
 
 protected:
 	aie::Renderer2D*			m_2dRenderer;

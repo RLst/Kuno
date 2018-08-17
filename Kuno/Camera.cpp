@@ -59,8 +59,8 @@ namespace util {
 
 		//Clamps
 		zoom = pkr::Clamp(zoom, m_maxZoom, m_minZoom);
-		x = pkr::Clamp(x, 0 - (float)WORLD_WIDTH * (float)ISO_TILE_WIDTH, float(WORLD_WIDTH * ISO_TILE_WIDTH));
-		y = pkr::Clamp(y, 0 - (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT, (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT);
+		//x = pkr::Clamp(x, 0 - (float)WORLD_WIDTH * (float)ISO_TILE_WIDTH, float(WORLD_WIDTH * ISO_TILE_WIDTH));
+		//y = pkr::Clamp(y, 0 - (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT, (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT);
 	}
 
 	void Camera::translate(aie::Renderer2D * renderer)

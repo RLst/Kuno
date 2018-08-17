@@ -26,10 +26,12 @@ namespace pf {
 	{
 		NA = -1,			//Not applicatble
 		SMOOTH_FLOOR = 0,	//0.5f; Very easy to traverse
+		PATH,				//0.8f
 		GRASS,				//1.0f; Normal
 		DIRT,				//1.3f
 		GRAVEL,				//2.5f
 		WATER,				//5.0f
+		DEEPWATER,			//20.0f
 		TILE_TERRAIN_COUNT
 	};
 
@@ -41,10 +43,13 @@ namespace pf {
 		//Image width: 100
 		//Image height: 200
 	private:
-		pkr::Vector2	m_originOffset = { 0.5f, 0.18f };		//MUST modify for each tile set
+		//MUST modify if changing the tile set
+		//This is the centre of the tile in canvas coordinates/percentages
+		pkr::Vector2	m_originOffset = { 0.5f, 0.28f };	//KunoCustom Tileset
+		//pkr::Vector2	m_originOffset = { 0.5f, 0.18f };	//Prototype	Tileset
 
 	public:
-		//int				ID;
+		int				ID;
 
 		std::vector<StaticObject*> objects;		//StaticObjects include walls and unmovable objects
 
@@ -53,7 +58,7 @@ namespace pf {
 		eTileTraversable		access;
 
 		//NOTE!!!
-		//depthSortOffset: The point offset from cPos (cartesian world coord) at which the 
+		//depthSortOffset: The point offset from canvas world pos at which the 
 		//Depth Sorter uses to sort the depth of the tile/object
 		//This point should be the isometrically furthest point from the viewer where the object
 		//intersects or meets the ground ie. back corner of block

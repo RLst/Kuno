@@ -59,6 +59,8 @@ namespace util {
 
 		//Clamps
 		zoom = pkr::Clamp(zoom, m_maxZoom, m_minZoom);
+		x = pkr::Clamp(x, -1500.0f, 750.0f);
+		y = pkr::Clamp(y, -500.0f, 750.0f);
 		//x = pkr::Clamp(x, 0 - (float)WORLD_WIDTH * (float)ISO_TILE_WIDTH, float(WORLD_WIDTH * ISO_TILE_WIDTH));
 		//y = pkr::Clamp(y, 0 - (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT, (float)WORLD_DEPTH * (float)ISO_TILE_HEIGHT);
 	}

@@ -120,7 +120,7 @@ void KunoApp::shutdown() {
 bool KunoApp::setupUtilities()
 {
 	//// Camera ////
-	m_camera = new util::Camera(-200, -200, 2.0f);
+	m_camera = new util::Camera(-200, -200, 0.75f);
 
 	//// Texture Manager ////
 	m_textureManager = new util::TextureManager();

@@ -182,16 +182,16 @@ namespace pf {
 
 		short mapData[width][depth] = 
 		{
-			{ 5, 1, 0, 0, 1, 5, 1, 0, 1, 5, 1, 1 },
-			{ 5, 1, 0, 0, 1, 5, 1, 0, 1, 5, 1, 1 },
+			{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
+			{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
 			{ 5, 1, 0, 0, 0, 0, 0, 0, 1, 5, 1, 1 },
-			{ 5, 1, 0, 0, 1, 5, 1, 1, 1, 5, 1, 1 },
-			{ 5, 5, 0, 0, 1, 5, 5, 5, 5, 5, 1, 1 },
+			{ 5, 1, 0, 0, 6, 5, 1, 1, 1, 5, 1, 1 },
+			{ 5, 5, 0, 0, 6, 5, 5, 5, 5, 5, 1, 1 },
 			{ 1, 5, 0, 0, 5, 5, 1, 1, 1, 1, 1, 1 },
 			{ 1, 5, 0, 0, 5, 1, 1, 1, 1, 1, 2, 2 },
-			{ 1, 5, 0, 0, 5, 1, 1, 1, 1, 2, 2, 2 },
-			{ 1, 1, 0, 0, 1, 1, 1, 2, 2, 3, 3, 3 },
-			{ 1, 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4 },
+			{ 6, 5, 0, 0, 5, 1, 1, 1, 1, 2, 2, 2 },
+			{ 6, 6, 0, 0, 1, 1, 1, 2, 2, 3, 3, 3 },
+			{ 6, 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4 },
 			{ 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4, 4 },
 			{ 0, 0, 1, 1, 1, 1, 2, 3, 3, 4, 4, 4 }
 		};
@@ -218,47 +218,6 @@ namespace pf {
 				newTile->ID = ID;
 				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
-				////// Create the tile ////
-				//if (mapData[row][col] = 0) { //Path
-				//	newTile->tex = tm->getTexture("Path");
-				//	newTile->dsOffset = pkr::Vector2(0, 58.0f);
-				//	newTile->terrain = SMOOTH_FLOOR;
-				//	newTile->access = TRAVERSABLE;
-				//}
-				//else if (mapData[row][col] = 1) { //Grass
-				//	newTile->tex = tm->getTexture("Grass");
-				//	newTile->dsOffset = pkr::Vector2(0, 58.0f);
-				//	newTile->terrain = GRASS;
-				//	newTile->access = TRAVERSABLE;
-				//}
-				//else if (mapData[row][col] = 2) { //Dirt
-				//	newTile->tex = tm->getTexture("Dirt");
-				//	newTile->dsOffset = pkr::Vector2(0, 58.0f);
-				//	newTile->terrain = DIRT;
-				//	newTile->access = TRAVERSABLE;
-				//}
-				//else if (mapData[row][col] = 3) { //Water
-				//	newTile->tex = tm->getTexture("Water");
-				//	newTile->dsOffset = pkr::Vector2(0, 58.0f);
-				//	newTile->terrain = WATER;
-				//	newTile->access = TRAVERSABLE;
-				//}
-				//else if (mapData[row][col] = 4) { //Deep water
-				//	newTile->objects.push_back(new StaticObject());
-				//	newTile->tex = tm->getTexture("DeepWater");
-				//	newTile->dsOffset = pkr::Vector2(0, 58.0f);
-				//	newTile->terrain = WATER;
-				//	newTile->access = eTileTraversable::UNTRAVERSABLE;
-				//}
-				//else if (mapData[row][col] = 5) { //Wall
-
-				//}
-
-
-
-
-
-
 				switch (mapData[row][col])
 				{
 				case 0:	//Path
@@ -273,10 +232,10 @@ namespace pf {
 					newTile->terrain = GRASS;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 2:	//DIRT
-					newTile->tex = tm->getTexture("Dirt");
+				case 2:	//SAND
+					newTile->tex = tm->getTexture("Sand");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = DIRT;
+					newTile->terrain = eTileTerrain::SAND;
 					newTile->access = TRAVERSABLE;
 					break;
 				case 3:	//WATER
@@ -299,9 +258,15 @@ namespace pf {
 					newTile->objects.push_back(new StaticObject());
 
 					newTile->tex = tm->getTexture("Wall");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->dsOffset = pkr::Vector2(0, 35.0f);
 					newTile->terrain = eTileTerrain::NA;
 					newTile->access = eTileTraversable::UNTRAVERSABLE;
+					break;
+				case 6: //DIRT
+					newTile->tex = tm->getTexture("Dirt");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = eTileTerrain::DIRT;
+					newTile->access = TRAVERSABLE;
 					break;
 
 				default:
@@ -353,6 +318,9 @@ namespace pf {
 						break;
 					case DIRT:
 						cost = 1.3f;
+						break;
+					case SAND:
+						cost = 1.5f;
 						break;
 					case GRAVEL:
 						cost = 2.0f;
@@ -654,22 +622,25 @@ namespace pf {
 						pkr::Vector2 end = c->target->cPos;
 						//Set line color based on terrain cost
 						if (c->cost == 0.5f) {
-							renderer->setRenderColour(0, 0, 0);
+							renderer->setRenderColour(0.1f, 0.1f, 0.1f);	//Path
 						}
 						else if (c->cost == 1.0f) {
-							renderer->setRenderColour(0, 0.60f, 0);
+							renderer->setRenderColour(0, 0.60f, 0);		//Grass
 						}
 						else if (c->cost == 1.3f) {
-							renderer->setRenderColour(0.7f, 0.35f, 0.1f);
+							renderer->setRenderColour(0.4f, 0.25f, 0.1f);	//Dirt
+						}
+						else if (c->cost == 1.5f) {
+							renderer->setRenderColour(0.8f, 0.7f, 0.1f);	//Sand
 						}
 						else if (c->cost == 2.0f) {
-							renderer->setRenderColour(0.65f, 0.65f, 0.65f);
+							renderer->setRenderColour(0.65f, 0.65f, 0.65f);		//Gravel
 						}
 						else if (c->cost == 5.0f) {
-							renderer->setRenderColour(0.2f, 0.4f, 1.0f);
+							renderer->setRenderColour(0.2f, 0.4f, 1.0f);	//Water
 						}
 						else if (c->cost == 20.0f) {
-							renderer->setRenderColour(0.1f, 0.2f, 0.5f);
+							renderer->setRenderColour(0.1f, 0.2f, 0.5f);	//Deep water
 						}
 						renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
 

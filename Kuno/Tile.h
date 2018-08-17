@@ -29,6 +29,7 @@ namespace pf {
 		PATH,				//0.8f
 		GRASS,				//1.0f; Normal
 		DIRT,				//1.3f
+		SAND,
 		GRAVEL,				//2.5f
 		WATER,				//5.0f
 		DEEPWATER,			//20.0f

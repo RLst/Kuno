@@ -145,20 +145,22 @@ bool KunoApp::loadTextures()
 	m_textureManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
 	m_textureManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
 	m_textureManager->addTexture("Dirt", new aie::Texture("../bin/textures/assets/dirt.png"));
+	m_textureManager->addTexture("Sand", new aie::Texture("../bin/textures/assets/sand.png"));
 	m_textureManager->addTexture("Grass", new aie::Texture("../bin/textures/assets/grass.png"));
 	m_textureManager->addTexture("Path", new aie::Texture("../bin/textures/assets/path.png"));
 	m_textureManager->addTexture("Water", new aie::Texture("../bin/textures/assets/water.png"));
 	m_textureManager->addTexture("DeepWater", new aie::Texture("../bin/textures/assets/deepwater.png"));
 
 	//Walls
-	m_textureManager->addTexture("Wall", new aie::Texture("../bin/textures/assets/wall.png"));
-	m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
-	
-	//Static objects
-	m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
-	m_textureManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
-	m_textureManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
-	m_textureManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
+	m_textureManager->addTexture("Wall", new aie::Texture("../bin/textures/assets/wallGrey.png"));
+	m_textureManager->addTexture("WallCrap", new aie::Texture("../bin/textures/assets/wallBrown.png"));
+	//m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
+	//
+	////Static objects
+	//m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
+	//m_textureManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
+	//m_textureManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
+	//m_textureManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
 
 	return true;
 }

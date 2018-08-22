@@ -147,5 +147,6 @@ public:
 
 	//DEBUGS
 	void DEBUG(aie::Renderer2D* renderer);			//Print important values and test stuff
-	pf::Map*					getMap() const { return m_map; }
+	void showInstructions();
+	//pf::Map*					getMap() const { return m_map; }
 };

@@ -121,13 +121,19 @@ namespace ai {
 		//Invert
 		switch (result) {
 		case eResult::SUCCESS:
+#ifdef _DEBUG
 			std::cout << "SUCCESS > FAILURE" << std::endl;
+#endif // _DEBUG
 			return FAILURE; break;
 		case eResult::FAILURE:
+#ifdef _DEBUG
 			std::cout << "FAILURE > SUCCESS" << std::endl;
+#endif // _DEBUG
 			return SUCCESS; break;
 		default:	//Else return whatever result is
+#ifdef _DEBUG
 			std::cout << "OTHER" << std::endl;
+#endif // _DEBUG
 			return result;
 		}
 	}

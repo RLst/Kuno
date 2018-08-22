@@ -433,8 +433,10 @@ void KunoApp::draw() {
 	for (auto Enemy : m_EnemyList)
 		Enemy->draw(m_2dRenderer);
 
+	showInstructions();
+
 #ifdef _DEBUG
-DEBUG(m_2dRenderer);
+	DEBUG(m_2dRenderer);
 #endif // _DEBUG
 
 	m_2dRenderer->end();
@@ -460,16 +462,6 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	pkr::Vector2 world2canvas = m_coordConverter->WorldToCanvas(world);						//Convert from World BACK to Canvas
 
 	ImGui::Begin("DEBUG");
-
-	//// INSTRUCTIONS ////
-	ImGui::Begin("INSTRUCTIONS");
-	ImGui::Text("Press 'c' to toggle display of tile connections");
-	ImGui::Text("Mouse wheel to zoom in and out");
-	ImGui::Text("WSAD or move mouse to edge of screen to pan camera");
-	ImGui::Text("Click on map to move player agent there");
-	ImGui::Text("Left click to set start node, Right click to set end node");
-	ImGui::TextWrapped("Press 'spacebar' to toggle between A* and Djikstra algorithm on the map");
-	ImGui::End();
 
 	//// Camera ////
 	if (ImGui::CollapsingHeader("Camera"))
@@ -526,5 +518,18 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 		}
 	}
 
+	ImGui::End();
+}
+
+void KunoApp::showInstructions()
+{
+	//// INSTRUCTIONS ////
+	ImGui::Begin("INSTRUCTIONS");
+	ImGui::Text("Press 'c' to toggle display of tile connections");
+	ImGui::Text("Mouse wheel to zoom in and out");
+	ImGui::Text("WSAD or move mouse to edge of screen to pan camera");
+	ImGui::Text("Click on map to move player agent there");
+	ImGui::Text("Left click to set start node, Right click to set end node");
+	ImGui::TextWrapped("Press 'spacebar' to toggle between A* and Djikstra algorithm on the map");
 	ImGui::End();
 }

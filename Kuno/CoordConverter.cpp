@@ -6,7 +6,7 @@
 
 #include "CoordConverter.h"
 #include "GameDefines.h"
-#include <Vector2.h>
+#include <pkr\Vector2.h>
 #include "KunoApp.h"
 #include "Camera.h"
 

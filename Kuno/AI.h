@@ -7,8 +7,6 @@
 
 #include <vector>
 #include <list>
-//#include <pkr\Vector3.h>
-//#include <pkr\Vector2.h>
 
 //For header definitions
 #include <Renderer2D.h>

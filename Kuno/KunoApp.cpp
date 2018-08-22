@@ -408,10 +408,15 @@ void KunoApp::update(float deltaTime) {
 
 	m_SeekGent->update(deltaTime);
 	m_FleeGent->update(deltaTime);
+
+#ifdef _DEBUG
 	std::cout << "ENEMY: BEGIN" << std::endl;
+#endif // _DEBUG
 	for (auto Enemy : m_EnemyList)
 		Enemy->update(deltaTime);
+#ifdef _DEBUG
 	std::cout << "ENEMY: END" << std::endl;
+#endif // _DEBUG
 
 	//Update GUI
 

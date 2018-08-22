@@ -72,7 +72,10 @@ namespace ai {
 				//Reset and return success
 				this->m_isMoving = false;
 				m_path.reset();
+
+#ifdef _DEBUG
 				std::cout << "SUCCESS" << std::endl;
+#endif // _DEBUG
 				return SUCCESS;
 			}
 
@@ -81,7 +84,9 @@ namespace ai {
 			{
 				//Increment current waypoint index and return running
 				m_path.next();
+#ifdef _DEBUG
 				std::cout << "NEXT index: " << m_path.index << std::endl;
+#endif // _DEBUG
 				return RUNNING;
 				//return SUCCESS;
 			}
@@ -90,13 +95,17 @@ namespace ai {
 				//The agent is in between waypoints (PROBABLY)
 				//so move agent towards next waypoint
 				seek(m_path.getWaypoint(), deltaTime);
+#ifdef _DEBUG
 				std::cout << "RUNNING" << std::endl;
+#endif // _DEBUG
 				return RUNNING;
 				//return SUCCESS;
 			}
 		}
 		//Path not available
+#ifdef _DEBUG
 		std::cout << "FAILURE" << std::endl;
+#endif // _DEBUG
 		return FAILURE;
 	}
 

@@ -510,8 +510,9 @@ namespace pf {
 					continue;
 
 				//The distance from start to a neighbour
-				float tentativeGscore = currentNode->G + pkr::Vector2::distance(currentNode->pos, neighbour->target->pos);
+				float tentativeGscore = currentNode->G + neighbour->cost;
 				float hScore = pkr::Vector2::distance(neighbour->target->pos, start->pos);
+				//float tentativeGscore = currentNode->G + pkr::Vector2::distance(currentNode->pos, neighbour->target->pos);
 
 				//Discover a new node
 				if (!inOpenedList) {

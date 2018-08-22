@@ -58,11 +58,11 @@ public:
 	//// Find Tile ////
 	//Get the nearest tile using a CARTESIAN coord; 
 	//Agents use this
-	Tile*				findTileFromPos(const pkr::Vector2 &cPos, float searchRadius = FIND_TILE_SEARCH_RADIUS);
+	Tile*				findTileFromPos(const pkr::Vector2 &pos);
 	
 	//Get the nearest tile using an ISOMETRIC coord; 
 	//Mouse uses this; use this to find the tile under the mouse cursor
-	Tile*				findTileFromCanvasPos(const pkr::Vector2 &iPos, float searchRadius = FIND_TILE_SEARCH_RADIUS);	
+	Tile*				findTileFromCanvasPos(const pkr::Vector2 &cPos);	
 	
 	//Clamps
 	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);			//Returns a clamped WORLD position 

@@ -206,44 +206,24 @@ namespace ai {
 
 			if (agent->isMoving()) {
 
-				//Get desired world position from agent
-				auto desiredPos = agent->getDesiredPos();
-
 				//// Find the correct destination and starting tiles ////
 				//DESTINATION TILE
-				desiredPos = m_map->clampWithinMapRetWORLD(desiredPos);		//Restrict desiredPos within the bounds of the map
-				auto endTile = m_map->findTileFromPos(desiredPos);
-
-				//This (somewhat) ensures endTile will be valid ie. NOT a untraversable tile
-				float searchRadius = FIND_TILE_SEARCH_RADIUS; 
-				while (!endTile->objects.empty()) {									//// THIS IS CAUSING MAJOR ERRORS ////
-					endTile = m_map->findTileFromPos(desiredPos, searchRadius);
-					searchRadius += 10.0f;
-					if (searchRadius > 500.0f) {
-						//assert(false);		//Search area getting too large;
-						break;		//endTile = nullptr;
-					}
-				}
+				auto endPos = m_map->clampWithinMapRetWORLD(agent->getDesiredPos());		//Restrict desiredPos within the bounds of the map
+				auto endTile = m_map->findTileFromPos(endPos);
 
 				//START TILE
+				auto startPos = m_map->clampWithinMapRetWORLD(agent->pos);
+				auto startTile = m_map->findTileFromPos(startPos);
+
 				pf::Path desiredPath;
-				pf::Tile* startTile = m_map->findTileFromPos(agent->pos);
-				if (!startTile->objects.empty()) {	//If agent is on an untraversable tile
-					//Expand the search until a traversable tile is found
-					float searchRadius = FIND_TILE_SEARCH_RADIUS;
-					do 	{
-						startTile = m_map->findTileFromPos(agent->pos, searchRadius);
-						searchRadius += 10.0f;
-						if (searchRadius > 1000.0f)
-							assert(false);		//Search area getting too large;
-					} while (!startTile->objects.empty());
-					//The path should move the agent out from the untraversable tile
+				if (!startTile->objects.empty()) {	//If agent is on a untraversable tile
+					//... this path should move the agent out from the untraversable tile
 					desiredPath = m_map->getAStarPath(startTile, endTile);
 				}
-				else { //Else the agent is on a traversable tile
-					desiredPath = m_map->getAStarPath(startTile, endTile);
+				else {	//If agent is ona  traversable tile
 					//Set the first waypoint to the agent's current position so that
 					//it doesn't move back to the tile centre
+					desiredPath = m_map->getAStarPath(startTile, endTile);
 					desiredPath[0] = agent->pos;
 				}
 

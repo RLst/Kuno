@@ -344,24 +344,48 @@ namespace pf {
 
 	}
 
-	Tile * Map::findTileFromPos(const pkr::Vector2 & pos, float searchRadius)
+	Tile * Map::findTileFromPos(const pkr::Vector2 & pos)
 	{
-		for (auto t : m_tiles) {
-			//Return tile that is within range of search position
-			if (pkr::Vector2::distance(t->pos, pos) < searchRadius)
-				return t;
+		//Just return the closest tile (use distancesquare for efficiency)
+		if (!m_tiles.empty()) {
+			//Go through all tiles and find the closest one
+			Tile* closestTile; float closestDist = INFINITY; float distance;
+			for (auto t : m_tiles) {
+				//Get the distance
+				distance = pkr::Vector2::distanceSqr(t->pos, pos);
+
+				//if the distance is lower than current distance then save dist and Tile*
+				if (distance < closestDist) {
+					closestDist = distance;
+					closestTile = t;
+				}
+			}
+			return closestTile;		//This should be the tile closest to input position
 		}
-		return nullptr;		//Tile not found; return null
+		return nullptr;		//Failsafe: return null if no tiles are available
 	}
 
-	Tile * Map::findTileFromCanvasPos(const pkr::Vector2 & iPos, float searchRadius)
+
+	Tile * Map::findTileFromCanvasPos(const pkr::Vector2 & cPos)
 	{
-		for (auto t : m_tiles) {
-			//Return tile that is within range of search position
-			if (pkr::Vector2::distance(t->cPos, iPos) < searchRadius)
-				return t;
+		//Just return the closest tile (use distancesquare for efficiency)
+		if (!m_tiles.empty()) {
+			//Go through all tiles and find the closest one
+			Tile* closestTile; float closestDist = INFINITY; float distance;
+			for (auto t : m_tiles) {
+				//Get the distance
+				distance = pkr::Vector2::distanceSqr(t->cPos, cPos);
+
+				//if the distance is lower than current distance then save dist and Tile*
+				if (distance < closestDist) {
+					closestDist = distance;
+					closestTile = t;
+				}
+			}
+			return closestTile;		//This should be the tile closest to input position
+
 		}
-		return nullptr;		//Tile not found; return null
+		return nullptr;		//Failsafe: return null if no tiles are available
 	}
 
 	pkr::Vector2 Map::clampWithinMapRetWORLD(const pkr::Vector2 & pos)

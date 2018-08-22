@@ -230,6 +230,11 @@ float Vector2::distance(const Vector2 & A, const Vector2 & B)	//Static distance 
 	return sqrt((B.x - A.x)*(B.x - A.x) + (B.y - A.y)*(B.y - A.y));
 }
 
+float Vector2::distanceSqr(const Vector2 & A, const Vector2 & B)
+{
+	return ((B.x - A.x)*(B.x - A.x) + (B.y - A.y)*(B.y - A.y));
+}
+
 float Vector2::distance(const Vector2 & other) const			//Distance
 {
 	return sqrt((x-other.x)*(x-other.x) + (y-other.y)*(y-other.y));

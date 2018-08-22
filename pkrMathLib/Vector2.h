@@ -87,7 +87,8 @@ public:
 	void			setMagnitude(float mag);							//Sets magnitude of vector
 
 	//Distance	
-	static float	distance(const Vector2 &a, const Vector2 &b);			//Distance between two input vectors
+	static float	distance(const Vector2 &A, const Vector2 &B);			//Distance between two input vectors
+	static float	distanceSqr(const Vector2 &A, const Vector2 &B);		//Distance squared between to input vectors (efficient)	
 	float			distance(const Vector2 &other) const;					//Distance between another vector
 	float			distanceSqr(const Vector2 &other) const;				//Distance squared for efficient comparison	
 																			

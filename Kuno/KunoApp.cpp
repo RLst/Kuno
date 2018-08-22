@@ -66,6 +66,7 @@ bool KunoApp::startup() {
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
+	//m_font = new aie::Font("./font/consolas.ttf", 32);
 
 	//Randomize seed
 	srand((unsigned int)time(NULL));
@@ -150,9 +151,22 @@ bool KunoApp::loadTextures()
 	m_textureManager->addTexture("Water", new aie::Texture("../bin/textures/assets/water.png"));
 	m_textureManager->addTexture("DeepWater", new aie::Texture("../bin/textures/assets/deepwater.png"));
 
+	//m_textureManager->addTexture("Floor", new aie::Texture("./textures/prototype_iso/floor_N.png"));
+	//m_textureManager->addTexture("Slab", new aie::Texture("./textures/prototype_iso/slab_N.png"));
+	//m_textureManager->addTexture("Dirt", new aie::Texture("./textures/assets/dirt.png"));
+	//m_textureManager->addTexture("Sand", new aie::Texture("./textures/assets/sand.png"));
+	//m_textureManager->addTexture("Grass", new aie::Texture("./textures/assets/grass.png"));
+	//m_textureManager->addTexture("Path", new aie::Texture("./textures/assets/path.png"));
+	//m_textureManager->addTexture("Water", new aie::Texture("./textures/assets/water.png"));
+	//m_textureManager->addTexture("DeepWater", new aie::Texture("./textures/assets/deepwater.png"));
+
 	//Walls
 	m_textureManager->addTexture("Wall", new aie::Texture("../bin/textures/assets/wallGrey.png"));
 	m_textureManager->addTexture("WallCrap", new aie::Texture("../bin/textures/assets/wallBrown.png"));
+
+	//m_textureManager->addTexture("Wall", new aie::Texture("./textures/assets/wallGrey.png"));a
+	//m_textureManager->addTexture("WallCrap", new aie::Texture("./textures/assets/wallBrown.png"));
+
 	//m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
 	//
 	////Static objects

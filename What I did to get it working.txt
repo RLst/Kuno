@@ -1,0 +1,10 @@
+Kuno Properties...
+	VC++ directories
+		$(SolutionDir)dependencies\pkr\pkrMathLib;
+		$(SolutionDir)dependencies\pkr\pkrMathLib\$(Configuration);
+
+
+pkrMathLib properties...
+	Build Events
+		Post-Build Event
+			Command Line = copy "$(ProjectDir)\*.h" "$(SolutionDir)dependencies\pkr\pkrMathLib"

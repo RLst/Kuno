@@ -36,8 +36,8 @@
 #include "Tile.h"
 #include "Map.h"
 
-#include <pkr\Vector2.h>
-#include <pkr\Vector3.h>
+#include <pkr\math\Vector2.h>
+#include <pkr\math\Vector3.h>
 
 //// MODERN SINGLETON PATTERN ////
 KunoApp* KunoApp::Instance()

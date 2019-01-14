@@ -7,7 +7,7 @@
 #include "AI.h"
 #include "PF.h"
 #include "Map.h"
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 #include "Agent.h"
 
 namespace aie {

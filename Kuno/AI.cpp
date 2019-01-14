@@ -6,7 +6,7 @@
 
 #include "AI.h"
 #include "Agent.h"
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 #include <Renderer2D.h>
 #include "GameDefines.h"
 

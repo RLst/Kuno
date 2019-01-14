@@ -4,7 +4,7 @@
 ///////////////
 
 #include "Agent.h"
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 #include "AI.h"
 #include "KunoApp.h"
 

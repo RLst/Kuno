@@ -5,7 +5,7 @@
 
 
 #pragma once
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 
 
 namespace aie {

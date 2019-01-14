@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 #include <unordered_map>
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 
 //Forward declares
 namespace aie { 

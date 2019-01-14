@@ -5,7 +5,7 @@
 
 #pragma once
 #include <vector>
-#include <pkr\Vector3.h>
+#include <pkr\math\Vector3.h>
 #include "PF.h"
 #include "GameDefines.h"
 

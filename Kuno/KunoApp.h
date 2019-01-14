@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Renderer2D.h"
 #include <vector>
-#include <pkr\Vector2.h>
+#include <pkr\math\Vector2.h>
 
 #include "AI.h"
 #include "PF.h"

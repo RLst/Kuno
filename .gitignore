@@ -1,7 +1,7 @@
 #Temporary stuff
 **/Debug
 **/Release
-**.vs
+**/.vs
 
 #Commit bootstrap to minimise any screwing around
 #**/bootstrap/

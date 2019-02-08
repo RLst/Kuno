@@ -103,6 +103,7 @@ void KunoApp::shutdown() {
 	delete m_FleeGent;
 	//delete m_AttackGent;
 	//delete m_PatrolGent;
+	delete m_Enemy;
 	for (auto E : m_EnemyList)
 		delete E;
 
@@ -127,12 +128,10 @@ bool KunoApp::setupUtilities()
 
 	//// Depth Sorter ////
 	m_depthSorter = new util::DepthSorter(0.0f, 100.0f);
-	//DepthSorter = util::DepthSorter(-2000.0f, 2000.0f);
 				//note: Z buffer depth of between 0-1 is reserved for the GUI
 
 	//// Coord Converter ////
 	m_coordConverter = new util::CoordConverter(m_camera);
-	//CoordConverter = util::CoordConverter(&Camera);
 
 	return true;
 }

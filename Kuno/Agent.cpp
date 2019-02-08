@@ -20,13 +20,13 @@ namespace ai {
 
 	Agent::~Agent()
 	{
-		//// NOTE: Having problems cleaning up the behaviours ////
+		// NOTE: Having problems cleaning up the behaviours ////
 		//Behaviours
-		//for (auto behaviour : m_behaviours) {
-		//	if (behaviour != nullptr)
-		//		delete behaviour;			//Do the behaviours have to be deleted?
-		//	//behaviour = nullptr;
-		//}		
+		for (auto behaviour : m_behaviours) {
+			if (behaviour != nullptr)
+				delete behaviour;			//Do the behaviours have to be deleted?
+			//behaviour = nullptr;
+		}		
 	}
 
 	void Agent::addBehaviour(iBehaviour * behaviour)

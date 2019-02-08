@@ -94,6 +94,7 @@ protected:
 	ai::Agent*					m_FleeGent;
 	//ai::Agent*					m_AttackGent;
 	//ai::Agent*					m_PatrolGent;
+
 	ai::Agent*					m_Enemy;
 	std::vector<ai::Agent*>		m_EnemyList;
 
@@ -110,10 +111,6 @@ protected:
 
 private:
 	//Utilities
-	//static util::Camera				Camera;
-	//static util::TextureManager		TextureManager;
-	//static util::DepthSorter		DepthSorter;
-	//static util::CoordConverter		CoordConverter;
 	util::Camera*				m_camera;
 	util::TextureManager*		m_textureManager;
 	util::DepthSorter*			m_depthSorter;

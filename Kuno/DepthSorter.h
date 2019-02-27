@@ -38,6 +38,27 @@ public:
 
 	float		getSortDepthByMapDiagonal(float spriteYpos) const;		//Advance depth sorting algorithm 
 	float		getSortDepthByMapDiagonal(ai::Agent *agent) const;		//for near perfect depth sorting
+
+	//Sort depth by diagonal
+	/*
+	Requirements:
+	* Tile map height in pixels
+	* Map grid size (rows and columns)
+	* Start point of map
+
+	How to:
+	* Find the point of the map that is the furthest away from the camera
+	* Calculate how many diagonals the map will have: rows + columns - 1
+	1x1 = 1 horizontal diagonal ... rows + columns - 1
+	2x2 = 3 horizontal diagonals
+	3x3 = 5 diagonals
+	3x2 = 4 diagonals
+	FIGURED IT OUT!!!: number of diagonals in a grid = rows + columns - 1
+
+
+	* Figure out which diagonal the sprite/agent is on (y pos)
+		* Get y pos of object/agent
+	*/
 };
 
 }

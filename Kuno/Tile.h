@@ -25,14 +25,28 @@ namespace pf {
 	enum eTileTerrain : int
 	{
 		NA = -1,			//Not applicatble
-		SMOOTH_FLOOR = 0,	//0.5f; Very easy to traverse
-		PATH,				//0.8f
-		GRASS,				//1.0f; Normal
-		DIRT,				//1.3f
+		
+		// Portfolio
+		//FLOOR = 0,
+		//FLOOR_GRASSROUND,
+		//SLAB,
+		//SMALLBLOCK,
+		//LARGEBLOCK,
+		//HUGEBLOCK,
+		//COLUMN,
+		//STEPS,
+		//WALLCORNER,		
+
+		 //Kuno Tiles
+		//SMOOTH_FLOOR = 0,	
+		PATH = 0,				
+		GRASS,	
+		DIRT,	
 		SAND,
-		GRAVEL,				//2.5f
-		WATER,				//5.0f
-		DEEPWATER,			//20.0f
+		GRAVEL,	
+		WATER,
+		DEEPWATER,
+		
 		TILE_TERRAIN_COUNT
 	};
 
@@ -44,8 +58,9 @@ namespace pf {
 		//Image width: 100
 		//Image height: 200
 	private:
-		//MUST modify if changing the tile set
+		
 		//This is the centre of the tile in canvas coordinates/percentages
+		// ** MUST BE MODIFED IF CHANGING TILE SETS
 		pkr::Vector2	m_originOffset = { 0.5f, 0.28f };	//KunoCustom Tileset
 		//pkr::Vector2	m_originOffset = { 0.5f, 0.18f };	//Prototype	Tileset
 
@@ -71,7 +86,7 @@ namespace pf {
 		Tile() = default;
 		~Tile();	//Texture manager will delete the textures
 
-		Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 }, eTileTerrain terrain = SMOOTH_FLOOR, eTileTraversable = TRAVERSABLE);
+		Tile(pkr::Vector2 pos, aie::Texture* tex, pkr::Vector2 dsOffset = { 0,0 }, eTileTerrain terrain = PATH, eTileTraversable = TRAVERSABLE);
 
 		//Cores
 		void			draw(aie::Renderer2D* renderer);

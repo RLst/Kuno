@@ -41,7 +41,6 @@ private:
 	Tile*				m_pathStart = nullptr;
 	Tile*				m_pathEnd = nullptr;
 
-
 public:
 
 	Map() = default;
@@ -50,7 +49,7 @@ public:
 	Map(int mapWidth, int mapDepth);
 
 	//Create maps
-	void				buildRandomMap(int width, int depth);
+	//void				buildRandomMap(int width, int depth);
 	void				buildKunoMap();									//Build game map from raw data (maybe this should be in Game.cpp)
 	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
 	//void				loadMap();	//From file? Implement later

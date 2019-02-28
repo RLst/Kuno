@@ -76,7 +76,7 @@ bool KunoApp::startup() {
 	if (loadTextures() == false) return false;
 
 	//Setup map and pathfinding
-	setBackgroundColour(0.12f / 4.0f, 0.63f / 4.0f, 1.0f / 4.0f);
+	setBackgroundColour(0.12f / 2.0f, 0.63f / 2.0f, 1.0f / 2.0f);
 	//setBackgroundColour(1, 0.65f, 0);
 	if (setupMap() == false) return false;
 
@@ -138,41 +138,30 @@ bool KunoApp::setupUtilities()
 
 bool KunoApp::loadTextures()
 {
-	//Test: Load in some core textures
-	//MAKE THE FINAL PATH AS: "../assets/tiles/*.png"
-	//Ground
-	m_textureManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
-	m_textureManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
-	m_textureManager->addTexture("Dirt", new aie::Texture("../bin/textures/assets/dirt.png"));
-	m_textureManager->addTexture("Sand", new aie::Texture("../bin/textures/assets/sand.png"));
-	m_textureManager->addTexture("Grass", new aie::Texture("../bin/textures/assets/grass.png"));
-	m_textureManager->addTexture("Path", new aie::Texture("../bin/textures/assets/path.png"));
-	m_textureManager->addTexture("Water", new aie::Texture("../bin/textures/assets/water.png"));
-	m_textureManager->addTexture("DeepWater", new aie::Texture("../bin/textures/assets/deepwater.png"));
-
-	//m_textureManager->addTexture("Floor", new aie::Texture("./textures/prototype_iso/floor_N.png"));
-	//m_textureManager->addTexture("Slab", new aie::Texture("./textures/prototype_iso/slab_N.png"));
-	//m_textureManager->addTexture("Dirt", new aie::Texture("./textures/assets/dirt.png"));
-	//m_textureManager->addTexture("Sand", new aie::Texture("./textures/assets/sand.png"));
-	//m_textureManager->addTexture("Grass", new aie::Texture("./textures/assets/grass.png"));
-	//m_textureManager->addTexture("Path", new aie::Texture("./textures/assets/path.png"));
-	//m_textureManager->addTexture("Water", new aie::Texture("./textures/assets/water.png"));
-	//m_textureManager->addTexture("DeepWater", new aie::Texture("./textures/assets/deepwater.png"));
-
-	//Walls
-	m_textureManager->addTexture("Wall", new aie::Texture("../bin/textures/assets/wallGrey.png"));
-	m_textureManager->addTexture("WallCrap", new aie::Texture("../bin/textures/assets/wallBrown.png"));
-
-	//m_textureManager->addTexture("Wall", new aie::Texture("./textures/assets/wallGrey.png"));a
-	//m_textureManager->addTexture("WallCrap", new aie::Texture("./textures/assets/wallBrown.png"));
-
-	//m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
-	//
-	////Static objects
-	//m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
-	//m_textureManager->addTexture("ColumnBlocks", new aie::Texture("../bin/textures/prototype_iso/columnBlocks_N.png"));
+#ifdef _DEBUG
+	//Prototype
+	//m_textureManager->addTexture("Floor", new aie::Texture("../bin/textures/prototype_iso/floor_N.png"));
+	//m_textureManager->addTexture("FloorGrassRound", new aie::Texture("../bin/textures/prototype_iso/floorGrassRound_N.png"));
+	//m_textureManager->addTexture("Slab", new aie::Texture("../bin/textures/prototype_iso/slab_N.png"));
 	//m_textureManager->addTexture("SmallBlock", new aie::Texture("../bin/textures/prototype_iso/blockSmall_N.png"));
 	//m_textureManager->addTexture("LargeBlock", new aie::Texture("../bin/textures/prototype_iso/blockLarge_N.png"));
+	//m_textureManager->addTexture("HugeBlock", new aie::Texture("../bin/textures/prototype_iso/blockHuge_N.png"));
+	//m_textureManager->addTexture("Column", new aie::Texture("../bin/textures/prototype_iso/column_N.png"));
+	//m_textureManager->addTexture("Steps", new aie::Texture("../bin/textures/prototype_iso/stepsSmallSlabs_N.png"));
+	//m_textureManager->addTexture("WallCorner", new aie::Texture("../bin/textures/prototype_iso/wallCorner_N.png"));
+
+	//Kuno (My hand drawn tiles)
+	m_textureManager->addTexture("Path", new aie::Texture("../bin/textures/assets/path.png"));
+	m_textureManager->addTexture("Grass", new aie::Texture("../bin/textures/assets/grass.png"));
+	m_textureManager->addTexture("Dirt", new aie::Texture("../bin/textures/assets/dirt.png"));
+	m_textureManager->addTexture("Sand", new aie::Texture("../bin/textures/assets/sand.png"));
+	m_textureManager->addTexture("Water", new aie::Texture("../bin/textures/assets/water.png"));
+	m_textureManager->addTexture("DeepWater", new aie::Texture("../bin/textures/assets/deepwater.png"));
+	m_textureManager->addTexture("Wall", new aie::Texture("../bin/textures/assets/wall.png"));
+#elif NDEBUG
+	//As above but with different paths (need to check exact reason)
+	//Final path has to be "../assets/tiles/*.png"
+#endif
 
 	return true;
 }
@@ -198,7 +187,7 @@ bool KunoApp::setupPlayer()
 	m_Yuna->setSneakSpeed(playerStat.sneakSpeed);
 	m_Yuna->setWalkSpeed(playerStat.walkSpeed);
 	m_Yuna->setRunSpeed(playerStat.runSpeed);
-
+	
 	return true;
 }
 

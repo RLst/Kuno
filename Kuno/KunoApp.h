@@ -85,7 +85,6 @@ protected:
 	aie::Font*					m_font;
 
 	//// Agents ////
-
 	//Player
 	ai::Agent*					m_Yuna;
 

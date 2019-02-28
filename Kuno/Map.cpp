@@ -33,10 +33,139 @@ namespace pf {
 		m_width(mapWidth),
 		m_depth(mapDepth)
 	{
-		buildRandomMap(m_width, m_depth);
-		//buildKunoMap();
+		//buildRandomMap(m_width, m_depth);
+		buildKunoMap();
 	}
 
+	void Map::buildKunoMap()
+	{
+
+		//MAP DATA ARRAY
+		const short width = 20;
+		const short depth = 20;
+
+		//This must be done otherwise they'll be out of range errors
+		m_width = width;
+		m_depth = depth;
+
+		short mapData[width][depth] =
+		{
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 6, 6, 4, 4, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 6, 1, 1, 1, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+		};
+		//	{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
+		//	{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
+		//	{ 5, 1, 0, 0, 0, 0, 0, 0, 1, 5, 1, 1 },
+		//	{ 5, 1, 0, 0, 6, 5, 1, 1, 1, 5, 1, 1 },
+		//	{ 5, 5, 0, 0, 6, 5, 5, 5, 5, 5, 1, 1 },
+		//	{ 1, 5, 0, 0, 5, 5, 1, 1, 1, 1, 1, 1 },
+		//	{ 1, 5, 0, 0, 5, 1, 1, 1, 1, 1, 2, 2 },
+		//	{ 6, 5, 0, 0, 5, 1, 1, 1, 1, 2, 2, 2 },
+		//	{ 6, 6, 0, 0, 1, 1, 1, 2, 2, 3, 3, 3 },
+		//	{ 6, 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4 },
+		//	{ 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4, 4 },
+		//	{ 0, 0, 1, 1, 1, 1, 2, 3, 3, 4, 4, 4 }
+		//};
+
+		//Call texture manager
+		auto tm = KunoApp::Instance()->TextureManager();
+
+		/////////////////////
+		//// NEW SYSTEM ////
+		///////////////////
+
+		//ONE LAYER FITS ALL!
+		int ID = 0;			//Not sure if this is needed anymore
+		for (int row = 0; row < depth; ++row)
+		{
+			for (int col = 0; col < width; ++col)
+			{
+				++ID;
+
+				Tile* newTile = new Tile();
+				//StaticObject * newObject = new StaticObject();		//Used to set tile untraversable
+
+				//// Position tile ////
+				newTile->ID = ID;
+				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
+
+				switch (mapData[row][col])
+				{
+				case 0:	//PATH
+					newTile->tex = tm->getTexture("Path");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = PATH;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 1:	//GRASS
+					newTile->tex = tm->getTexture("Grass");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = GRASS;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 3: //DIRT
+					newTile->tex = tm->getTexture("Dirt");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = DIRT;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 4:	//SAND
+					newTile->tex = tm->getTexture("Sand");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = SAND;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 5:	//WATER
+					newTile->tex = tm->getTexture("Water");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = WATER;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 6:	//DEEPWATER
+					newTile->objects.push_back(new StaticObject());		//An empty static object makes this tile untraversable
+					newTile->tex = tm->getTexture("DeepWater");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = WATER;
+					newTile->access = UNTRAVERSABLE;
+					break;
+				case 7:	//WALL
+					newTile->objects.push_back(new StaticObject());		//An empty static object makes this tile untraversable
+					newTile->tex = tm->getTexture("Wall");
+					newTile->dsOffset = pkr::Vector2(0, 35.0f);
+					newTile->terrain = NA;
+					newTile->access = UNTRAVERSABLE;
+					break;
+
+				default:
+					assert(false);		//Something went wrong!
+				}
+
+				//Insert new tile into tile container
+				m_tiles.push_back(newTile);
+
+			}	//Cols
+		}	//Rows
+	}
+
+	/*
 	void Map::buildRandomMap(int width, int depth)
 	{
 		m_width = width;
@@ -64,60 +193,47 @@ namespace pf {
 				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
 
 				//// Set the base //// (The ground/floor)
-				switch (pkr::Random(0, 5))
+				switch (pkr::Random(0, TILE_TERRAIN_COUNT))
 				{
-				case 0:	//Path
-					newTile->tex = TM->getTexture("Path");
+				case 0:
+					newTile->tex = TM->getTexture("Floor");		//Parsing by string is slow but this only happens once each tile
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = SMOOTH_FLOOR;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 1:	//Grass
-					newTile->tex = TM->getTexture("Grass");
+				case 1:
+					newTile->tex = TM->getTexture("FloorGrassRound");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = GRASS;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 2:	//DIRT
-					newTile->tex = TM->getTexture("Dirt");
+				case 2:
+					newTile->tex = TM->getTexture("Slab");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = DIRT;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 3:	//WATER
-					newTile->tex = TM->getTexture("Water");
+				case 3:
+					newTile->tex = TM->getTexture("SmallBlock");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = WATER;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 4:	//DEEPWATER
-					newTile->tex = TM->getTexture("DeepWater");
+				case 4:	
+					newTile->tex = TM->getTexture("LargeBlock");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = WATER;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 5:	//WALL
-					newTile->tex = TM->getTexture("Wall");
+				case 5:	
+					newTile->tex = TM->getTexture("HugeBlock");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = eTileTerrain::NA;
 					newTile->access = eTileTraversable::UNTRAVERSABLE;
 					break;
 
-				//case 5:	//GRAVEL
-				//	newTile->tex = TM->getTexture("Floor");
-				//	newTile->dsOffset = pkr::Vector2(0, 75.0f);
-				//	newTile->terrain = GRAVEL;
-				//	newTile->access = TRAVERSABLE;
-				//	break;
-				//case 6:	//Slab
-				//	newTile->tex = TM->getTexture("Slab");
-				//	newTile->dsOffset = pkr::Vector2(0, 75.0f);
-				//	newTile->terrain = SMOOTH_FLOOR;
-				//	newTile->access = TRAVERSABLE;
-				//	break;
-
 				default:
-					assert(false);		//Something went wrong!
+					assert(false);		//Something bad happened!
 				}
 
 				//// Add any objects that may be on this tile ////
@@ -168,117 +284,7 @@ namespace pf {
 		}	//Rows
 
 	}
-
-	void Map::buildKunoMap()
-	{
-
-		//MAP DATA ARRAY
-		const short width = 12;
-		const short depth = 12;
-
-		//This must be done otherwise they'll be out of range errors
-		m_width = width;		
-		m_depth = depth;
-
-		short mapData[width][depth] = 
-		{
-			{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
-			{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
-			{ 5, 1, 0, 0, 0, 0, 0, 0, 1, 5, 1, 1 },
-			{ 5, 1, 0, 0, 6, 5, 1, 1, 1, 5, 1, 1 },
-			{ 5, 5, 0, 0, 6, 5, 5, 5, 5, 5, 1, 1 },
-			{ 1, 5, 0, 0, 5, 5, 1, 1, 1, 1, 1, 1 },
-			{ 1, 5, 0, 0, 5, 1, 1, 1, 1, 1, 2, 2 },
-			{ 6, 5, 0, 0, 5, 1, 1, 1, 1, 2, 2, 2 },
-			{ 6, 6, 0, 0, 1, 1, 1, 2, 2, 3, 3, 3 },
-			{ 6, 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4 },
-			{ 1, 0, 0, 1, 1, 1, 2, 3, 3, 3, 4, 4 },
-			{ 0, 0, 1, 1, 1, 1, 2, 3, 3, 4, 4, 4 }
-		};
-
-		//Call texture manager
-		auto tm = KunoApp::Instance()->TextureManager();
-
-		/////////////////////
-		//// NEW SYSTEM ////
-		///////////////////
-
-		//ONE LAYER FITS ALL!
-		int ID = 0;			//Not sure if this is needed anymore
-		for (int row = 0; row < depth; ++row)
-		{
-			for (int col = 0; col < width; ++col)
-			{
-				++ID;
-
-				Tile* newTile = new Tile();
-				//StaticObject * newObject = new StaticObject();		//Used to set tile untraversable
-
-				//// Position tile ////
-				newTile->ID = ID;
-				newTile->pos = pkr::Vector2(static_cast<float>(col * CART_TILE_HEIGHT), static_cast<float>(row * CART_TILE_WIDTH));
-
-				switch (mapData[row][col])
-				{
-				case 0:	//Path
-					newTile->tex = tm->getTexture("Path");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = SMOOTH_FLOOR;
-					newTile->access = TRAVERSABLE;
-					break;
-				case 1:	//Grass
-					newTile->tex = tm->getTexture("Grass");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = GRASS;
-					newTile->access = TRAVERSABLE;
-					break;
-				case 2:	//SAND
-					newTile->tex = tm->getTexture("Sand");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = eTileTerrain::SAND;
-					newTile->access = TRAVERSABLE;
-					break;
-				case 3:	//WATER
-					newTile->tex = tm->getTexture("Water");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = WATER;
-					newTile->access = TRAVERSABLE;
-					break;
-				case 4:	//DEEPWATER
-					//Just push on an empty object so that it makes tile untraversable
-					newTile->objects.push_back(new StaticObject());
-
-					newTile->tex = tm->getTexture("DeepWater");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = WATER;
-					newTile->access = eTileTraversable::UNTRAVERSABLE;
-					break;
-				case 5:	//WALL
-					//Just push on an empty object so that it makes tile untraversable
-					newTile->objects.push_back(new StaticObject());
-
-					newTile->tex = tm->getTexture("Wall");
-					newTile->dsOffset = pkr::Vector2(0, 35.0f);
-					newTile->terrain = eTileTerrain::NA;
-					newTile->access = eTileTraversable::UNTRAVERSABLE;
-					break;
-				case 6: //DIRT
-					newTile->tex = tm->getTexture("Dirt");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = eTileTerrain::DIRT;
-					newTile->access = TRAVERSABLE;
-					break;
-
-				default:
-					assert(false);		//Something went wrong!
-				}
-
-				//Insert new tile into tile container
-				m_tiles.push_back(newTile);
-
-			}	//Cols
-		}	//Rows
-	}
+	*/
 
 	void Map::connectNodesByDistance(float connectRadius)
 	{
@@ -301,36 +307,18 @@ namespace pf {
 
 				//If they're within range then connect taking into account terrain
 				if (distanceBetween < connectRadius) {
-					//Set the edge cost based on the terrain
+
+					//THIS SETS THE EDGE COST (ie. HOW DIFFICULT IT IS TO TRAVERSE ACROSS THESE TERRAINS)
 					float cost = 1.0f;
 					switch (t2->terrain) {
-					case NA:
-						cost = INFINITY;
-						break;
-					case SMOOTH_FLOOR:
-						cost = 0.5f;
-						break;
-					case eTileTerrain::PATH:
-						cost = 0.8f;
-						break;
-					case GRASS:
-						cost = 1.0f;
-						break;
-					case DIRT:
-						cost = 1.3f;
-						break;
-					case SAND:
-						cost = 1.5f;
-						break;
-					case GRAVEL:
-						cost = 2.0f;
-						break;
-					case WATER:
-						cost = 5.0f;
-						break;
-					case eTileTerrain::DEEPWATER:
-						cost = 20.0f;
-						break;
+					case NA:			cost = INFINITY;	break;
+					case PATH:			cost = 0.8f;		break;
+					case GRASS:			cost = 1.0f;		break;
+					case DIRT:			cost = 1.3f;		break;
+					case SAND:			cost = 2.0f;		break;
+					case GRAVEL:		cost = 3.0f;		break;
+					case WATER:			cost = 4.0f;		break;
+					case DEEPWATER:		cost = 5.0f;		break;
 					default:
 						assert(false);		//Invalid
 					}
@@ -645,28 +633,11 @@ namespace pf {
 						//Canvas coords
 						pkr::Vector2 start = t->cPos;
 						pkr::Vector2 end = c->target->cPos;
+
 						//Set line color based on terrain cost
-						if (c->cost == 0.5f) {
-							renderer->setRenderColour(0.1f, 0.1f, 0.1f);	//Path
-						}
-						else if (c->cost == 1.0f) {
-							renderer->setRenderColour(0, 0.60f, 0);		//Grass
-						}
-						else if (c->cost == 1.3f) {
-							renderer->setRenderColour(0.4f, 0.25f, 0.1f);	//Dirt
-						}
-						else if (c->cost == 1.5f) {
-							renderer->setRenderColour(0.8f, 0.7f, 0.1f);	//Sand
-						}
-						else if (c->cost == 2.0f) {
-							renderer->setRenderColour(0.65f, 0.65f, 0.65f);		//Gravel
-						}
-						else if (c->cost == 5.0f) {
-							renderer->setRenderColour(0.2f, 0.4f, 1.0f);	//Water
-						}
-						else if (c->cost == 20.0f) {
-							renderer->setRenderColour(0.1f, 0.2f, 0.5f);	//Deep water
-						}
+						float maxCost = 4.0f;
+						// (c->cost / maxCost)
+						renderer->setRenderColour((c->cost / maxCost), 0, 0);
 						renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
 
 						//World coords

@@ -554,8 +554,10 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	//// Tile connections ////
 	if (ImGui::CollapsingHeader("Tile Connections"))
 	{
+		ImGui::TextColored(orange, "Darker connections are more difficult to traverse.");
+		
 		int index = 0;
-		//For each 
+		//Display each tile's connection
 		for (auto t : m_map->getTiles())
 		{
 			for (auto c : t->connections)

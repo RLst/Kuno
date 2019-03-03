@@ -1,3 +1,15 @@
+//Tony Le
+//Date: 25 Jul 2018
+//Kuno; Ninja isometric stealth based
+//Yuna Okuma name found here: http://www.fantasynamegenerators.com/japanese_names.php
+
+//NOTES:
+//This is a super singleton so that you can access:
+//Camera: to get camera position for viewport to canvas conversions
+//DepthSorter: to get appropriate sprite z depth
+//CoordConverter: to convert between different coord systems
+//TextureManager: stores single copies of textures for optimal memory usage
+
 #pragma once
 
 #include "Application.h"
@@ -13,15 +25,8 @@
 #include "DepthSorter.h"
 #include "CoordConverter.h"
 	
-//Tony Le
-//Date: 25 Jul 2018
-//Kuno; Ninja isometric stealth based
-//Yuna Okuma name found here: http://www.fantasynamegenerators.com/japanese_names.php
 
-//This is a singleton so that you can access:
-//Camera: to get camera position for viewport to canvas conversions
-//DepthSorter:
-//CoordConverter: to convert between different coord systems
+
 
 namespace aie {
 	class Renderer2D;
@@ -89,17 +94,9 @@ protected:
 	ai::Agent*					m_Yuna;
 
 	//Enemies
-	ai::Agent*					m_SeekGent;
-	ai::Agent*					m_FleeGent;
-	//ai::Agent*					m_AttackGent;
-	//ai::Agent*					m_PatrolGent;
-
-	ai::Agent*					m_Enemy;
-	std::vector<ai::Agent*>		m_EnemyList;
-
-	//std::vector<ai::Agent*>		m_Swordsman;
-	//std::vector<ai::Agent*>		m_Bowmen;
-	//ai::Agent*					m_Lord;
+	ai::Agent*					m_seeker;
+	ai::Agent*					m_fleer;
+	std::vector<ai::Agent*>		m_guardList;
 
 	//Map and pathfinding
 	pf::Map*					m_map;
@@ -143,6 +140,4 @@ public:
 
 	//DEBUGS
 	void DEBUG(aie::Renderer2D* renderer);			//Print important values and test stuff
-	void showInstructions();
-	//pf::Map*					getMap() const { return m_map; }
 };

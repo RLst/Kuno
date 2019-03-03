@@ -65,8 +65,11 @@ bool KunoApp::startup() {
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
+#ifdef _DEBUG
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
-	//m_font = new aie::Font("./font/consolas.ttf", 32);
+#elif NDEBUG
+	m_font = new aie::Font("./font/consolas.ttf", 32);
+#endif
 
 	//Randomize seed
 	srand((unsigned int)time(NULL));
@@ -98,14 +101,10 @@ void KunoApp::shutdown() {
 
 	//Agents
 	delete m_Yuna;
-
-	delete m_SeekGent;
-	delete m_FleeGent;
-	//delete m_AttackGent;
-	//delete m_PatrolGent;
-	delete m_Enemy;
-	for (auto E : m_EnemyList)
-		delete E;
+	delete m_seeker;
+	delete m_fleer;
+	for (auto g : m_guardList)
+		delete g;
 
 	//Map
 	delete m_map;
@@ -115,6 +114,74 @@ void KunoApp::shutdown() {
 	delete m_textureManager;
 	delete m_depthSorter;
 	delete m_coordConverter;
+}
+
+//// CORE ////
+void KunoApp::update(float deltaTime) {
+
+	// input example
+	aie::Input* input = aie::Input::getInstance();
+
+	////////////////////////////////////////////////
+	//Edge scrolling, Zooming
+	m_camera->update(deltaTime);
+
+	//Update the map
+	m_map->update(deltaTime);		//Handle the tile tinting
+
+	//Update the agents
+	m_Yuna->update(deltaTime);
+
+	m_seeker->update(deltaTime);
+	m_fleer->update(deltaTime);
+
+#ifdef _DEBUG
+	std::cout << "ENEMY: BEGIN" << std::endl;
+#endif // _DEBUG
+	for (auto g : m_guardList)
+		g->update(deltaTime);
+#ifdef _DEBUG
+	std::cout << "ENEMY: END" << std::endl;
+#endif // _DEBUG
+
+	// exit the application
+	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
+		quit();
+}
+
+void KunoApp::draw() {
+
+	// wipe the screen to the background colour
+	clearScreen();
+
+	aie::Input* input = aie::Input::getInstance();
+
+	//// Translate camera ////
+	m_camera->translate(m_2dRenderer);
+
+	//// START DRAW ////
+	m_2dRenderer->begin();
+
+	//// Draw the map ////
+	//float mapDrawStartTime = KunoApp::Instance()->getTime();
+	m_map->draw(m_2dRenderer);
+	//float mapDrawEndTime = KunoApp::Instance()->getTime();
+
+	//Draw agents
+	m_Yuna->draw(m_2dRenderer);
+
+	//Draw DEBUG agents
+	m_seeker->draw(m_2dRenderer);
+	m_fleer->draw(m_2dRenderer);
+	for (auto g : m_guardList)
+		g->draw(m_2dRenderer);
+
+#ifdef _DEBUG
+	DEBUG(m_2dRenderer);
+#endif // _DEBUG
+
+	m_2dRenderer->end();
+	//// END DRAW ////
 }
 
 //// SETUPS ////
@@ -161,6 +228,13 @@ bool KunoApp::loadTextures()
 #elif NDEBUG
 	//As above but with different paths (need to check exact reason)
 	//Final path has to be "../assets/tiles/*.png"
+	m_textureManager->addTexture("Path", new aie::Texture("./textures/assets/path.png"));
+	m_textureManager->addTexture("Grass", new aie::Texture("./textures/assets/grass.png"));
+	m_textureManager->addTexture("Dirt", new aie::Texture("./textures/assets/dirt.png"));
+	m_textureManager->addTexture("Sand", new aie::Texture("./textures/assets/sand.png"));
+	m_textureManager->addTexture("Water", new aie::Texture("./textures/assets/water.png"));
+	m_textureManager->addTexture("DeepWater", new aie::Texture("./textures/assets/deepwater.png"));
+	m_textureManager->addTexture("Wall", new aie::Texture("./textures/assets/wall.png"));
 #endif
 
 	return true;
@@ -182,7 +256,7 @@ bool KunoApp::setupMap()
 
 bool KunoApp::setupPlayer()
 {
-	m_Yuna = new ai::Agent(20.0f, pkr::Vector3(0.2f, 0.4f, 0.75f), { 550, 50 });
+	m_Yuna = new ai::Agent(20.0f, pkr::Vector3(0.2f, 0.4f, 0.75f), { 350, 100 });
 	m_Yuna->setAttack(playerStat.attack);
 	m_Yuna->setSneakSpeed(playerStat.sneakSpeed);
 	m_Yuna->setWalkSpeed(playerStat.walkSpeed);
@@ -195,44 +269,37 @@ bool KunoApp::setupEnemies()
 {
 	typedef pkr::Vector3 Color;
 
-	////Attack
-	//Color attackcol = { 0.85f, 0.2f, 0 };	//Red
-	//m_AttackGent = new ai::Agent(35.0f, attackcol, { 800, 200 });
-	////Patrol
-	//Color patrolcol = { 0, 0.2f, 0.9f };	//Blue
-	//m_PatrolGent = new ai::Agent(35.0f, patrolcol, { 800, 800 });
-
 	//Seek
 	Color seekcol = {0.2f, 0.9f, 0.3f};		//Green
-	m_SeekGent = new ai::Agent(enemyStat.size, seekcol, { 135, 135 });
-	m_SeekGent->setWalkSpeed(enemyStat.walkSpeed);
-	m_SeekGent->setRunSpeed(enemyStat.runSpeed);
+	m_seeker = new ai::Agent(enemyStat.size, seekcol, { 900, 850 });
+	m_seeker->setWalkSpeed(enemyStat.walkSpeed);
+	m_seeker->setRunSpeed(enemyStat.runSpeed);
 
 	//Flee
 	Color fleecol = { 0.85f, 0.85f, 0 };	//Yellow
-	m_FleeGent = new ai::Agent(enemyStat.size, fleecol, { 180, 180 });
-	m_SeekGent->setWalkSpeed(enemyStat.walkSpeed);
-	m_SeekGent->setRunSpeed(enemyStat.runSpeed);
+	m_fleer = new ai::Agent(enemyStat.size, fleecol, { 800, 850 });
+	m_fleer->setWalkSpeed(enemyStat.walkSpeed);
+	m_fleer->setRunSpeed(enemyStat.runSpeed);
 
 	//Guards
-	int enemyAmt = 1;
+	int noOfGuards = 3;
 	Color guardcol = { 0.9f, 0.2f, 0 };
 
 	//Create
-	for (int i = 0; i < enemyAmt; ++i)
-		m_EnemyList.push_back(new ai::Agent(enemyStat.size, enemyStat.colour));
+	for (int i = 0; i < noOfGuards; ++i)
+		m_guardList.push_back(new ai::Agent(enemyStat.size, enemyStat.colour));
 
 	//Set guard positions
-	m_EnemyList[0]->pos = (pkr::Vector2(90, 90)); m_EnemyList[0]->patrolPath().push_back(pkr::Vector2(90, 90));
-	//m_EnemyList[1]->pos = (pkr::Vector2(300, 100)); m_EnemyList[1]->patrolPath().push_back(pkr::Vector2(300, 100));
-	//m_EnemyList[2]->pos = (pkr::Vector2(100, 300)); m_EnemyList[2]->patrolPath().push_back(pkr::Vector2(100, 300));
+	m_guardList[0]->pos = (pkr::Vector2(850, 850)); m_guardList[0]->patrolPath().push_back(pkr::Vector2(850, 850));
+	m_guardList[1]->pos = (pkr::Vector2(450, 750)); m_guardList[1]->patrolPath().push_back(pkr::Vector2(450, 750));
+	m_guardList[2]->pos = (pkr::Vector2(450, 600)); m_guardList[2]->patrolPath().push_back(pkr::Vector2(450, 600));
 	//m_EnemyList[3]->pos = (pkr::Vector2(300, 300)); m_EnemyList[3]->patrolPath().push_back(pkr::Vector2(300, 300));
 
 	//Set attributes
-	for (auto e : m_EnemyList) {
-		e->setAttack(enemyStat.attack);
-		e->setWalkSpeed(enemyStat.walkSpeed);
-		e->setRunSpeed(enemyStat.runSpeed);
+	for (auto g : m_guardList) {
+		g->setAttack(enemyStat.attack);
+		g->setWalkSpeed(enemyStat.walkSpeed);
+		g->setRunSpeed(enemyStat.runSpeed);
 	}
 
 	return true;
@@ -269,7 +336,7 @@ bool KunoApp::setupAI()
 		sqSeekAction->addChild(new ai::action::CalculatePath(m_map));
 	SeekROOT->addChild(sqSeekAction);
 	SeekROOT->addChild(new ai::action::FollowPath());
-	m_SeekGent->addBehaviour(SeekROOT);
+	m_seeker->addBehaviour(SeekROOT);
 
 	//// FLEE ////
 	auto FleeROOT = new ai::Selector();
@@ -279,7 +346,7 @@ bool KunoApp::setupAI()
 		sqFleeAction->addChild(new ai::action::CalculatePath(m_map));
 	FleeROOT->addChild(sqFleeAction);
 	FleeROOT->addChild(new ai::action::FollowPath());
-	m_FleeGent->addBehaviour(FleeROOT);
+	m_fleer->addBehaviour(FleeROOT);
 
 	//// GUARD ////
 	//'Constant' behaviours
@@ -367,9 +434,9 @@ bool KunoApp::setupAI()
 	///////////////////////////
 
 	////Load AI behaviours into enemies
-	m_EnemyList[0]->addBehaviour(SwordsmanRoot);
+	m_guardList[0]->addBehaviour(SwordsmanRoot);
 	//auto SwordsmanRootCopy1 = SwordsmanRoot;
-	//m_EnemyList[1]->addBehaviour(SwordsmanRootCopy1);
+	//m_guardList[1]->addBehaviour(SwordsmanRoot);
 	//auto SwordsmanRootCopy2 = SwordsmanRoot;
 	//m_EnemyList[2]->addBehaviour(SwordsmanRootCopy2);
 	//auto SwordsmanRootCopy3 = SwordsmanRoot;
@@ -378,77 +445,7 @@ bool KunoApp::setupAI()
 	return true;
 }
 
-//// CORE ////
-void KunoApp::update(float deltaTime) {
 
-	// input example
-	aie::Input* input = aie::Input::getInstance();
-
-	////////////////////////////////////////////////
-	//Edge scrolling, Zooming
-	m_camera->update(deltaTime);
-
-	//Update the map
-	m_map->update(deltaTime);		//Handle the tile tinting
-	
-	//Update the agents
-	m_Yuna->update(deltaTime);
-
-	m_SeekGent->update(deltaTime);
-	m_FleeGent->update(deltaTime);
-
-#ifdef _DEBUG
-	std::cout << "ENEMY: BEGIN" << std::endl;
-#endif // _DEBUG
-	for (auto Enemy : m_EnemyList)
-		Enemy->update(deltaTime);
-#ifdef _DEBUG
-	std::cout << "ENEMY: END" << std::endl;
-#endif // _DEBUG
-
-	//Update GUI
-
-	// exit the application
-	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
-		quit();
-}
-
-void KunoApp::draw() {
-
-	// wipe the screen to the background colour
-	clearScreen();
-
-	aie::Input* input = aie::Input::getInstance();
-
-	//// Translate camera ////
-	m_camera->translate(m_2dRenderer);
-
-	//// START DRAW ////
-	m_2dRenderer->begin();
-
-	//// Draw the map ////
-	//float mapDrawStartTime = KunoApp::Instance()->getTime();
-	m_map->draw(m_2dRenderer);
-	//float mapDrawEndTime = KunoApp::Instance()->getTime();
-
-	//Draw agents
-	m_Yuna->draw(m_2dRenderer);
-
-	//Draw DEBUG agents
-	m_SeekGent->draw(m_2dRenderer);
-	m_FleeGent->draw(m_2dRenderer);
-	for (auto Enemy : m_EnemyList)
-		Enemy->draw(m_2dRenderer);
-
-	showInstructions();
-
-#ifdef _DEBUG
-	DEBUG(m_2dRenderer);
-#endif // _DEBUG
-
-	m_2dRenderer->end();
-	//// END DRAW ////
-}
 
 void KunoApp::DEBUG(aie::Renderer2D* renderer)
 {
@@ -470,12 +467,23 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 
 	ImGui::Begin("DEBUG");
 
+	//// Instructions ////
+	if (ImGui::CollapsingHeader("Help"))
+	{
+		ImGui::Text("C - Toggle tile connections");
+		ImGui::Text("Mouse wheel - Zoom in/out");
+		ImGui::Text("WASD or mouse to edges - Pan camera");
+		ImGui::Text("Click on map to move player");
+		ImGui::Text("Left click - Set start test path node");
+		ImGui::Text("Right click - Set end test path node");
+		ImGui::Text("Space - Toggle pathfinding algorithm");
+	}
+
 	//// Camera ////
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		ImGui::Text("x: %.0f, y: %.0f", m_camera->x, m_camera->y);
 		ImGui::Text("Zoom: %.3f", m_camera->zoom);
-		//ImGui::Text("lastScrollPos: %.3f", m_camera->m_lastScrollPos);
 	}
 
 	//// Coord converter ////
@@ -499,9 +507,7 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	}
 
 	//// Depth Sorter ////
-	// An orange circle will locate where the cursor is should be depth sorted by the sorter
-	//pkr::Vector2 view = pkr::Vector2((float)input->getMouseX(), (float)input->getMouseY());
-	//pkr::Vector2 circCanvas = m_coordConverter->ViewportToCanvas(view);
+	// An orange circle will locate where the cursor is should be sorted by the depth sorter
 	if (ImGui::CollapsingHeader("Depth Sorter"))
 	{
 		float depth = m_depthSorter->getSortDepth(canvas.y);
@@ -525,18 +531,55 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 		}
 	}
 
-	ImGui::End();
-}
+	//// Tile connections ////
+	if (ImGui::CollapsingHeader("Tile Connections"))
+	{
+		int index = 0;
+		//For each 
+		for (auto t : m_map->getTiles())
+		{
+			for (auto c : t->connections)
+			{
+				//Canvas coords
+				pkr::Vector2 start = t->cPos;
+				pkr::Vector2 end = c->target->cPos;
 
-void KunoApp::showInstructions()
-{
-	//// INSTRUCTIONS ////
-	ImGui::Begin("INSTRUCTIONS");
-	ImGui::Text("Press 'c' to toggle display of tile connections");
-	ImGui::Text("Mouse wheel to zoom in and out");
-	ImGui::Text("WSAD or move mouse to edge of screen to pan camera");
-	ImGui::Text("Click on map to move player agent there");
-	ImGui::Text("Left click to set start node, Right click to set end node");
-	ImGui::TextWrapped("Press 'spacebar' to toggle between A* and Djikstra algorithm on the map");
+				//Set line color based on terrain cost
+				float maxCost = 5.0f;
+				// (c->cost / maxCost)
+				renderer->setRenderColour((c->cost / maxCost), 0, 0);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
+
+				//World coords
+				start = t->pos;
+				end = c->target->pos;
+
+				//Print debugs
+				ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
+
+			} ++index;
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Path"))
+	{
+		const char* algorithm;
+		algorithm = (m_map->useAstar) ? "A* Search" : "Dijkstra Search";
+		ImGui::TextColored({ 1,0.5f,0,1 }, algorithm);	ImGui::SameLine; ImGui::Text("Press space to toggle");
+
+		//Print path waypoints
+		auto path = m_map->getPath();
+		renderer->setRenderColour(0.90f, 0, 0);
+		if (!path.empty()) {
+			//Loop through all sets of waypoints and draw the path (isometrically)
+			for (int i = 0; i < path.size() - 1; ++i) {
+				auto start = CoordConverter()->WorldToCanvas(path[i]);
+				auto end = CoordConverter()->WorldToCanvas(path[i + 1]);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.3f);
+				ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
+			}
+		}
+	}
+
 	ImGui::End();
 }

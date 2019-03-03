@@ -581,7 +581,7 @@ namespace pf {
 
 		//// If there are start and end nodes then try to A* ////
 		if (m_pathStart != nullptr && m_pathEnd != nullptr) {
-			if (m_useAstar)
+			if (useAstar)
 				m_path = getAStarPath(m_pathStart, m_pathEnd);
 			else
 				m_path = getDjikstraPath(m_pathStart, m_pathEnd);
@@ -592,10 +592,7 @@ namespace pf {
 
 		//// Swap between pathing algorithms ////
 		if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
-			m_useAstar = !m_useAstar;
-		//Toggle connection draws
-		if (input->wasKeyPressed(aie::INPUT_KEY_C))
-			m_drawConnections = !m_drawConnections;
+			useAstar = !useAstar;
 	}
 
 	void Map::draw(aie::Renderer2D * renderer)
@@ -614,70 +611,10 @@ namespace pf {
 			if (t == m_tileMouseOver)		renderer->setRenderColour(0.75f, 0.75f, 0.75f);			//Mouse over
 			else if (t == m_pathStart)		renderer->setRenderColour(0.35f, 0.7f, 0.35f);			//Start
 			else if (t == m_pathEnd)		renderer->setRenderColour(0.7f, 0.35f, 0.35f);			//End
-			//else if (t->terrain == GRASS)	renderer->setRenderColour(0, 0.6f, 0);
-			//else if (t->terrain == DIRT)	renderer->setRenderColour(0.7f, 0.35f, 0.65f);
-			//else if (t->terrain == GRAVEL)	renderer->setRenderColour(0.65f, 0.65f, 0.65f);
-			//else if (t->terrain == WATER)	renderer->setRenderColour(0.2f, 0.4f, 1);
 			else							renderer->setRenderColour(1, 1, 1);
 
 			//Draw tile including any objects it has
 			t->draw(renderer);
-
-#ifdef _DEBUG
-			//// DEBUG ////
-			//Draw the paths; all the node/tile connections
-			ImGui::Begin("Map's tile connections");
-			if (m_drawConnections)
-			{
-				int index = 0;
-				for (auto c : t->connections)
-				{
-					{
-						//Canvas coords
-						pkr::Vector2 start = t->cPos;
-						pkr::Vector2 end = c->target->cPos;
-
-						//Set line color based on terrain cost
-						float maxCost = 5.0f;
-						// (c->cost / maxCost)
-						renderer->setRenderColour((c->cost / maxCost), 0, 0);
-						renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
-
-						//World coords
-						start = t->pos;
-						end = c->target->pos;
-
-						//Print debugs
-						ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
-					} ++index;
-				}
-			}
-			ImGui::End();
-#endif
-
 		}
-
-#ifdef _DEBUG
-		//Draw the test map A* pathfinding
-		ImGui::Begin("Map's path");
-
-		//Toggle between pathfinding algorithms
-		const char* pathalgorithm;
-		pathalgorithm = (m_useAstar) ? "A* Search" : "Dijkstra Search";
-		ImGui::TextColored({ 1,0.5f,0,1 }, pathalgorithm);	ImGui::SameLine; ImGui::Text("Press space to toggle");
-
-		//Print path waypoints
-		renderer->setRenderColour(0.90f, 0, 0);
-		if (!m_path.empty()) {
-			//Loop through all sets of waypoints and draw the path (isometrically)
-			for (int i = 0; i < m_path.size() - 1; ++i) {
-				auto start = app->CoordConverter()->WorldToCanvas(m_path[i]);
-				auto end = app->CoordConverter()->WorldToCanvas(m_path[i + 1]);
-				renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.3f);
-				ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
-			}
-		}
-		ImGui::End();
-#endif // _DEBUG
 	}
 }

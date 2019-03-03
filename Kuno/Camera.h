@@ -24,8 +24,8 @@ namespace util {
 		float			m_panSpeed = 1000.0f;
 
 		//Zoom
-		float			m_minZoom = 7.5f;
-		float			m_maxZoom = 0.5f;
+		float			m_minZoom = 10.0f;
+		float			m_maxZoom = 0.25f;
 		float			m_zoomSpeedMultiplier = 12.0f;
 		float			m_lastScrollPos = 0;		//Holds the previous mouse wheel position (if you don't default this to zero then it'll start off fully zoomed in etc)
 

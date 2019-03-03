@@ -35,12 +35,12 @@ private:
 	Tile*				m_tileMouseOver;		//The tile the mouse is over
 
 	//Test out pathfinding
-	bool				m_drawConnections = true;
-	bool				m_useAstar = true;
 	Path				m_path;
 	Tile*				m_pathStart = nullptr;
 	Tile*				m_pathEnd = nullptr;
 
+public:
+	bool				useAstar = true;
 public:
 
 	Map() = default;

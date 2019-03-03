@@ -58,7 +58,7 @@ namespace ai {
 		pf::Path			m_patrolPath;		//Only add one waypoint to set as a guard, +1 for patrolling
 		pkr::Vector2		m_desiredPos = pkr::Vector2();		//UpdatePath will use this to create a path
 		/////////////////////////////////////////////
-		//// CRAP AND CLUNKY: WRITE BETTER CODE ////
+		//// TODO CRAP AND CLUNKY: WRITE BETTER CODE ////
 		///////////////////////////////////////////
 		//Flag that states whether or not the desired position is currently being seeked to or not
 		bool				m_isMoving = false;

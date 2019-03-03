@@ -3,14 +3,14 @@
 **/Release
 **/.vs
 
-#Commit bootstrap to minimise any screwing around
+#Include bootstrap to minimise any screwing around
 #**/bootstrap/
 #**/dependencies/
 
-#Commit imgui configuration
+#Also include imgui configuration
 #bin/imgui.ini
 
-#Ignore only the core bootstrap assets
+#Ignore only the core bootstrap images (NOT THE FONTS!!!)
 bin/textures/tankRed.png
 bin/textures/tankGreen.png
 bin/textures/tankBlue.png
@@ -28,7 +28,7 @@ bin/textures/barrelGreen.png
 bin/textures/barrelBlue.png
 bin/textures/barrelBeige.png
 bin/textures/ball.png
-bin/font/consolas_italic.ttf
-bin/font/consolas_bold.ttf
-bin/font/consolas.ttf
+# bin/font/consolas_italic.ttf
+# bin/font/consolas_bold.ttf
+# bin/font/consolas.ttf
 

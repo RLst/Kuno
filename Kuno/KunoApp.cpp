@@ -176,9 +176,7 @@ void KunoApp::draw() {
 	for (auto g : m_guardList)
 		g->draw(m_2dRenderer);
 
-#ifdef _DEBUG
 	DEBUG(m_2dRenderer);
-#endif // _DEBUG
 
 	m_2dRenderer->end();
 	//// END DRAW ////
@@ -460,28 +458,23 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	m_2dRenderer->drawText(m_font, fps, fpsPos.x, fpsPos.y);
 	
 	//// IMGUI STUFF ////
+	ImVec4 orange = { 1, 0.5f, 0, 1 };
 	pkr::Vector2 view = { (float)input->getMouseX(), (float)input->getMouseY() };			//Get Viewport coords
 	pkr::Vector2 canvas = m_coordConverter->ViewportToCanvas(view);							//Convert from Viewport to Canvas
 	pkr::Vector2 world = m_coordConverter->CanvasToWorld(canvas);							//Convert from Canvas to World
 	pkr::Vector2 world2canvas = m_coordConverter->WorldToCanvas(world);						//Convert from World BACK to Canvas
 
-	ImGui::Begin("DEBUG");
+	ImGui::Begin("Info");
 
 	//// Instructions ////
-	if (ImGui::CollapsingHeader("Help"))
-	{
-		ImGui::Text("C - Toggle tile connections");
-		ImGui::Text("Mouse wheel - Zoom in/out");
-		ImGui::Text("WASD or mouse to edges - Pan camera");
-		ImGui::Text("Click on map to move player");
-		ImGui::Text("Left click - Set start test path node");
-		ImGui::Text("Right click - Set end test path node");
-		ImGui::Text("Space - Toggle pathfinding algorithm");
-	}
+	ImGui::TextColored(orange, "Click on map to move player");
 
 	//// Camera ////
 	if (ImGui::CollapsingHeader("Camera"))
 	{
+		ImGui::TextColored(orange, "- WASD keys OR move cursor");
+		ImGui::TextColored(orange, "to edges to pan camera.");
+		ImGui::TextColored(orange, "- Mouse wheel to zoom in/out");
 		ImGui::Text("x: %.0f, y: %.0f", m_camera->x, m_camera->y);
 		ImGui::Text("Zoom: %.3f", m_camera->zoom);
 	}
@@ -507,12 +500,13 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 	}
 
 	//// Depth Sorter ////
-	// An orange circle will locate where the cursor is should be sorted by the depth sorter
 	if (ImGui::CollapsingHeader("Depth Sorter"))
 	{
+		ImGui::TextColored(orange, "A circle will appear at the cursor");
+		ImGui::TextColored(orange, "to demonstrate how it will be sorted");
 		float depth = m_depthSorter->getSortDepth(canvas.y);
 		m_2dRenderer->setRenderColour(1, 0.85f, 0.40f);
-		m_2dRenderer->drawCircle(canvas.x, canvas.y, 5.0f, depth);
+		m_2dRenderer->drawCircle(canvas.x, canvas.y, 10.0f, depth);
 		ImGui::Text("Nearest: %.2f, Furthest: %.2f", m_depthSorter->m_minYpos, m_depthSorter->m_maxYpos);
 		ImGui::Text("Viewport > x: %.2f, y: %.2f", view.x, view.y);
 		ImGui::Text("Canvas > x: %.2f, y: %.2f", canvas.x, canvas.y);
@@ -528,6 +522,32 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 		if (tileUnderMouse != nullptr)
 		{
 			ImGui::Text("Position > x: %.2f, y: %.2f", tileUnderMouse->pos.x, tileUnderMouse->pos.y);
+		}
+	}
+
+	//// Pathfinding ////
+	if (ImGui::CollapsingHeader("Path"))
+	{
+		const char* algorithm;
+		algorithm = (m_map->useAstar) ? "A* Search" : "Dijkstra Search";
+
+		ImGui::TextColored(orange, "- Left click to set start of path");
+		ImGui::TextColored(orange, "- Right click to set end of path");
+		ImGui::TextColored(orange, "- Press space to toggle algorithm");
+		ImGui::Text("%s", algorithm);
+
+
+		//Print path waypoints
+		auto path = m_map->getPath();
+		renderer->setRenderColour(0.90f, 0, 0);
+		if (!path.empty()) {
+			//Loop through all sets of waypoints and draw the path (isometrically)
+			for (int i = 0; i < path.size() - 1; ++i) {
+				auto start = CoordConverter()->WorldToCanvas(path[i]);
+				auto end = CoordConverter()->WorldToCanvas(path[i + 1]);
+				renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.3f);
+				ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
+			}
 		}
 	}
 
@@ -547,8 +567,8 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 				//Set line color based on terrain cost
 				float maxCost = 5.0f;
 				// (c->cost / maxCost)
-				renderer->setRenderColour((c->cost / maxCost), 0, 0);
-				renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);
+				renderer->setRenderColour(1-(c->cost / maxCost), 1 - (c->cost / maxCost), 1 - (c->cost / maxCost));
+				renderer->drawLine(start.x, start.y, end.x, end.y, 1.0f, 0.2f);
 
 				//World coords
 				start = t->pos;
@@ -558,26 +578,6 @@ void KunoApp::DEBUG(aie::Renderer2D* renderer)
 				ImGui::Text("Edge: %d, x1: %.1f, y1: %.1f, x2: %.1f, y2: %.1f", index, start.x, start.y, end.x, end.y);
 
 			} ++index;
-		}
-	}
-
-	if (ImGui::CollapsingHeader("Path"))
-	{
-		const char* algorithm;
-		algorithm = (m_map->useAstar) ? "A* Search" : "Dijkstra Search";
-		ImGui::TextColored({ 1,0.5f,0,1 }, algorithm);	ImGui::SameLine; ImGui::Text("Press space to toggle");
-
-		//Print path waypoints
-		auto path = m_map->getPath();
-		renderer->setRenderColour(0.90f, 0, 0);
-		if (!path.empty()) {
-			//Loop through all sets of waypoints and draw the path (isometrically)
-			for (int i = 0; i < path.size() - 1; ++i) {
-				auto start = CoordConverter()->WorldToCanvas(path[i]);
-				auto end = CoordConverter()->WorldToCanvas(path[i + 1]);
-				renderer->drawLine(start.x, start.y, end.x, end.y, 6.f, 0.3f);
-				ImGui::Text("%d > x: %.2f, y: %.2f", i, start.x, start.y);
-			}
 		}
 	}
 

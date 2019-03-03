@@ -50,26 +50,26 @@ namespace pf {
 
 		short mapData[width][depth] =
 		{
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 6, 6, 4, 4, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 6, 1, 1, 1, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 5, 5, 5, 5, 5, 5, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1 },
+			{ 5, 5, 5, 5, 5, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 3, 3, 3 },
+			{ 5, 5, 5, 5, 4, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3 },
+			{ 5, 5, 4, 4, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 3, 3, 3 },
+			{ 4, 4, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 3 },
+			{ 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 },
+			{ 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+			{ 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, },
+			{ 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 4, 6, 6, 6, 6, 6, 6, },
+			{ 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 4, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 4, 4, 4, 4, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 4, 6, 6, 6, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 4, 6, 2, 2, 2, 2, 2, 2, 2, 2, },
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
+			{ 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 4, 6, 2, 2, 2, 2, 2, 2, 2, 2, },
+			{ 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 4, 6, 6, 6, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 4, 4, 4, 4, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 4, 6, 2, 2, 2, 2, 2, },
+			{ 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 6, 2, 2, 2, 2, 2, },
 		};
 		//	{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
 		//	{ 5, 1, 0, 0, 6, 5, 1, 0, 1, 5, 1, 1 },
@@ -109,13 +109,19 @@ namespace pf {
 
 				switch (mapData[row][col])
 				{
-				case 0:	//PATH
+				case 0:	//PATH (Stone path)
 					newTile->tex = tm->getTexture("Path");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = PATH;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 1:	//GRASS
+				case 1:	//SAND or Dried Dirt Path
+					newTile->tex = tm->getTexture("Sand");
+					newTile->dsOffset = pkr::Vector2(0, 58.0f);
+					newTile->terrain = SAND;
+					newTile->access = TRAVERSABLE;
+					break;
+				case 2:	//GRASS
 					newTile->tex = tm->getTexture("Grass");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = GRASS;
@@ -127,26 +133,20 @@ namespace pf {
 					newTile->terrain = DIRT;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 4:	//SAND
-					newTile->tex = tm->getTexture("Sand");
-					newTile->dsOffset = pkr::Vector2(0, 58.0f);
-					newTile->terrain = SAND;
-					newTile->access = TRAVERSABLE;
-					break;
-				case 5:	//WATER
+				case 4:	//WATER
 					newTile->tex = tm->getTexture("Water");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = WATER;
 					newTile->access = TRAVERSABLE;
 					break;
-				case 6:	//DEEPWATER
+				case 5:	//DEEPWATER
 					newTile->objects.push_back(new StaticObject());		//An empty static object makes this tile untraversable
 					newTile->tex = tm->getTexture("DeepWater");
 					newTile->dsOffset = pkr::Vector2(0, 58.0f);
 					newTile->terrain = WATER;
 					newTile->access = UNTRAVERSABLE;
 					break;
-				case 7:	//WALL
+				case 6:	//WALL
 					newTile->objects.push_back(new StaticObject());		//An empty static object makes this tile untraversable
 					newTile->tex = tm->getTexture("Wall");
 					newTile->dsOffset = pkr::Vector2(0, 35.0f);
@@ -309,19 +309,7 @@ namespace pf {
 				if (distanceBetween < connectRadius) {
 
 					//THIS SETS THE EDGE COST (ie. HOW DIFFICULT IT IS TO TRAVERSE ACROSS THESE TERRAINS)
-					float cost = 1.0f;
-					switch (t2->terrain) {
-					case NA:			cost = INFINITY;	break;
-					case PATH:			cost = 0.8f;		break;
-					case GRASS:			cost = 1.0f;		break;
-					case DIRT:			cost = 1.3f;		break;
-					case SAND:			cost = 2.0f;		break;
-					case GRAVEL:		cost = 3.0f;		break;
-					case WATER:			cost = 4.0f;		break;
-					case DEEPWATER:		cost = 5.0f;		break;
-					default:
-						assert(false);		//Invalid
-					}
+					float cost = getTerrainCost(t2);
 
 					//// FINALLY CONNECT THE TILES UP ////
 					pf::Node::connect(t1, t2, cost);	//!!!This should also connect tiles both ways
@@ -330,6 +318,21 @@ namespace pf {
 			}
 		}
 
+	}
+
+	float Map::getTerrainCost(const pf::Tile *tile)
+	{
+		switch (tile->terrain) {
+		case NA:			return INFINITY;	break;
+		case PATH:			return 0.75f;		break;
+		case SAND:			return 1.0f;		break;
+		case GRASS:			return 2.0f;		break;
+		case DIRT:			return 3.0f;		break;
+		case WATER:			return 4.0f;		break;
+		case DEEPWATER:		return 5.0f;		break;
+		default:
+			assert(false);		//Invalid tile
+		}
 	}
 
 	Tile * Map::findTileFromPos(const pkr::Vector2 & pos)
@@ -635,7 +638,7 @@ namespace pf {
 						pkr::Vector2 end = c->target->cPos;
 
 						//Set line color based on terrain cost
-						float maxCost = 4.0f;
+						float maxCost = 5.0f;
 						// (c->cost / maxCost)
 						renderer->setRenderColour((c->cost / maxCost), 0, 0);
 						renderer->drawLine(start.x, start.y, end.x, end.y, 2.f, 0.2f);

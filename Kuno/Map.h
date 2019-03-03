@@ -52,17 +52,14 @@ public:
 	//void				buildRandomMap(int width, int depth);
 	void				buildKunoMap();									//Build game map from raw data (maybe this should be in Game.cpp)
 	void				connectNodesByDistance(float connectRadius);	//Also take into account tile's terrain and accessibility
+	float				getTerrainCost(const pf::Tile * tile);
 	//void				loadMap();	//From file? Implement later
 
-	//// Find Tile ////
-	//Get the nearest tile using a CARTESIAN coord; 
-	//Agents use this
-	Tile*				findTileFromPos(const pkr::Vector2 &pos);
-	
-	//Get the nearest tile using an ISOMETRIC coord; 
-	//Mouse uses this; use this to find the tile under the mouse cursor
-	Tile*				findTileFromCanvasPos(const pkr::Vector2 &cPos);	
-	
+	//Tiles
+	Tile*				findTileFromPos(const pkr::Vector2 &pos);	//Get the nearest tile using a CARTESIAN coord; Agents use this
+	Tile*				findTileFromCanvasPos(const pkr::Vector2 &cPos);	//Get the nearest tile using an ISOMETRIC coord; Mouse uses this; use this to find the tile under the mouse cursor
+	std::vector<Tile*>	getTiles() const { return m_tiles; }
+
 	//Clamps
 	pkr::Vector2		clampWithinMapRetWORLD(const pkr::Vector2 &Wpos);			//Returns a clamped WORLD position 
 	Tile*				clampwithinMapRetTILE(const pkr::Vector2 &Wpos);			//Returns the nearest tile after clamping

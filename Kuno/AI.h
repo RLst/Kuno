@@ -88,7 +88,7 @@ namespace ai {
 	protected:
 		iBehaviour * m_child;
 	public:
-		~aDecorator() override { delete m_child; }
+		~aDecorator() override;
 		virtual eResult execute(Agent* agent, float deltaTime) = 0;
 		void	setChild(iBehaviour * behaviour) { m_child = behaviour; }
 	};

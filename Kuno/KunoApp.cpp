@@ -359,7 +359,7 @@ bool KunoApp::setupAI()
 	auto bhFlee = new ai::action::Flee(m_Yuna);
 
 		//// ActionSelector
-		auto ActionSel = new ai::Selector();
+		auto ActionSelector = new ai::Selector();
 	
 			//Attack Sequence
 			auto AttackSeq = new ai::Sequence();
@@ -368,45 +368,45 @@ bool KunoApp::setupAI()
 			AttackSeq->addChild(bhUpdateLastSeen);									//Constant
 				auto AttackDec = new ai::DelayDecorator(new ai::action::Attack(m_Yuna), enemyStat.attackSpeed);
 			AttackSeq->addChild(AttackDec);
-		ActionSel->addChild(AttackSeq);
+		ActionSelector->addChild(AttackSeq);
 
 			//Flee or Pursue Sequence
-			auto FleeOrPursueSeq = new ai::Sequence();
-			FleeOrPursueSeq->addChild(new ai::condition::WithinRange(m_Yuna, enemyStat.sightRange));
-			FleeOrPursueSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
-			FleeOrPursueSeq->addChild(bhUpdateLastSeen);							//Constant
-				auto FleeOrPursueSel = new ai::Selector();
-					auto FleeSeq = new ai::Sequence();
-					FleeSeq->addChild(new ai::condition::CheckHealth(enemyStat.lowHealthThres));	
-					FleeSeq->addChild(bhFlee);										//Constant
-				FleeOrPursueSel->addChild(FleeSeq);
-				FleeOrPursueSel->addChild(bhSeek);									//Constant
-			FleeOrPursueSeq->addChild(FleeOrPursueSel);
-		ActionSel->addChild(FleeOrPursueSeq);
+			auto FleeOrPursueSequence = new ai::Sequence();
+			FleeOrPursueSequence->addChild(new ai::condition::WithinRange(m_Yuna, enemyStat.sightRange));
+			FleeOrPursueSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::ALERT));
+			FleeOrPursueSequence->addChild(bhUpdateLastSeen);							//Constant
+				auto FleeOrPursueSelector = new ai::Selector();
+					auto FleeSequence = new ai::Sequence();
+					FleeSequence->addChild(new ai::condition::CheckHealth(enemyStat.lowHealthThres));	
+					FleeSequence->addChild(bhFlee);										//Constant
+				FleeOrPursueSelector->addChild(FleeSequence);
+				FleeOrPursueSelector->addChild(bhSeek);									//Constant
+			FleeOrPursueSequence->addChild(FleeOrPursueSelector);
+		ActionSelector->addChild(FleeOrPursueSequence);
 
 			//Inspect
-			auto InspectSeq = new ai::Sequence();
+			auto InspectSequence = new ai::Sequence();
 			//InspectSeq->addChild(new ai::condition::WithinRange(m_Yuna, swordsman.suspiciousRange));
 			//InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
 			//InspectSeq->addChild(new ai::action::UpdateLastSeen(m_Yuna));						//Constant
-			InspectSeq->addChild(new ai::condition::LastSeenAvailable());
-				auto UpdateStateSeq(new ai::Sequence());
+			InspectSequence->addChild(new ai::condition::LastSeenAvailable());
+				auto UpdateStateSequence(new ai::Sequence());
 					auto NotAlertState = new ai::NotDecorator(new ai::condition::CheckState(ai::Agent::eState::ALERT));
-				UpdateStateSeq->addChild(NotAlertState);
-				UpdateStateSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
-			InspectSeq->addChild(new ai::SuccessDecorator(UpdateStateSeq));
-			InspectSeq->addChild(bhInspect);													//Constant? Inspects what's at agent.lastSeen
-			InspectSeq->addChild(new ai::action::Idle(2.0f, 3.0f));				//Idle between 3-4s
-			InspectSeq->addChild(bhClearLastSeen);												//Constant
-			InspectSeq->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
-		ActionSel->addChild(InspectSeq);
+				UpdateStateSequence->addChild(NotAlertState);
+				UpdateStateSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::SUSPICIOUS));
+			InspectSequence->addChild(new ai::SuccessDecorator(UpdateStateSequence));
+			InspectSequence->addChild(bhInspect);													//Constant? Inspects what's at agent.lastSeen
+			InspectSequence->addChild(new ai::action::Idle(2.0f, 3.0f));				//Idle between 3-4s
+			InspectSequence->addChild(bhClearLastSeen);												//Constant
+			InspectSequence->addChild(new ai::action::UpdateState(ai::Agent::eState::GUARD));
+		ActionSelector->addChild(InspectSequence);
 			//InspectSeq->addChild(new ai::TimeoutDecorator(new ai::action::Idle(), 7.5f));
 
 			//Guard
 			auto GuardSeq = new ai::Sequence();
 			GuardSeq->addChild(new ai::condition::CheckState(ai::Agent::eState::GUARD));
 			GuardSeq->addChild(bhReturnToPost);						//Constant
-		ActionSel->addChild(GuardSeq);
+		ActionSelector->addChild(GuardSeq);
 
 		//	//Patrol
 		//	auto PatrolSeq = new ai::Sequence();
@@ -421,7 +421,7 @@ bool KunoApp::setupAI()
 
 	//ROOT
 	auto SwordsmanRoot = new ai::Sequence();
-		auto AlwaysSuccess = new ai::SuccessDecorator(ActionSel);
+		auto AlwaysSuccess = new ai::SuccessDecorator(ActionSelector);
 	SwordsmanRoot->addChild(AlwaysSuccess);
 	//SwordsmanRoot->addChild(ActionSel);
 	SwordsmanRoot->addChild(MoveSeq);

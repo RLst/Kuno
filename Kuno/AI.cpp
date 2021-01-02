@@ -18,7 +18,7 @@ namespace ai {
 	aComposite::~aComposite()
 	{
 		//Delete all children
-		for (auto &child : m_childBehaviours) {
+		for (auto& child : m_childBehaviours) {
 			delete child;
 			child = nullptr;
 		}
@@ -100,6 +100,15 @@ namespace ai {
 		}
 		return eResult::SUCCESS;
 		*/
+	}
+
+	aDecorator::~aDecorator()
+	{
+		if (m_child != nullptr)
+		{
+			delete m_child;
+			m_child = nullptr;
+		}
 	}
 
 	NotDecorator::NotDecorator(iBehaviour * childBehaviour)
@@ -196,5 +205,7 @@ namespace ai {
 		m_child->execute(agent, deltaTime);
 		return eResult::SUCCESS;	//ALWAYS RETURN SUCCESS!
 	}
+
+
 
 }
